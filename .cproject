@@ -66,7 +66,7 @@
 								<option id="com.atollic.truestudio.common_options.target.fpucore.2133575421" name="FPU" superClass="com.atollic.truestudio.common_options.target.fpucore" value="FPv4-SP-D16" valueType="enumerated"/>
 								<option id="com.atollic.truestudio.common_options.target.fpu.759376050" name="Floating point" superClass="com.atollic.truestudio.common_options.target.fpu" value="com.atollic.truestudio.common_options.target.fpu.hard" valueType="enumerated"/>
 								<option id="com.atollic.truestudio.ld.general.clib.744396623" name="Runtime Library" superClass="com.atollic.truestudio.ld.general.clib"/>
-								<option id="com.atollic.truestudio.ld.general.scriptfile.725188916" name="Linker script" superClass="com.atollic.truestudio.ld.general.scriptfile" value="../Debug_STM32F407VG_RAM.ld" valueType="string"/>
+								<option id="com.atollic.truestudio.ld.general.scriptfile.725188916" name="Linker script" superClass="com.atollic.truestudio.ld.general.scriptfile" value="../Debug_STM32F407VG_FLASH.ld" valueType="string"/>
 								<option id="com.atollic.truestudio.ld.optimization.do_garbage.700029043" name="Dead code removal " superClass="com.atollic.truestudio.ld.optimization.do_garbage" value="true" valueType="boolean"/>
 							</tool>
 							<tool id="com.atollic.truestudio.exe.debug.toolchain.gpp.1920491408" name="C++ Compiler" superClass="com.atollic.truestudio.exe.debug.toolchain.gpp">
@@ -100,7 +100,7 @@
 								<option id="com.atollic.truestudio.common_options.target.fpu.1337105596" name="Floating point" superClass="com.atollic.truestudio.common_options.target.fpu" value="com.atollic.truestudio.common_options.target.fpu.hard" valueType="enumerated"/>
 								<option id="com.atollic.truestudio.ld.general.cclib.100598943" name="Runtime Library" superClass="com.atollic.truestudio.ld.general.cclib" value="com.atollic.truestudio.ld.general.cclib.CCSmallCSmall" valueType="enumerated"/>
 								<option id="com.atollic.truestudio.ldcc.optimization.do_garbage.1856195747" name="Dead code removal" superClass="com.atollic.truestudio.ldcc.optimization.do_garbage" value="true" valueType="boolean"/>
-								<option id="com.atollic.truestudio.ldcc.general.scriptfile.1503718060" name="Linker script" superClass="com.atollic.truestudio.ldcc.general.scriptfile" value="../Debug_STM32F407VG_RAM.ld" valueType="string"/>
+								<option id="com.atollic.truestudio.ldcc.general.scriptfile.1503718060" name="Linker script" superClass="com.atollic.truestudio.ldcc.general.scriptfile" value="../Debug_STM32F407VG_FLASH.ld" valueType="string"/>
 								<inputType id="com.atollic.truestudio.ldcc.input.1778251887" name="Input" superClass="com.atollic.truestudio.ldcc.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>

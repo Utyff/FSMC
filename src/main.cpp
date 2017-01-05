@@ -45,7 +45,7 @@ SOFTWARE.
 **
 **===========================================================================
 */
-//void init();
+void init();
 
 int main(void)
 {
@@ -61,15 +61,25 @@ int main(void)
   *  E.g.  SCB->VTOR = 0x20000000;  
   */
 
-//  init();
+  init();
+	//------------------Инициализация портов светодиодов------------------
+/*  GPIO_InitTypeDef GPIO_InitStructure; //Структура содержащая настройки порта
+  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE); //Включаем тактирование порта D
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_12 | GPIO_Pin_13; //Выбираем нужные выводы | GPIO_Pin_14| GPIO_Pin_15
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT; //Включаем режим выхода
+  GPIO_Init(GPIOD, &GPIO_InitStructure); //вызов функции инициализации */
+  //--------------------------------------------------------------------
 
   /* Infinite loop */
   while (1)
   {
-	i++;
+/*	  GPIO_SetBits(GPIOD, GPIO_Pin_12);
+	  for( i=0; i<10000000; i++) {}
+	  GPIO_ResetBits(GPIOD, GPIO_Pin_12);
+	  for( i=0; i<10000000; i++) {} //*/
   }
 }
-/*
+
 void init() {
 	//------------------Инициализация TIM6------------------
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM6,ENABLE);

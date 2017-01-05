@@ -56,9 +56,9 @@
   *-----------------------------------------------------------------------------
   *        APB2 Prescaler                         | 2
   *-----------------------------------------------------------------------------
-  *        HSE Frequency(Hz)                      | 25000000
+  *        HSE Frequency(Hz)                      | 8000000
   *-----------------------------------------------------------------------------
-  *        PLL_M                                  | 25
+  *        PLL_M                                  | 8
   *-----------------------------------------------------------------------------
   *        PLL_N                                  | 336
   *-----------------------------------------------------------------------------
@@ -66,11 +66,11 @@
   *-----------------------------------------------------------------------------
   *        PLL_Q                                  | 7
   *-----------------------------------------------------------------------------
-  *        PLLI2S_N                               | NA
+  *        PLLI2S_N                               | 192
   *-----------------------------------------------------------------------------
-  *        PLLI2S_R                               | NA
+  *        PLLI2S_R                               | 5
   *-----------------------------------------------------------------------------
-  *        I2S input clock                        | NA
+  *        I2S input clock(Hz)                    | 38400000
   *-----------------------------------------------------------------------------
   *        VDD(V)                                 | 3.3
   *-----------------------------------------------------------------------------
@@ -145,14 +145,14 @@
 
 /*!< Uncomment the following line if you need to relocate your vector Table in
      Internal SRAM. */
-/* #define VECT_TAB_SRAM */
+//#define VECT_TAB_SRAM
 #define VECT_TAB_OFFSET  0x00 /*!< Vector Table base offset field. 
                                    This value must be a multiple of 0x200. */
 /******************************************************************************/
 
 /************************* PLL Parameters *************************************/
 /* PLL_VCO = (HSE_VALUE or HSI_VALUE / PLL_M) * PLL_N */
-#define PLL_M      25
+#define PLL_M      8
 #define PLL_N      336
 
 /* SYSCLK = PLL_VCO / PLL_P */
@@ -162,6 +162,11 @@
 #define PLL_Q      7
 
 /******************************************************************************/
+
+/* PLLI2S_VCO = (HSE_VALUE Or HSI_VALUE / PLL_M) * PLLI2S_N
+   I2SCLK = PLLI2S_VCO / PLLI2S_R */
+//#define PLLI2S_N   192
+//#define PLLI2S_R   5
 
 /**
   * @}
@@ -374,7 +379,8 @@ static void SetSysClock(void)
   {
     /* Select regulator voltage output Scale 1 mode, System frequency up to 168 MHz */
     RCC->APB1ENR |= RCC_APB1ENR_PWREN;
-    PWR->CR |= PWR_CR_VOS;
+    //PWR->CR |= PWR_CR_VOS;
+    PWR->CR |= PWR_CR_PMODE;
 
     /* HCLK = SYSCLK / 1*/
     RCC->CFGR |= RCC_CFGR_HPRE_DIV1;
@@ -414,6 +420,20 @@ static void SetSysClock(void)
          configuration. User can add here some code to deal with this error */
   }
 
+/******************************************************************************/
+/*                        I2S clock configuration                             */
+/******************************************************************************/
+  /* PLLI2S clock used as I2S clock source */
+  //RCC->CFGR &= ~RCC_CFGR_I2SSRC;
+
+  /* Configure PLLI2S */
+  //RCC->PLLI2SCFGR = (PLLI2S_N << 6) | (PLLI2S_R << 28);
+
+  /* Enable PLLI2S */
+  //RCC->CR |= ((uint32_t)RCC_CR_PLLI2SON);
+
+  /* Wait till PLLI2S is ready */
+  //while((RCC->CR & RCC_CR_PLLI2SRDY) == 0){}
 }
 
 /**

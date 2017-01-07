@@ -143,28 +143,28 @@ void SysTick_Handler(void)
 /*  TimingDelay_Decrement(); */
 }
 
-int GreenStat=0; //Переменная-счетчик
-// Обработчик прерывания TIM6_DAC
-void TIM6_DAC_IRQHandler(void)
+/*int OraStat=0;
+// Обработчик прерывания TIM4_DAC
+void TIM4_IRQHandler(void)
 {
-  TIM6->SR &= ~TIM_SR_UIF; //Сбрасываем флаг прерывания
-  if( GreenStat )
-       GPIO_SetBits(GPIOD, GPIO_Pin_12);
-  else
-       GPIO_ResetBits(GPIOD, GPIO_Pin_12);
-  GreenStat = !GreenStat;
-}
-
-int OraStat = 1;
-// Обработчик прерывания TIM7
-void TIM7_IRQHandler(void)
-{
-  TIM7->SR &= ~TIM_SR_UIF; //Сбрасываем флаг прерывания
+  TIM4->SR &= ~TIM_SR_UIF; //Сбрасываем флаг прерывания
   if( OraStat )
        GPIO_SetBits(GPIOD, GPIO_Pin_13);
   else
        GPIO_ResetBits(GPIOD, GPIO_Pin_13);
   OraStat = !OraStat;
+} //*/
+
+int GreenStat = 1;
+// Обработчик прерывания TIM7
+void TIM7_IRQHandler(void)
+{
+  TIM7->SR &= ~TIM_SR_UIF; //Сбрасываем флаг прерывания
+  if( GreenStat )
+       GPIO_SetBits(GPIOD, GPIO_Pin_12);
+  else
+       GPIO_ResetBits(GPIOD, GPIO_Pin_12);
+  GreenStat = !GreenStat;
 }
 
 /******************************************************************************/

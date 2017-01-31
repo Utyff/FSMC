@@ -4,9 +4,18 @@
 #include "stm32f4xx_rcc.h"
 #include "stm32f4xx_tim.h"
 
+#include "delay.h"
+#include "SSD1289.h"
+//#include "touch_7846.h"
+//#include "Julija.h"
 
 void init();
 void TIM4_Config(void);
+
+extern unsigned char flag;
+char stringas[8];
+int xold,yold;
+
 
 int main(void)
 {
@@ -19,15 +28,27 @@ int main(void)
   *  SCB->VTOR register.
   *  E.g.  SCB->VTOR = 0x20000000;
   */
-
-  init();
-
 //  RCC_ClocksTypeDef RCC_Clocks;
 //  RCC_GetClocksFreq(&RCC_Clocks);
+
+  init();
   TIM4_Config();
 
-  while (1)
-  {}
+  Delay(0x300);
+  LCD_Init();
+  Delay(0x300);
+//  touch_init();
+//  LCD_Clear(BLACK);
+  //LCD_SetTextColor(BLUE);
+
+  while(1)
+  {
+/*    Convert_Pos();
+    Pixel(Pen_Point.X0,Pen_Point.Y0,WHITE);
+    Pixel(Pen_Point.X0,Pen_Point.Y0+1,WHITE);
+    Pixel(Pen_Point.X0+1,Pen_Point.Y0,WHITE);
+    Pixel(Pen_Point.X0+1,Pen_Point.Y0+1,WHITE);//*/
+  }
 }
 
 void TIM4_Config(void)

@@ -65,7 +65,7 @@ void LCD_GPIO_Conf(void)
                                 GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10 |
                                 GPIO_Pin_11 | GPIO_Pin_14 | GPIO_Pin_15;
   GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF;
-  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
   GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
   GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
   GPIO_Init(GPIOD, &GPIO_InitStructure);
@@ -81,9 +81,9 @@ void LCD_FSMCConfig(void)
   FSMC_NORSRAMInitTypeDef  FSMC_NORSRAMInitStructure;
   FSMC_NORSRAMTimingInitTypeDef FSMC_NORSRAMTimingInitStructure;
 
-  FSMC_NORSRAMTimingInitStructure.FSMC_AddressSetupTime = 16;  //0
-  FSMC_NORSRAMTimingInitStructure.FSMC_AddressHoldTime = 3;    //0
-  FSMC_NORSRAMTimingInitStructure.FSMC_DataSetupTime = 17;     //3
+  FSMC_NORSRAMTimingInitStructure.FSMC_AddressSetupTime = 20;  //0
+  FSMC_NORSRAMTimingInitStructure.FSMC_AddressHoldTime = 20;    //0
+  FSMC_NORSRAMTimingInitStructure.FSMC_DataSetupTime = 20;     //3
   FSMC_NORSRAMTimingInitStructure.FSMC_BusTurnAroundDuration = 0;
   FSMC_NORSRAMTimingInitStructure.FSMC_CLKDivision = 1;        //1
   FSMC_NORSRAMTimingInitStructure.FSMC_DataLatency = 7;
@@ -101,13 +101,13 @@ void LCD_FSMCConfig(void)
   FSMC_NORSRAMInitStructure.FSMC_WaitSignal = FSMC_WaitSignal_Disable;
   FSMC_NORSRAMInitStructure.FSMC_AsynchronousWait = FSMC_AsynchronousWait_Disable;
   FSMC_NORSRAMInitStructure.FSMC_ExtendedMode = FSMC_ExtendedMode_Disable;
-  FSMC_NORSRAMInitStructure.FSMC_WriteBurst = FSMC_WriteBurst_Disable;   //disable
+  FSMC_NORSRAMInitStructure.FSMC_WriteBurst = FSMC_WriteBurst_Enable;   //disable
   FSMC_NORSRAMInitStructure.FSMC_ReadWriteTimingStruct = &FSMC_NORSRAMTimingInitStructure;
   FSMC_NORSRAMInit(&FSMC_NORSRAMInitStructure);
 
-  FSMC_NORSRAMTimingInitStructure.FSMC_AddressSetupTime = 16;   //0
-  FSMC_NORSRAMTimingInitStructure.FSMC_AddressHoldTime = 3;	    //0
-  FSMC_NORSRAMTimingInitStructure.FSMC_DataSetupTime = 17;	    //3
+  FSMC_NORSRAMTimingInitStructure.FSMC_AddressSetupTime = 20;   //0
+  FSMC_NORSRAMTimingInitStructure.FSMC_AddressHoldTime = 20;	    //0
+  FSMC_NORSRAMTimingInitStructure.FSMC_DataSetupTime = 20;	    //3
   FSMC_NORSRAMTimingInitStructure.FSMC_BusTurnAroundDuration = 0;
   FSMC_NORSRAMTimingInitStructure.FSMC_CLKDivision = 1;         //1
   FSMC_NORSRAMTimingInitStructure.FSMC_DataLatency = 7;
@@ -257,11 +257,16 @@ void LCD_Init_kumle() //_kumle
 
 void LCD_Init() //_ili9341
 {
-	LCD_WriteReg(0x0000,0x0001);
-	Delay(10);
+  LCD_GPIO_Conf();
+  Delay(3000);
+  LCD_FSMCConfig();
+  Delay(3000);
 
-	LCD_WriteReg(0x0015,0x0030);
-	LCD_WriteReg(0x0011,0x0040);
+  LCD_WriteReg(0x0000,0x0001);
+  Delay(10);
+
+  LCD_WriteReg(0x0015,0x0030);
+  LCD_WriteReg(0x0011,0x0040);
 	LCD_WriteReg(0x0010,0x1628);
 	LCD_WriteReg(0x0012,0x0000);
 	LCD_WriteReg(0x0013,0x104d);

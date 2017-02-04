@@ -7,11 +7,8 @@
 #include "delay.h"
 #include "SSD1289.h"
 
-void init();
-void TIM4_Config(void);
-
-char stringas[8];
-int xold,yold;
+void init_TIM7();
+void init_TIM4();
 
 
 int main(void)
@@ -19,26 +16,22 @@ int main(void)
 //  RCC_ClocksTypeDef RCC_Clocks;
 //  RCC_GetClocksFreq(&RCC_Clocks);
 
-  init();
-  TIM4_Config();
-
-  Delay(0x300);
-  LCD_Init();
-  Delay(0x300);
+  DWT_Init();
+  init_TIM7();
+  init_TIM4();
+//  Delay(0x300);
+//  LCD_Init();
+//  Delay(0x300);
 //  LCD_Clear(BLACK);
 //  LCD_SetTextColor(BLUE);
 
   while(1)
   {
-/*    Convert_Pos();
-    Pixel(Pen_Point.X0,Pen_Point.Y0,WHITE);
-    Pixel(Pen_Point.X0,Pen_Point.Y0+1,WHITE);
-    Pixel(Pen_Point.X0+1,Pen_Point.Y0,WHITE);
-    Pixel(Pen_Point.X0+1,Pen_Point.Y0+1,WHITE);//*/
+
   }
 }
 
-void TIM4_Config(void)
+void init_TIM4()
 {
   GPIO_InitTypeDef GPIO_InitStructure;
 
@@ -116,7 +109,7 @@ void TIM4_Config(void)
 }
 
 
-void init()
+void init_TIM7()
 {
   //------------------Инициализация TIM7------------------
   RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM7,ENABLE);

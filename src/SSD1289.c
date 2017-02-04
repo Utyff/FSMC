@@ -189,7 +189,7 @@ void LCD_Init_1289(void) //
   LCD_WriteReg(0x0036,0x0204);    Delay(50);
   LCD_WriteReg(0x0037,0x0502);    Delay(50);
   LCD_WriteReg(0x003A,0x0302);    Delay(50);
-  LCD_WriteReg(0x002F,0x12BE);    Delay(50);           
+  LCD_WriteReg(0x002F,0x12BE);    Delay(50);
   LCD_WriteReg(0x003B,0x0302);    Delay(50);
   LCD_WriteReg(0x0023,0x0000);    Delay(50);
   LCD_WriteReg(0x0024,0x0000);    Delay(50);
@@ -198,10 +198,10 @@ void LCD_Init_1289(void) //
   LCD_WriteReg(0x004e,0x0000);    Delay(50);
 }
 
+uint16_t DeviceCode;
+
 void LCD_Init_kumle() //_kumle
 {
-  static uint16_t DeviceCode;
-
   LCD_GPIO_Conf();
   Delay(3000);
   LCD_FSMCConfig();

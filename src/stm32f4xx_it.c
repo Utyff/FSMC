@@ -1,11 +1,11 @@
 /**
   ******************************************************************************
-  * @file    Project/STM32F4xx_StdPeriph_Template/stm32f4xx_it.c 
+  * @file    Project/STM32F4xx_StdPeriph_Template/stm32f4xx_it.c
   * @author  MCD Application Team
   * @version V1.1.0
   * @date    18-January-2013
   * @brief   Main Interrupt Service Routines.
-  *          This file provides template for all exceptions handler and 
+  *          This file provides template for all exceptions handler and
   *          peripherals interrupt service routine.
   ******************************************************************************
   * @attention
@@ -18,8 +18,8 @@
   *
   *        http://www.st.com/software_license_agreement_liberty_v2
   *
-  * Unless required by applicable law or agreed to in writing, software 
-  * distributed under the License is distributed on an "AS IS" BASIS, 
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   * See the License for the specific language governing permissions and
   * limitations under the License.
@@ -157,14 +157,16 @@ void TIM4_IRQHandler(void)
 
 int GreenStat = 1;
 // Обработчик прерывания TIM7
-void TIM7_IRQHandler(void)
+void TIM7_IRQHandler()
 {
   TIM7->SR &= ~TIM_SR_UIF; //Сбрасываем флаг прерывания
+//  GPIO_ToggleBits(GPIOD, GPIO_Pin_12);  // Green toggle
+
   if( GreenStat )
        GPIO_SetBits(GPIOD, GPIO_Pin_12);
   else
        GPIO_ResetBits(GPIOD, GPIO_Pin_12);
-  GreenStat = !GreenStat;
+  GreenStat = !GreenStat; //*/
 }
 
 /******************************************************************************/
@@ -185,7 +187,7 @@ void TIM7_IRQHandler(void)
 
 /**
   * @}
-  */ 
+  */
 
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

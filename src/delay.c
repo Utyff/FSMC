@@ -1,6 +1,8 @@
 #include "delay.h"
 
-static __IO uint32_t TimingDelay ;
+
+static __IO uint32_t TimingDelay;
+
 
 void Delay(__IO uint32_t nTime)
 {
@@ -21,4 +23,3 @@ void TimingDelay_Decrement(void)
     TimingDelay--;
   }
 }
-

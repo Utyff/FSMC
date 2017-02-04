@@ -1,3 +1,4 @@
 /Debug/
 /cmake-build-debug/
-/.settings/language.settings.xml
+.settings/language.settings.xml
+.idea/workspace.xml

@@ -11,9 +11,7 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c475876f-ea63-4be4-8d3d-cc002675afed" name="Default" comment="commit">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.cproject" afterPath="$PROJECT_DIR$/.cproject" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
+    <list default="true" id="c475876f-ea63-4be4-8d3d-cc002675afed" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
@@ -296,7 +294,7 @@
       <updated>1485902673590</updated>
       <workItem from="1485902675142" duration="1077000" />
       <workItem from="1486165392116" duration="116000" />
-      <workItem from="1486217928980" duration="463000" />
+      <workItem from="1486217928980" duration="487000" />
     </task>
     <task id="LOCAL-00001" summary="commit">
       <created>1485902968138</created>
@@ -319,11 +317,18 @@
       <option name="project" value="LOCAL" />
       <updated>1486165472752</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="commit">
+      <created>1486218396563</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1486218396563</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1656000" />
+    <option name="totallyTimeSpent" value="1680000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">

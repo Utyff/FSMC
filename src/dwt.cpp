@@ -24,7 +24,7 @@ void DWT_Init()
   }
 }
 
-volatile uint32_t ccc, cc2;
+//volatile uint32_t ccc, cc2;
 
 void DWT_Delay(uint32_t us) // microseconds
 {

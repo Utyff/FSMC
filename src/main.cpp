@@ -17,8 +17,8 @@ int main(void)
 //  RCC_GetClocksFreq(&RCC_Clocks);
 
   DWT_Init();
-  init_TIM7();
-  init_TIM4();
+  init_TIM7(); // Green LED using WIM-blink
+  init_TIM4(); // Orange LED interrupt blink
 //  Delay(0x300);
 //  LCD_Init();
 //  Delay(0x300);

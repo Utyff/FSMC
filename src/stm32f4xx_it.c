@@ -157,7 +157,7 @@ void TIM4_IRQHandler(void)
 
 //int GreenStat = 1;
 // Обработчик прерывания TIM7
-void TIM7_IRQHandler(void)
+void TIM7_IRQHandler()
 {
   TIM7->SR &= ~TIM_SR_UIF; //Сбрасываем флаг прерывания
   GPIO_ToggleBits(GPIOD, GPIO_Pin_12); // Green toggle

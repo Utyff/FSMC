@@ -24,6 +24,7 @@ int main(void)
 //  Delay(0x300);
 //  LCD_Clear(BLACK);
 //  LCD_SetTextColor(BLUE);
+  DWT_Init();
 
   while(1)
   {

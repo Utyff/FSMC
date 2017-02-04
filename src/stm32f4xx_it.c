@@ -160,7 +160,7 @@ void TIM4_IRQHandler(void)
 void TIM7_IRQHandler()
 {
   TIM7->SR &= ~TIM_SR_UIF; //—брасываем флаг прерывани€
-  GPIO_ToggleBits(GPIOD, GPIO_Pin_12); // Green toggle
+//  GPIO_ToggleBits(GPIOD, GPIO_Pin_12); // Green toggle
 /*  if( GreenStat )
        GPIO_SetBits(GPIOD, GPIO_Pin_12);
   else

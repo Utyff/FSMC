@@ -33,8 +33,8 @@ void DWT_Delay(uint32_t us) // microseconds
 //  ccc = delta;
 
   while ( DWT_GetDelta(t0) < delta ) {
-//	  ccc = DWT_GetDelta(t0);
-//	  cc2 = DWT_Get();
+//    ccc = DWT_GetDelta(t0);
+//    cc2 = DWT_Get();
   }
 }
 
@@ -47,15 +47,15 @@ void DWT_Delay_With_Action(uint32_t us, int (*cond)(), void (*act)()) // microse
 
   while ( DWT_GetDelta(t0) < delta )
   {
-	if( trigger==1 ) {
-	  if( cond()==0 )
+    if( trigger==1 ) {
+      if( cond()==0 )
         trigger=0;
-	}
-	else {
+    }
+    else {
       if( cond()==1 ) {
         trigger=1;
         act();
       }
-	}
+    }
   }
 }

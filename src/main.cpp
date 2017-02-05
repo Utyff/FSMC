@@ -9,6 +9,7 @@
 
 void init_TIM4();
 void init_TIM7();
+void init_LED();
 
 
 int main(void)
@@ -17,18 +18,18 @@ int main(void)
 //  RCC_GetClocksFreq(&RCC_Clocks);
 
   DWT_Init();
-  init_TIM7(); // Green LED using WIM-blink
-  init_TIM4(); // Orange LED interrupt blink
-//  Delay(0x300);
-//  LCD_Init();
-//  Delay(0x300);
-//  LCD_Clear(BLACK);
-//  LCD_SetTextColor(BLUE);
+//  init_TIM4(); // Orange LED timer PWM-blink
+//  init_TIM7(); // Green LED interrupt blink
+  init_LED();
+
+  Delay(0x300);
+  LCD_Init();
+  Delay(0x300);
 
   while(1)
   {
-    DWT_Delay(250000); // 4 times per second
-    GPIO_ToggleBits(GPIOD, GPIO_Pin_12); // Green toggle
+    DWT_Delay(250000); // 250ms / 4 times per second
+    GPIO_ToggleBits(GPIOD, GPIO_Pin_12); // Green LED toggle
   }
 }
 
@@ -61,7 +62,7 @@ void init_TIM4()
 
     To get TIM4 counter clock at 10 KHz, the prescaler is computed as follows:
        Prescaler = (TIM4CLK / TIM4 counter clock) - 1
-       Prescaler = ((SystemCoreClock /2) /10 KHz) - 1 // 8399 must be < 65000
+       Prescaler = ((SystemCoreClock /2) /10 KHz) - 1 // 8399 (must be less then 0xFFFF)
 
     To get TIM4 output clock at 1 Hz, the period (ARR)) is computed as follows:
        ARR = (TIM4 counter clock / TIM4 output clock) - 1
@@ -88,12 +89,11 @@ void init_TIM4()
   PrescalerValue = (uint16_t) ((SystemCoreClock /2) / 10000) - 1; // 8399
 
   /* Time base configuration */
-  TIM_TimeBaseStructure.TIM_Period = 9999;
+  TIM_TimeBaseStructure.TIM_Period = 9999; // TODO why 10 000? Must be 100 000
   TIM_TimeBaseStructure.TIM_Prescaler = PrescalerValue;
   TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;
   TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
   TIM_TimeBaseStructure.TIM_RepetitionCounter = 0;
-
   TIM_TimeBaseInit(TIM4, &TIM_TimeBaseStructure);
 
   /* TIM4 enable counter */
@@ -114,14 +114,17 @@ void init_TIM7()
 {
   //------------------Инициализация TIM7------------------
   RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM7,ENABLE);
-  //По умолчанию частота шины 24 МГц при использовании кварца 8 МГц
+  //По умолчанию частота шины 24 МГц при использовании кварца 8 МГц ????
   TIM7->PSC = 24000 - 1;      //Настройка делителя на 1000 "тиков" в секунду
   TIM7->ARR = 500;            //Отработка прерывания раз в секунду
   TIM7->DIER |= TIM_DIER_UIE; //Разрешения прерывание от таймера
   TIM7->CR1 |= TIM_CR1_CEN;   //Запуск таймера
-  NVIC_EnableIRQ(TIM7_IRQn);  //Разрешение TIM6_DAC_IRQn прерывания
+  NVIC_EnableIRQ(TIM7_IRQn);  //Разрешение TIM7_IRQn прерывания
   //------------------------------------------------------
+}
 
+void init_LED() // init GPIO PD12 for Green LED
+{
   //------------------Инициализация портов светодиодов------------------
   GPIO_InitTypeDef GPIO_InitStructure;                     //Структура содержащая настройки порта
   RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE);    //Включаем тактирование порта D

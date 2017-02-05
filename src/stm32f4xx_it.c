@@ -155,14 +155,13 @@ void TIM4_IRQHandler(void)
   OraStat = !OraStat;
 } //*/
 
-int GreenStat = 1;
+//int GreenStat = 1;
 // Обработчик прерывания TIM7
 void TIM7_IRQHandler()
 {
   TIM7->SR &= ~TIM_SR_UIF; //Сбрасываем флаг прерывания
-//  GPIO_ToggleBits(GPIOD, GPIO_Pin_12);  // Green toggle
-
-  if( GreenStat )
+//  GPIO_ToggleBits(GPIOD, GPIO_Pin_12); // Green toggle
+/*  if( GreenStat )
        GPIO_SetBits(GPIOD, GPIO_Pin_12);
   else
        GPIO_ResetBits(GPIOD, GPIO_Pin_12);

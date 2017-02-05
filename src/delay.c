@@ -10,7 +10,7 @@ void Delay(__IO uint32_t nTime)
 
   while(TimingDelay != 0)
   {
-	  for(int i=0; i<1000;  i++){i=i;}
+	  for(int i=0; i<1000; i++){i=i;}
 	  TimingDelay --;
   }
 }

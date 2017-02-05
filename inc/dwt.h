@@ -1,5 +1,5 @@
 #ifndef __DWT_H
-#define	__DWT_H
+#define __DWT_H
 
 #include "stm32f4xx.h"
 

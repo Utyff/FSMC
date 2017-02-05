@@ -7,8 +7,8 @@
 #include "delay.h"
 #include "SSD1289.h"
 
-void init_TIM7();
 void init_TIM4();
+void init_TIM7();
 
 
 int main(void)
@@ -16,20 +16,19 @@ int main(void)
 //  RCC_ClocksTypeDef RCC_Clocks;
 //  RCC_GetClocksFreq(&RCC_Clocks);
 
-  init_TIM4(); // using LED WIM-blink
-  init_TIM7(); // interrupt LED blink
-
+  DWT_Init();
+  init_TIM7(); // Green LED using WIM-blink
+  init_TIM4(); // Orange LED interrupt blink
 //  Delay(0x300);
 //  LCD_Init();
 //  Delay(0x300);
 //  LCD_Clear(BLACK);
 //  LCD_SetTextColor(BLUE);
-  DWT_Init();
 
   while(1)
   {
-    //GPIO_ToggleBits(GPIOD, GPIO_Pin_12);
-    DWT_Delay(10000);  // Green toggle
+    DWT_Delay(250000); // 4 times per second
+    GPIO_ToggleBits(GPIOD, GPIO_Pin_12); // Green toggle
   }
 }
 
@@ -48,7 +47,7 @@ void init_TIM4()
   GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF;
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
   GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-  GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
+  GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_DOWN; //NOPULL;
   GPIO_Init(GPIOD, &GPIO_InitStructure);
 
   /* -----------------------------------------------------------------------
@@ -126,8 +125,11 @@ void init_TIM7()
   //------------------Инициализация портов светодиодов------------------
   GPIO_InitTypeDef GPIO_InitStructure;                     //Структура содержащая настройки порта
   RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE);    //Включаем тактирование порта D
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_12 | GPIO_Pin_13; //Выбираем нужные выводы | GPIO_Pin_14| GPIO_Pin_15
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_12;               //Выбираем нужные выводы | GPIO_Pin_13 | GPIO_Pin_14| GPIO_Pin_15
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;            //Включаем режим выхода
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
+  GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+  GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_DOWN; //NOPULL;
   GPIO_Init(GPIOD, &GPIO_InitStructure);                   //вызов функции инициализации
   //--------------------------------------------------------------------
 }

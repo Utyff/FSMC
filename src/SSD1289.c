@@ -202,7 +202,6 @@ uint16_t DeviceCode;
 
 void LCD_Init_kumle() //_kumle
 {
-
   LCD_GPIO_Conf();
   Delay(3000);
   LCD_FSMCConfig();

@@ -24,17 +24,17 @@ void DWT_Init()
   }
 }
 
-volatile uint32_t ccc, cc2;
+//volatile uint32_t ccc, cc2;
 
 void DWT_Delay(uint32_t us) // microseconds
 {
   uint32_t t0 = DWT_Get();
   uint32_t delta = us * (SystemCoreClock/1000000);
-  ccc = delta;
+//  ccc = delta;
 
   while ( DWT_GetDelta(t0) < delta ) {
-	  ccc = DWT_GetDelta(t0);
-	  cc2 = DWT_Get();
+//	  ccc = DWT_GetDelta(t0);
+//	  cc2 = DWT_Get();
   }
 }
 

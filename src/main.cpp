@@ -5,14 +5,14 @@
 #include "stm32f4xx_tim.h"
 
 #include "delay.h"
-#include "SSD1289.h"
+#include "lcd.h"
 
 void init_TIM4();
 void init_TIM7();
 void init_LED();
 
 
-int main(void)
+int main()
 {
 //  RCC_ClocksTypeDef RCC_Clocks;
 //  RCC_GetClocksFreq(&RCC_Clocks);
@@ -22,14 +22,21 @@ int main(void)
 //  init_TIM7(); // Green LED interrupt blink
   init_LED();
 
-  Delay(0x300);
   LCD_Init();
-  Delay(0x300);
+
+  u16 clrs[]={BLUE,RED,GREEN,YELLOW,LGRAY,MAGENTA,BROWN,BLACK};
+  int i=0;
 
   while(1)
   {
     DWT_Delay(250000); // 250ms / 4 times per second
-    GPIO_ToggleBits(GPIOD, GPIO_Pin_12); // Green LED toggle
+    GPIO_ToggleBits(GPIOA, GPIO_Pin_6); // Green LED toggle
+
+    LCD_Clear(clrs[i]);
+    if(++i>7) i=0;
+    LCD_Draw_Circle(150,120,90);
+    POINT_COLOR=BLUE;
+    LCD_DrawRectangle(20,50,190,220);
   }
 }
 
@@ -127,12 +134,12 @@ void init_LED() // init GPIO PD12 for Green LED
 {
   //------------------Инициализация портов светодиодов------------------
   GPIO_InitTypeDef GPIO_InitStructure;                     //Структура содержащая настройки порта
-  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE);    //Включаем тактирование порта D
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_12;               //Выбираем нужные выводы | GPIO_Pin_13 | GPIO_Pin_14| GPIO_Pin_15
+  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);    //Включаем тактирование порта D
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_6;               //Выбираем нужные выводы | GPIO_Pin_13 | GPIO_Pin_14| GPIO_Pin_15
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;            //Включаем режим выхода
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
   GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
   GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_DOWN; //NOPULL;
-  GPIO_Init(GPIOD, &GPIO_InitStructure);                   //вызов функции инициализации
+  GPIO_Init(GPIOA, &GPIO_InitStructure);                   //вызов функции инициализации
   //--------------------------------------------------------------------
 }

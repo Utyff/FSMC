@@ -10,6 +10,7 @@
 void DWT_Init();
 void DWT_Delay(uint32_t us); // microseconds
 void DWT_Delay_With_Action(uint32_t us, int (*cond)(), void (*act)()); // microseconds
+void DWT_Delay_ms(uint32_t ms);  // milliseconds
 
 #ifdef __cplusplus
 }

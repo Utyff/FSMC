@@ -3,16 +3,18 @@
 
 static __IO uint32_t TimingDelay;
 
+void delay_us(uint32_t us) {
+  DWT_Delay(us);
+}
+
+void delay_ms(uint32_t ms) {
+  DWT_Delay_ms(ms);
+}
+
 
 void Delay(__IO uint32_t nTime)
 {
-  TimingDelay = nTime;
-
-  while(TimingDelay != 0)
-  {
-	  for(int i=0; i<1000; i++){i=i;}
-	  TimingDelay --;
-  }
+  DWT_Delay_ms(nTime);
 }
 
 

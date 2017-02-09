@@ -2,13 +2,11 @@
 
 
 
-inline uint32_t DWT_Get()
-{
-  return DWT->CYCCNT;
-}
+#define DWT_Get() DWT->CYCCNT
 
 
-inline uint32_t DWT_GetDelta(uint32_t t0)
+
+uint32_t DWT_GetDelta(uint32_t t0)
 {
   return DWT->CYCCNT - t0;
 }
@@ -30,12 +28,14 @@ void DWT_Delay(uint32_t us) // microseconds
 {
   uint32_t t0 = DWT_Get();
   uint32_t delta = us * (SystemCoreClock/1000000);
-//  ccc = delta;
 
-  while ( DWT_GetDelta(t0) < delta ) {
-//    ccc = DWT_GetDelta(t0);
-//    cc2 = DWT_Get();
-  }
+  while ( DWT_GetDelta(t0) < delta )
+  {}
+}
+
+inline void DWT_Delay_ms(uint32_t ms)  // milliseconds
+{
+  DWT_Delay(ms*1000);
 }
 
 

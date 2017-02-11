@@ -34,9 +34,17 @@ int main()
 
     LCD_Clear(clrs[i]);
     if(++i>7) i=0;
-    LCD_Draw_Circle(150,120,90);
+    POINT_COLOR=YELLOW;
+    LCD_Draw_Circle(20,20,15);
     POINT_COLOR=BLUE;
-    LCD_DrawRectangle(20,50,190,220);
+    LCD_Draw_Circle(300,20,15);
+    POINT_COLOR=GREEN;
+    LCD_Draw_Circle(300,220,15);
+    POINT_COLOR=RED;
+    LCD_Draw_Circle(20,220,15);
+
+    LCD_ShowChar(30,30,'A',12,1);
+    LCD_ShowChar(50,30,'B',12,0);
   }
 }
 

@@ -1,8 +1,5 @@
 #include "stm32f4xx_conf.h"
 #include "stm32f4xx.h"
-#include "stm32f4xx_gpio.h"
-#include "stm32f4xx_rcc.h"
-#include "stm32f4xx_tim.h"
 
 #include "delay.h"
 #include "lcd.h"
@@ -10,7 +7,9 @@
 void init_TIM4();
 void init_TIM7();
 void init_LED();
-
+extern "C" {
+void init_ADC();
+}
 
 int main()
 {
@@ -26,6 +25,8 @@ int main()
 
   u16 clrs[]={BLUE,RED,GREEN,YELLOW,LGRAY,MAGENTA,BROWN,BLACK};
   int i=0;
+
+  init_ADC();
 
   while(1)
   {

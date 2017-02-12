@@ -7,6 +7,7 @@
 void init_TIM4();
 void init_TIM7();
 void init_LED();
+
 extern "C" {
 void init_ADC();
 }

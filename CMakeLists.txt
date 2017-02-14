@@ -3,6 +3,12 @@ project(FSMC)
 
 set(CMAKE_CXX_STANDARD 11)
 
+include_directories(
+        inc
+        Libraries/CMSIS/Include
+        Libraries/Device/STM32F4xx/Include
+        Libraries/STM32F4xx_StdPeriph_Driver/inc)
+
 set(SOURCE_FILES
         Libraries/STM32F4xx_StdPeriph_Driver/src/misc.c
         Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_adc.c
@@ -38,7 +44,6 @@ set(SOURCE_FILES
         src/AsciiLib.c
         src/delay.c
         src/main.cpp
-        src/SSD1289.c
         src/stm32f4xx_it.c
         src/system_stm32f4xx.c)
 

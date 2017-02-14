@@ -58,10 +58,10 @@ GPIO_InitTypeDef      GPIO_InitStructure;
     // ADC Common configuration *************************************************
 //  ADC_CommonInitStructure.ADC_Mode = ADC_TripleMode_Interl;
     ADC_CommonInitStructure.ADC_Mode = ADC_Mode_Independent;
-    ADC_CommonInitStructure.ADC_TwoSamplingDelay = ADC_TwoSamplingDelay_20Cycles;
+    ADC_CommonInitStructure.ADC_TwoSamplingDelay = ADC_TwoSamplingDelay_5Cycles;
     ADC_CommonInitStructure.ADC_DMAAccessMode = ADC_DMAAccessMode_Disabled;
 //    ADC_CommonInitStructure.ADC_DMAAccessMode = ADC_DMAAccessMode_2;
-    ADC_CommonInitStructure.ADC_Prescaler = ADC_Prescaler_Div2;
+    ADC_CommonInitStructure.ADC_Prescaler = ADC_Prescaler_Div4; // APB2 = 84MZh | ADCCLK max = 30 | ADCCLK = 84/4 = 21
     ADC_CommonInit(&ADC_CommonInitStructure);
 
     ADC_InitStructure.ADC_Resolution = ADC_Resolution_8b;
@@ -76,7 +76,7 @@ GPIO_InitTypeDef      GPIO_InitStructure;
     ADC_RegularChannelConfig(ADC1, ADC_Channel_12, 1, ADC_SampleTime_112Cycles);
     // Enable ADC1 DMA
     ADC_DMACmd(ADC1, ENABLE);
-//    ADC_DMARequestAfterLastTransferCmd(ADC1, ENABLE);
+    ADC_DMARequestAfterLastTransferCmd(ADC1, ENABLE);
 
     // ADC2 regular channel 12 configuration ************************************
 //  ADC_Init(ADC2, &ADC_InitStructure);

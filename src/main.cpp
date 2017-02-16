@@ -145,7 +145,7 @@ void init_LED() // init GPIO PD12 for Green LED
   //------------------Инициализация портов светодиодов------------------
   GPIO_InitTypeDef GPIO_InitStructure;                     //Структура содержащая настройки порта
   RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);    //Включаем тактирование порта D
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_6;               //Выбираем нужные выводы | GPIO_Pin_13 | GPIO_Pin_14| GPIO_Pin_15
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_6;                //Выбираем нужные выводы | GPIO_Pin_13 | GPIO_Pin_14| GPIO_Pin_15
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;            //Включаем режим выхода
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
   GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;

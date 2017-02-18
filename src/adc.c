@@ -2,26 +2,26 @@
 #include "stm32f4xx.h"
 
 #define ADC_CDR_ADDRESS    ((uint32_t)0x40012308)
-#define ADC1_DR_ADDRESS    ((uint32_t)0x4001204C)
+#define ADC1_DR_ADDRESS    ((uint32_t)0x4001204C) // &ADC1->DR
 #define SAMPLE_BUFFER_SIZE 2048
 
 __IO uint16_t SamplesBuffer[SAMPLE_BUFFER_SIZE];
 
 
-void init_ADC_GPIO()
+void init_ADC_GPIO()  // configure PC2 as ADC CH12
 {
-    GPIO_InitTypeDef      GPIO_InitStructure;
+  GPIO_InitTypeDef      GPIO_InitStructure;
 
-    // Enable peripheral clocks
-    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA2 | RCC_AHB1Periph_GPIOC, ENABLE);
-    RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1 | RCC_APB2Periph_ADC2 |
-                           RCC_APB2Periph_ADC3, ENABLE);
+  // Enable peripheral clocks
+  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA2 | RCC_AHB1Periph_GPIOC, ENABLE);
+  RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1 | RCC_APB2Periph_ADC2 |
+                         RCC_APB2Periph_ADC3, ENABLE);
 
-    // Configure ADC Channel 12 pin as analog input
-    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2;
-    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AN;
-    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
-    GPIO_Init(GPIOC, &GPIO_InitStructure);
+  // Configure ADC Channel 12 pin as analog input
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AN;
+  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+  GPIO_Init(GPIOC, &GPIO_InitStructure);
 }
 
 void init_ADC2()
@@ -76,10 +76,12 @@ void sampleCircle()
   }
 }
 
-void init_ADC()
+void init_ADC3() // software circle
 {
   ADC_InitTypeDef ADC_init_structure; //Structure for adc confguration
+  ADC_CommonInitTypeDef ADC_CommonInitStructure;
   GPIO_InitTypeDef GPIO_initStructre; //Structure for analog input pin
+
   //Clock configuration
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1,ENABLE); //The ADC1 is connected the APB2 peripheral bus thus we will use its clock source
   RCC_AHB1PeriphClockCmd(RCC_AHB1ENR_GPIOCEN,ENABLE); //Clock for the ADC port!! Do not forget about this one ;)
@@ -89,6 +91,15 @@ void init_ADC()
   GPIO_initStructre.GPIO_Mode = GPIO_Mode_AN; //The PC2 pin is configured in analog mode
   GPIO_initStructre.GPIO_PuPd = GPIO_PuPd_NOPULL; //We don't need any pull up or pull down
   GPIO_Init(GPIOC,&GPIO_initStructre);        //Affecting the port with the initialization structure configuration
+
+  // ADC Common configuration *************************************************
+//  ADC_CommonInitStructure.ADC_Mode = ADC_TripleMode_Interl;
+  ADC_CommonInitStructure.ADC_Mode = ADC_Mode_Independent;
+  ADC_CommonInitStructure.ADC_TwoSamplingDelay = ADC_TwoSamplingDelay_5Cycles;
+  ADC_CommonInitStructure.ADC_DMAAccessMode = ADC_DMAAccessMode_Disabled;
+//    ADC_CommonInitStructure.ADC_DMAAccessMode = ADC_DMAAccessMode_2;
+  ADC_CommonInitStructure.ADC_Prescaler = ADC_Prescaler_Div4; // APB2 = 84MZh | ADCCLK max = 30 | ADCCLK = 84/4 = 21
+  ADC_CommonInit(&ADC_CommonInitStructure);
 
   //ADC structure configuration
   ADC_DeInit();
@@ -103,9 +114,80 @@ void init_ADC()
   //Enable ADC conversion
   ADC_Cmd(ADC1,ENABLE);
   //Select the channel to be read from
-  ADC_RegularChannelConfig(ADC1,ADC_Channel_12,1,ADC_SampleTime_480Cycles);
+  ADC_RegularChannelConfig(ADC1,ADC_Channel_12,1,ADC_SampleTime_3Cycles);
 
   sampleCircle();
+}
+
+
+static void dma() // http://ziblog.ru
+{
+  DMA_InitTypeDef DMA_InitStructure;
+
+  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA2, ENABLE);
+
+  // DMA2 Stream0 channel0 configuration
+  DMA_DeInit(DMA2_Stream0);
+  DMA_InitStructure.DMA_Channel = DMA_Channel_0;
+  DMA_InitStructure.DMA_PeripheralBaseAddr = (uint32_t) &ADC1->DR;
+  DMA_InitStructure.DMA_Memory0BaseAddr = (uint32_t) &SamplesBuffer;
+  DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralToMemory;
+  DMA_InitStructure.DMA_BufferSize = SAMPLE_BUFFER_SIZE;
+  DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
+  DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;
+  DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_HalfWord;
+  DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_HalfWord;
+  DMA_InitStructure.DMA_Mode = DMA_Mode_Circular;
+  DMA_InitStructure.DMA_Priority = DMA_Priority_High;
+  DMA_InitStructure.DMA_FIFOMode = DMA_FIFOMode_Disable;
+  DMA_InitStructure.DMA_FIFOThreshold = DMA_FIFOThreshold_HalfFull;
+  DMA_InitStructure.DMA_MemoryBurst = DMA_MemoryBurst_Single;
+  DMA_InitStructure.DMA_PeripheralBurst = DMA_PeripheralBurst_Single;
+  DMA_Init(DMA2_Stream0, &DMA_InitStructure);
+
+  // DMA2_Stream0 enable
+  DMA_Cmd(DMA2_Stream0, ENABLE);
+}
+
+void init_ADC() // DMA mode  http://ziblog.ru
+{
+  init_ADC_GPIO();
+  dma();
+
+  ADC_InitTypeDef ADC_InitStructure;
+  ADC_CommonInitTypeDef ADC_CommonInitStructure;
+
+  // разрешаем тактирование
+  RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1, ENABLE);
+
+  // базовая настройка
+  ADC_CommonInitStructure.ADC_Mode = ADC_Mode_Independent;
+  ADC_CommonInitStructure.ADC_Prescaler = ADC_Prescaler_Div4;
+  ADC_CommonInitStructure.ADC_DMAAccessMode = ADC_DMAAccessMode_Disabled;
+  ADC_CommonInitStructure.ADC_TwoSamplingDelay = ADC_TwoSamplingDelay_5Cycles;
+  ADC_CommonInit(&ADC_CommonInitStructure);
+
+  ADC_InitStructure.ADC_ScanConvMode = ENABLE;
+  ADC_InitStructure.ADC_ContinuousConvMode = ENABLE;
+  ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Left;
+  ADC_InitStructure.ADC_ExternalTrigConv = 0;
+  ADC_InitStructure.ADC_ExternalTrigConvEdge = ADC_ExternalTrigConvEdge_None;
+  ADC_InitStructure.ADC_NbrOfConversion = 1;
+  ADC_InitStructure.ADC_Resolution = ADC_Resolution_12b;
+  ADC_Init(ADC1, &ADC_InitStructure);
+
+  // выбор канала
+  ADC_RegularChannelConfig(ADC1, ADC_Channel_12, 1, ADC_SampleTime_3Cycles);
+
+  ADC_DiscModeCmd(ADC1, DISABLE);
+  ADC_EOCOnEachRegularChannelCmd(ADC1, ENABLE);
+  ADC_DMARequestAfterLastTransferCmd(ADC1, ENABLE);
+  ADC_DMACmd(ADC1, ENABLE);
+
+  // включаем АЦП
+  ADC_Cmd(ADC1, ENABLE);
+  // Start ADC1 Software Conversion
+  ADC_SoftwareStartConv(ADC1);
 }
 
 void init_ADC_DMA()
@@ -119,70 +201,71 @@ void init_ADC_DMA()
   /******************************************************************************/
   init_ADC_GPIO();
 
-    // DMA2 Stream0 channel0 configuration
-    DMA_InitStructure.DMA_Channel = DMA_Channel_0;
-    DMA_InitStructure.DMA_PeripheralBaseAddr = (uint32_t)ADC_CDR_ADDRESS;// ADC1_DR_ADDRESS;
-    DMA_InitStructure.DMA_Memory0BaseAddr = (uint32_t)&SamplesBuffer;
-    DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralToMemory;
-    DMA_InitStructure.DMA_BufferSize = SAMPLE_BUFFER_SIZE;
-    DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
-    DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;
-    DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_HalfWord;
-    DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_HalfWord;
-    DMA_InitStructure.DMA_Mode = DMA_Mode_Circular;
-    DMA_InitStructure.DMA_Priority = DMA_Priority_High;
-    DMA_InitStructure.DMA_FIFOMode = DMA_FIFOMode_Disable;
-    DMA_InitStructure.DMA_FIFOThreshold = DMA_FIFOThreshold_HalfFull;
-    DMA_InitStructure.DMA_MemoryBurst = DMA_MemoryBurst_Single;
-    DMA_InitStructure.DMA_PeripheralBurst = DMA_PeripheralBurst_Single;
-    DMA_Init(DMA2_Stream0, &DMA_InitStructure);
+  // DMA2 Stream0 channel0 configuration
+  DMA_DeInit(DMA2_Stream0);
+  DMA_InitStructure.DMA_Channel = DMA_Channel_0;
+  DMA_InitStructure.DMA_PeripheralBaseAddr = (uint32_t)ADC_CDR_ADDRESS;// ADC1_DR_ADDRESS;
+  DMA_InitStructure.DMA_Memory0BaseAddr = (uint32_t)&SamplesBuffer;
+  DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralToMemory;
+  DMA_InitStructure.DMA_BufferSize = SAMPLE_BUFFER_SIZE;
+  DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
+  DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;
+  DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_HalfWord;
+  DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_HalfWord;
+  DMA_InitStructure.DMA_Mode = DMA_Mode_Circular;
+  DMA_InitStructure.DMA_Priority = DMA_Priority_High;
+  DMA_InitStructure.DMA_FIFOMode = DMA_FIFOMode_Disable;
+  DMA_InitStructure.DMA_FIFOThreshold = DMA_FIFOThreshold_HalfFull;
+  DMA_InitStructure.DMA_MemoryBurst = DMA_MemoryBurst_Single;
+  DMA_InitStructure.DMA_PeripheralBurst = DMA_PeripheralBurst_Single;
+  DMA_Init(DMA2_Stream0, &DMA_InitStructure);
 
-    // DMA2_Stream0 enable
-    DMA_Cmd(DMA2_Stream0, ENABLE);
+  // DMA2_Stream0 enable
+  DMA_Cmd(DMA2_Stream0, ENABLE);
 
-    /******************************************************************************/
-    /*  ADCs configuration: triple interleaved with 5cycles delay to reach 6Msps  */
-    /******************************************************************************/
+  /******************************************************************************/
+  /*  ADCs configuration: triple interleaved with 5cycles delay to reach 6Msps  */
+  /******************************************************************************/
 
-    // ADC Common configuration *************************************************
+  // ADC Common configuration *************************************************
 //  ADC_CommonInitStructure.ADC_Mode = ADC_TripleMode_Interl;
-    ADC_CommonInitStructure.ADC_Mode = ADC_Mode_Independent;
-    ADC_CommonInitStructure.ADC_TwoSamplingDelay = ADC_TwoSamplingDelay_20Cycles;
-    ADC_CommonInitStructure.ADC_DMAAccessMode = ADC_DMAAccessMode_Disabled;
-//    ADC_CommonInitStructure.ADC_DMAAccessMode = ADC_DMAAccessMode_2;
-    ADC_CommonInitStructure.ADC_Prescaler = ADC_Prescaler_Div4; // APB2 = 84MZh | ADCCLK max = 30 | ADCCLK = 84/4 = 21
-    ADC_CommonInit(&ADC_CommonInitStructure);
+  ADC_CommonInitStructure.ADC_Mode = ADC_Mode_Independent;
+  ADC_CommonInitStructure.ADC_TwoSamplingDelay = ADC_TwoSamplingDelay_20Cycles;
+  ADC_CommonInitStructure.ADC_DMAAccessMode = ADC_DMAAccessMode_Disabled;
+//  ADC_CommonInitStructure.ADC_DMAAccessMode = ADC_DMAAccessMode_2;
+  ADC_CommonInitStructure.ADC_Prescaler = ADC_Prescaler_Div4; // APB2 = 84MZh | ADCCLK max = 30 | ADCCLK = 84/4 = 21
+  ADC_CommonInit(&ADC_CommonInitStructure);
 
-    ADC_InitStructure.ADC_Resolution = ADC_Resolution_12b;
-    ADC_InitStructure.ADC_ScanConvMode = DISABLE;
-    ADC_InitStructure.ADC_ContinuousConvMode = ENABLE;
-    ADC_InitStructure.ADC_ExternalTrigConvEdge = ADC_ExternalTrigConvEdge_None;
-    ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;
-    ADC_InitStructure.ADC_NbrOfConversion = 1;
+  ADC_InitStructure.ADC_Resolution = ADC_Resolution_12b;
+  ADC_InitStructure.ADC_ScanConvMode = DISABLE;
+  ADC_InitStructure.ADC_ContinuousConvMode = ENABLE;
+  ADC_InitStructure.ADC_ExternalTrigConvEdge = ADC_ExternalTrigConvEdge_None;
+  ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;
+  ADC_InitStructure.ADC_NbrOfConversion = 1;
 
-    // ADC1 regular channel 12 configuration ************************************
-    ADC_Init(ADC1, &ADC_InitStructure);
-    ADC_RegularChannelConfig(ADC1, ADC_Channel_12, 1, ADC_SampleTime_112Cycles);
-    // Enable ADC1 DMA
-    ADC_DMACmd(ADC1, ENABLE);
-//    ADC_DMARequestAfterLastTransferCmd(ADC1, ENABLE);
+  // ADC1 regular channel 12 configuration ************************************
+  ADC_Init(ADC1, &ADC_InitStructure);
+  ADC_RegularChannelConfig(ADC1, ADC_Channel_12, 1, ADC_SampleTime_112Cycles);
+  // Enable ADC1 DMA
+  ADC_DMACmd(ADC1, ENABLE);
+//  ADC_DMARequestAfterLastTransferCmd(ADC1, ENABLE);
 
-    // ADC2 regular channel 12 configuration ************************************
+  // ADC2 regular channel 12 configuration ************************************
 //  ADC_Init(ADC2, &ADC_InitStructure);
 //  ADC_RegularChannelConfig(ADC2, ADC_Channel_12, 1, ADC_SampleTime_112Cycles);
 
-    // ADC3 regular channel 12 configuration ************************************
+  // ADC3 regular channel 12 configuration ************************************
 //  ADC_Init(ADC3, &ADC_InitStructure);
 //  ADC_RegularChannelConfig(ADC3, ADC_Channel_12, 1, ADC_SampleTime_112Cycles);
 
-    // Enable DMA request after last transfer (multi-ADC mode) ******************
+  // Enable DMA request after last transfer (multi-ADC mode) ******************
 //  ADC_MultiModeDMARequestAfterLastTransferCmd(ENABLE);
 
-    // Enable ADC1, 2, 3 ********************************************************
-    ADC_Cmd(ADC1, ENABLE);
+  // Enable ADC1, 2, 3 ********************************************************
+  ADC_Cmd(ADC1, ENABLE);
 //  ADC_Cmd(ADC2, ENABLE);
 //  ADC_Cmd(ADC3, ENABLE);
 
-    // Start ADC1 Software Conversion
-    ADC_SoftwareStartConv(ADC1);
+  // Start ADC1 Software Conversion
+  ADC_SoftwareStartConv(ADC1);
 }

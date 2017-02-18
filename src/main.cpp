@@ -27,6 +27,8 @@ int main()
   u16 clrs[]={BLUE,RED,GREEN,YELLOW,LGRAY,MAGENTA,BROWN,BLACK};
   int i=0;
 
+//  FLASH->ACR &= (~FLASH_ACR_PRFTEN);
+  FLASH_PrefetchBufferCmd(DISABLE);
   init_ADC();
 
   while(1)
@@ -103,7 +105,7 @@ void init_TIM4()
   RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4, ENABLE);
 
   /* Compute the prescaler value */
-  PrescalerValue = (uint16_t) ((SystemCoreClock /2) / 10000) - 1; // 8399
+  PrescalerValue = (uint16_t) (((SystemCoreClock /2) / 10000) - 1); // 8399
 
   /* Time base configuration */
   TIM_TimeBaseStructure.TIM_Period = 9999; // TODO why 10 000? Must be 100 000

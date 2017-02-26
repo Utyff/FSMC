@@ -13,6 +13,7 @@
 void init_TIM4();
 void init_TIM7();
 void init_LED();
+void init_AD9833();
 
 extern "C" {
 void init_ADC();
@@ -26,6 +27,7 @@ int main()
   DWT_Init();
 //  init_TIM4(); // Orange LED timer PWM-blink
 //  init_TIM7(); // Green LED interrupt blink
+  init_AD9833();
   init_LED();
 
   LCD_Init();

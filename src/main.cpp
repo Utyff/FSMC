@@ -13,11 +13,12 @@
 void init_TIM4();
 void init_TIM7();
 void init_LED();
-void init_AD9833();
 
 extern "C" {
-void init_ADC();
+  void init_ADC();
+  void init_AD9833();
 }
+
 
 int main()
 {
@@ -36,7 +37,7 @@ int main()
   int i=0;
 
 //  FLASH->ACR &= (~FLASH_ACR_PRFTEN);
-//  FLASH_PrefetchBufferCmd(DISABLE);
+  FLASH_PrefetchBufferCmd(DISABLE);
   init_ADC();
 
   while(1)
@@ -57,8 +58,14 @@ int main()
 
     LCD_ShowChar(30,30,'A',12,1);
     LCD_ShowChar(50,30,'B',12,0);
+    LCD_ShowNum (30,50, 79, 3,12);
+    LCD_ShowNum (90,50, 12345, 3,12);
+    LCD_ShowNum (30,70, 79, 5,12);
+    LCD_ShowxNum(30,90, 7989, 3,12, 9);
+    LCD_ShowString(30,110,90,30, 12,"STrinG");
   }
 }
+
 
 void init_TIM4()
 {
@@ -149,6 +156,7 @@ void init_TIM7()
   NVIC_EnableIRQ(TIM7_IRQn);  //Разрешение TIM7_IRQn прерывания
   //------------------------------------------------------
 }
+
 
 void init_LED() // init GPIO PD12 for Green LED
 {

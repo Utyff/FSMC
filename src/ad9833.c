@@ -4,8 +4,8 @@
 #include "stm32f4xx_spi.h"
 
 
-#define AD_F_MCLK 		25000000
-#define AD_2POW28		268435456
+#define AD_F_MCLK	25000000
+#define AD_2POW28	268435456
 
 #define AD_FREQ_CALC(freq) (uint32_t)(((double)AD_2POW28/(double)AD_F_MCLK*freq)*4)
 #define AD_PHASE_CALC(phase_deg) (uint16_t)((512*phase_deg)/45)
@@ -60,12 +60,12 @@ static void delay9833(__IO uint32_t nCount)
 
 static void AD9833_word(uint16_t data)
 {
-	SPI1->DR = (data>>8); // High 8 bits, MSB first
+	SPI1->DR = (data>>8);        // High 8 bits, MSB first
 	while(!(SPI1->SR & SPI_I2S_FLAG_TXE));
-	while( SPI1->SR & SPI_I2S_FLAG_BSY );
-	SPI1->DR = (uint8_t) data; // Low 8 bits
+	while(  SPI1->SR & SPI_I2S_FLAG_BSY );
+	SPI1->DR = (uint8_t) data;   // Low 8 bits
 	while(!(SPI1->SR & SPI_I2S_FLAG_TXE));
-	while( SPI1->SR & SPI_I2S_FLAG_BSY );
+	while(  SPI1->SR & SPI_I2S_FLAG_BSY );
 }
 
 static void AD9833_write(uint16_t data)
@@ -201,11 +201,11 @@ void init_SPI1(void)
 	     * PA6 = MISO
 	     * PA7 = MOSI
 	     */
-	    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_7 | GPIO_Pin_5;
-	    GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AF;
+	    GPIO_InitStruct.GPIO_Pin   = GPIO_Pin_7 | GPIO_Pin_5;
+	    GPIO_InitStruct.GPIO_Mode  = GPIO_Mode_AF;
 	    GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;
 	    GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz;
-	    GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
+	    GPIO_InitStruct.GPIO_PuPd  = GPIO_PuPd_NOPULL;
 	    GPIO_Init(GPIOA, &GPIO_InitStruct);
 
 	    // connect SPI1 pins to SPI alternate function
@@ -215,8 +215,8 @@ void init_SPI1(void)
 	    // enable clock for used IO pins
 	    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOE, ENABLE);
 
-	    /* Configure the chip select pin
-	       in this case we will use PE7 */
+	    // Configure the chip select pin
+	    // in this case we will use PE7
 	    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_7;
 	    GPIO_InitStruct.GPIO_Mode = GPIO_Mode_OUT;
 	    GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;
@@ -234,19 +234,19 @@ void init_SPI1(void)
 	     * CPHA = 0 --> data is sampled at the first edge
 	     */
 	    SPI_InitStruct.SPI_Direction = SPI_Direction_1Line_Tx;
-	    SPI_InitStruct.SPI_Mode = SPI_Mode_Master;     // transmit in master mode, NSS pin has to be always high
+	    SPI_InitStruct.SPI_Mode = SPI_Mode_Master;      // transmit in master mode, NSS pin has to be always high
 	    SPI_InitStruct.SPI_DataSize = SPI_DataSize_16b; // one packet of data is 8 bits wide
 	    SPI_InitStruct.SPI_CPOL = SPI_CPOL_High;        // clock is low when idle
-	    SPI_InitStruct.SPI_CPHA = SPI_CPHA_1Edge;      // data sampled at first edge
+	    SPI_InitStruct.SPI_CPHA = SPI_CPHA_1Edge;       // data sampled at first edge
 	    SPI_InitStruct.SPI_NSS = SPI_NSS_Soft | SPI_NSSInternalSoft_Set;
 	    SPI_InitStruct.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_4; // SPI frequency is APB2 frequency / 4
-	    SPI_InitStruct.SPI_FirstBit = SPI_FirstBit_MSB;// data is transmitted MSB first
+	    SPI_InitStruct.SPI_FirstBit = SPI_FirstBit_MSB; // data is transmitted MSB first
 	    SPI_Init(SPI1, &SPI_InitStruct);
 
 	    SPI_Cmd(SPI1, ENABLE); // enable SPI1
 	}
 
-int init_AD9833(void) {
+void init_AD9833() {
 
     init_SPI1();
 

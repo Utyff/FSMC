@@ -5,6 +5,18 @@
 #define DWT_Get() DWT->CYCCNT
 
 
+uint32_t DWT_Get_Current_Time()
+{
+  return DWT_Get();
+}
+
+uint32_t DWT_Elapsed_Time(uint32_t t0)
+{
+  if (DWT->CYCCNT>t0)
+    return DWT->CYCCNT-t0;
+
+  return (((uint64_t)0x100000000)+DWT->CYCCNT)-t0;
+}
 
 uint32_t DWT_GetDelta(uint32_t t0)
 {
@@ -22,7 +34,6 @@ void DWT_Init()
   }
 }
 
-//volatile uint32_t ccc, cc2;
 
 void DWT_Delay(uint32_t us) // microseconds
 {
@@ -32,6 +43,7 @@ void DWT_Delay(uint32_t us) // microseconds
   while ( DWT_GetDelta(t0) < delta )
   {}
 }
+
 
 inline void DWT_Delay_ms(uint32_t ms)  // milliseconds
 {

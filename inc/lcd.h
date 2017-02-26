@@ -153,7 +153,7 @@ void LCD_Color_Fill(u16 sx,u16 sy,u16 ex,u16 ey,u16 *color);				// fill in the s
 void LCD_ShowChar(u16 x,u16 y,u8 num,u8 size,u8 mode);						// display a character
 void LCD_ShowNum(u16 x,u16 y,u32 num,u8 len,u8 size);  						// display a number
 void LCD_ShowxNum(u16 x,u16 y,u32 num,u8 len,u8 size,u8 mode);				// display numbers
-void LCD_ShowString(u16 x,u16 y,u16 width,u16 height,u8 size,u8 *p);		// display a string,12/16 font
+void LCD_ShowString(u16 x,u16 y,u16 width,u16 height,u8 size,const char *p);		// display a string,12/16 font
 
 void LCD_WriteReg(u16 LCD_Reg, u16 LCD_RegValue);
 u16 LCD_ReadReg(u16 LCD_Reg);

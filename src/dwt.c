@@ -5,22 +5,24 @@
 #define DWT_Get() DWT->CYCCNT
 
 
-uint32_t DWT_Get_Current_Time()
+uint32_t DWT_GetDelta(uint32_t t0)
+{
+  return DWT->CYCCNT - t0;
+}
+
+
+uint32_t DWT_Get_Current_Tick()
 {
   return DWT_Get();
 }
 
-uint32_t DWT_Elapsed_Time(uint32_t t0)
+
+uint32_t DWT_Elapsed_Tick(uint32_t t0)
 {
   if (DWT->CYCCNT>t0)
     return DWT->CYCCNT-t0;
 
-  return (((uint64_t)0x100000000)+DWT->CYCCNT)-t0;
-}
-
-uint32_t DWT_GetDelta(uint32_t t0)
-{
-  return DWT->CYCCNT - t0;
+  return (uint32_t)((((uint64_t)0x100000000)+DWT->CYCCNT)-t0);
 }
 
 

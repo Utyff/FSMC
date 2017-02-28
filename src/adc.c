@@ -7,8 +7,8 @@
 #define SAMPLE_BUFFER_SIZE 2048
 
 __IO uint16_t SamplesBuffer[SAMPLE_BUFFER_SIZE];
-static uint32_t startTick;  // time when start ADC buffer fill
-uint32_t elapsedTick;       // the last time buffer fill
+uint32_t ADCStartTick;  // time when start ADC buffer fill
+uint32_t ADCElapsedTick;       // the last time buffer fill
 
 
 static void init_ADC_GPIO()  // configure PC2 as ADC CH12
@@ -103,7 +103,7 @@ void init_ADC()  // DMA mode
   ADC_Cmd(ADC1, ENABLE);
   // Start ADC1 Software Conversion
   ADC_SoftwareStartConv(ADC1);
-  startTick = DWT_Get_Current_Tick();
+  ADCStartTick = DWT_Get_Current_Tick();
 }
 
 
@@ -125,6 +125,6 @@ void DMA2_Stream0_IRQHandler ( void )
   }
 
   // count time for one circle
-  elapsedTick = DWT_Elapsed_Tick(startTick);
-  startTick = DWT_Get_Current_Tick();
+  ADCElapsedTick = DWT_Elapsed_Tick(ADCStartTick);
+  ADCStartTick = DWT_Get_Current_Tick();
 }

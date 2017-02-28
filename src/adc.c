@@ -1,11 +1,14 @@
 #include "stm32f4xx_conf.h"
 #include "stm32f4xx.h"
+#include <dwt.h>
 
 //#define ADC_CDR_ADDRESS    ((uint32_t)0x40012308)
 //#define ADC1_DR_ADDRESS    ((uint32_t)0x4001204C) // &ADC1->DR
 #define SAMPLE_BUFFER_SIZE 2048
 
 __IO uint16_t SamplesBuffer[SAMPLE_BUFFER_SIZE];
+static uint32_t startTick;  // time when start ADC buffer fill
+uint32_t elapsedTick;       // the last time buffer fill
 
 
 static void init_ADC_GPIO()  // configure PC2 as ADC CH12
@@ -23,9 +26,10 @@ static void init_ADC_GPIO()  // configure PC2 as ADC CH12
 }
 
 
-static void dma() // http://ziblog.ru
+static void dma()  // with IRQ when buffer fill
 {
-  DMA_InitTypeDef DMA_InitStructure;
+  DMA_InitTypeDef   DMA_InitStructure;
+  NVIC_InitTypeDef  NVIC_InitStructure;
 
   RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA2, ENABLE);
 
@@ -48,11 +52,18 @@ static void dma() // http://ziblog.ru
   DMA_InitStructure.DMA_PeripheralBurst = DMA_PeripheralBurst_Single;
   DMA_Init(DMA2_Stream0, &DMA_InitStructure);
 
-  // DMA2_Stream0 enable
   DMA_Cmd(DMA2_Stream0, ENABLE);
+
+  // Enable the DMA Stream IRQ Channel
+  NVIC_InitStructure.NVIC_IRQChannel = DMA2_Stream0_IRQn;
+  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
+  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
+  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+  NVIC_Init ( &NVIC_InitStructure );
+  DMA_ITConfig ( DMA2_Stream0, DMA_IT_TC, ENABLE ); // DMA_IT_HT |  // IRQ when transfer complete and half transfer
 }
 
-void init_ADC() // DMA mode  http://ziblog.ru
+void init_ADC()  // DMA mode
 {
   init_ADC_GPIO();
   dma();
@@ -92,4 +103,28 @@ void init_ADC() // DMA mode  http://ziblog.ru
   ADC_Cmd(ADC1, ENABLE);
   // Start ADC1 Software Conversion
   ADC_SoftwareStartConv(ADC1);
+  startTick = DWT_Get_Current_Tick();
+}
+
+
+// dma2 stream 0 irq handler
+void DMA2_Stream0_IRQHandler ( void )
+{
+  // Test on DMA Stream Transfer Complete interrupt
+  if ( DMA_GetITStatus(DMA2_Stream0, DMA_IT_TCIF0) )
+  {
+    // Clear Stream0 Transfer Complete
+    DMA_ClearITPendingBit(DMA2_Stream0, DMA_IT_TCIF0);
+  }
+
+  // Test on DMA Stream HalfTransfer Complete interrupt
+  if ( DMA_GetITStatus(DMA2_Stream0, DMA_IT_HTIF0) )
+  {
+    // Clear Stream0 HalfTransfer
+    DMA_ClearITPendingBit(DMA2_Stream0, DMA_IT_HTIF0);
+  }
+
+  // count time for one circle
+  elapsedTick = DWT_Elapsed_Tick(startTick);
+  startTick = DWT_Get_Current_Tick();
 }

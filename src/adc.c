@@ -8,6 +8,7 @@
 
 __IO uint16_t SamplesBuffer[SAMPLE_BUFFER_SIZE];
 uint32_t ADCStartTick;  // time when start ADC buffer fill
+uint32_t ADCHalfElapsedTick;   // the last time half buffer fill
 uint32_t ADCElapsedTick;       // the last time buffer fill
 
 
@@ -60,7 +61,7 @@ static void dma()  // with IRQ when buffer fill
   NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
   NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
   NVIC_Init ( &NVIC_InitStructure );
-  DMA_ITConfig ( DMA2_Stream0, DMA_IT_TC, ENABLE ); // DMA_IT_HT |  // IRQ when transfer complete and half transfer
+  DMA_ITConfig ( DMA2_Stream0, DMA_IT_HT | DMA_IT_TC, ENABLE ); // DMA_IT_HT |  // IRQ when transfer complete and half transfer
 }
 
 void init_ADC()  // DMA mode
@@ -115,6 +116,10 @@ void DMA2_Stream0_IRQHandler ( void )
   {
     // Clear Stream0 Transfer Complete
     DMA_ClearITPendingBit(DMA2_Stream0, DMA_IT_TCIF0);
+
+    // count time for one circle
+    ADCElapsedTick = DWT_Elapsed_Tick(ADCStartTick);
+    ADCStartTick = DWT_Get_Current_Tick();
   }
 
   // Test on DMA Stream HalfTransfer Complete interrupt
@@ -122,9 +127,9 @@ void DMA2_Stream0_IRQHandler ( void )
   {
     // Clear Stream0 HalfTransfer
     DMA_ClearITPendingBit(DMA2_Stream0, DMA_IT_HTIF0);
+
+    // count time for half circle
+    ADCHalfElapsedTick = DWT_Elapsed_Tick(ADCStartTick);
   }
 
-  // count time for one circle
-  ADCElapsedTick = DWT_Elapsed_Tick(ADCStartTick);
-  ADCStartTick = DWT_Get_Current_Tick();
 }

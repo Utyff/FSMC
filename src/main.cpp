@@ -1,3 +1,4 @@
+#include <screen.h>
 #include "stm32f4xx_conf.h"
 #include "stm32f4xx.h"
 
@@ -28,7 +29,7 @@ int main()
   DWT_Init();
 //  init_TIM4(); // Orange LED timer PWM-blink
 //  init_TIM7(); // Green LED interrupt blink
-  init_AD9833();
+//  init_AD9833();
   init_LED();
   LCD_Init();
 
@@ -44,7 +45,8 @@ int main()
     DWT_Delay(250000); // 250ms / 4 times per second
     GPIO_ToggleBits(LED_PORT, LED_PIN); // Green LED toggle
 
-    LCD_Clear(clrs[i]);
+    //LCD_Clear(clrs[i]);
+    drawFrame();
     if(++i>7) i=0;
     POINT_COLOR=YELLOW;
     LCD_Draw_Circle(20,20,15);

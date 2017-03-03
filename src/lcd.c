@@ -859,8 +859,12 @@ void LCD_Init(void)
 }
 // Clear screen function
 //color: To clear the screen fill color
+u32 LCDClearTick;
 void LCD_Clear(u16 color)
 {
+    // get start time
+    u32 t0 = DWT_Get_Current_Tick();
+
 	u32 index=0;
 	u32 totalpoint=lcddev.width;
 	totalpoint*=lcddev.height; 			// get the total number of points
@@ -879,6 +883,9 @@ void LCD_Clear(u16 color)
 	{
 		LCD->LCD_RAM=color;
 	}
+
+    // count time for one circle
+	LCDClearTick = DWT_Elapsed_Tick(t0);
 }
 // Fill a single color in the designated area
 //(sx,sy),(ex,ey): filled rectangle coordinates diagonal , area size:(ex-sx+1)*(ey-sy+1)

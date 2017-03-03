@@ -33,7 +33,7 @@
 								<option id="com.atollic.truestudio.as.general.incpath.143492924" name="Include path" superClass="com.atollic.truestudio.as.general.incpath" valueType="includePath">
 									<listOptionValue builtIn="false" value="../src"/>
 								</option>
-								<option id="com.atollic.truestudio.common_options.target.interwork.384336681" superClass="com.atollic.truestudio.common_options.target.interwork"/>
+								<option id="com.atollic.truestudio.common_options.target.interwork.384336681" name="Mix ARM/Thumb" superClass="com.atollic.truestudio.common_options.target.interwork"/>
 								<inputType id="com.atollic.truestudio.as.input.1696500624" name="Input" superClass="com.atollic.truestudio.as.input"/>
 							</tool>
 							<tool id="com.atollic.truestudio.exe.debug.toolchain.gcc.578859422" name="C Compiler" superClass="com.atollic.truestudio.exe.debug.toolchain.gcc">
@@ -56,7 +56,7 @@
 								<option id="com.atollic.truestudio.common_options.target.fpu.28610790" name="Floating point" superClass="com.atollic.truestudio.common_options.target.fpu" value="com.atollic.truestudio.common_options.target.fpu.hard" valueType="enumerated"/>
 								<option id="com.atollic.truestudio.gcc.optimization.prep_garbage.1455150408" name="Prepare dead code removal " superClass="com.atollic.truestudio.gcc.optimization.prep_garbage" value="true" valueType="boolean"/>
 								<option id="com.atollic.truestudio.gcc.optimization.prep_data.1782045800" name="Prepare dead data removal" superClass="com.atollic.truestudio.gcc.optimization.prep_data" value="true" valueType="boolean"/>
-								<option id="com.atollic.truestudio.common_options.target.interwork.336747818" superClass="com.atollic.truestudio.common_options.target.interwork"/>
+								<option id="com.atollic.truestudio.common_options.target.interwork.336747818" name="Mix ARM/Thumb" superClass="com.atollic.truestudio.common_options.target.interwork"/>
 								<inputType id="com.atollic.truestudio.gcc.input.295115226" superClass="com.atollic.truestudio.gcc.input"/>
 							</tool>
 							<tool id="com.atollic.truestudio.exe.debug.toolchain.ld.977782215" name="C Linker" superClass="com.atollic.truestudio.exe.debug.toolchain.ld">
@@ -68,7 +68,7 @@
 								<option id="com.atollic.truestudio.ld.general.clib.744396623" name="Runtime Library" superClass="com.atollic.truestudio.ld.general.clib"/>
 								<option id="com.atollic.truestudio.ld.general.scriptfile.725188916" name="Linker script" superClass="com.atollic.truestudio.ld.general.scriptfile" value="../Debug_STM32F407VG_FLASH.ld" valueType="string"/>
 								<option id="com.atollic.truestudio.ld.optimization.do_garbage.700029043" name="Dead code removal " superClass="com.atollic.truestudio.ld.optimization.do_garbage" value="true" valueType="boolean"/>
-								<option id="com.atollic.truestudio.common_options.target.interwork.1550086664" superClass="com.atollic.truestudio.common_options.target.interwork"/>
+								<option id="com.atollic.truestudio.common_options.target.interwork.1550086664" name="Mix ARM/Thumb" superClass="com.atollic.truestudio.common_options.target.interwork"/>
 							</tool>
 							<tool id="com.atollic.truestudio.exe.debug.toolchain.gpp.1920491408" name="C++ Compiler" superClass="com.atollic.truestudio.exe.debug.toolchain.gpp">
 								<option id="com.atollic.truestudio.gpp.symbols.defined.131156332" name="Defined symbols" superClass="com.atollic.truestudio.gpp.symbols.defined" valueType="definedSymbols">
@@ -92,7 +92,7 @@
 								<option id="com.atollic.truestudio.gpp.optimization.prep_data.371516028" name="Prepare dead data removal" superClass="com.atollic.truestudio.gpp.optimization.prep_data" value="true" valueType="boolean"/>
 								<option id="com.atollic.truestudio.gpp.optimization.fno_rtti.560660826" name="Disable RTTI" superClass="com.atollic.truestudio.gpp.optimization.fno_rtti" value="true" valueType="boolean"/>
 								<option id="com.atollic.truestudio.gpp.optimization.fno_exceptions.1101575671" name="Disable exception handling" superClass="com.atollic.truestudio.gpp.optimization.fno_exceptions" value="true" valueType="boolean"/>
-								<option id="com.atollic.truestudio.common_options.target.interwork.1275844554" superClass="com.atollic.truestudio.common_options.target.interwork"/>
+								<option id="com.atollic.truestudio.common_options.target.interwork.1275844554" name="Mix ARM/Thumb" superClass="com.atollic.truestudio.common_options.target.interwork"/>
 								<inputType id="com.atollic.truestudio.gpp.input.1076378" superClass="com.atollic.truestudio.gpp.input"/>
 							</tool>
 							<tool id="com.atollic.truestudio.exe.debug.toolchain.ldcc.1789468413" name="C++ Linker" superClass="com.atollic.truestudio.exe.debug.toolchain.ldcc">
@@ -104,7 +104,7 @@
 								<option id="com.atollic.truestudio.ld.general.cclib.100598943" name="Runtime Library" superClass="com.atollic.truestudio.ld.general.cclib" value="com.atollic.truestudio.ld.general.cclib.CCSmallCSmall" valueType="enumerated"/>
 								<option id="com.atollic.truestudio.ldcc.optimization.do_garbage.1856195747" name="Dead code removal" superClass="com.atollic.truestudio.ldcc.optimization.do_garbage" value="true" valueType="boolean"/>
 								<option id="com.atollic.truestudio.ldcc.general.scriptfile.1503718060" name="Linker script" superClass="com.atollic.truestudio.ldcc.general.scriptfile" value="../Debug_STM32F407VG_FLASH.ld" valueType="string"/>
-								<option id="com.atollic.truestudio.common_options.target.interwork.226758716" superClass="com.atollic.truestudio.common_options.target.interwork"/>
+								<option id="com.atollic.truestudio.common_options.target.interwork.226758716" name="Mix ARM/Thumb" superClass="com.atollic.truestudio.common_options.target.interwork"/>
 								<inputType id="com.atollic.truestudio.ldcc.input.1778251887" name="Input" superClass="com.atollic.truestudio.ldcc.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
@@ -141,7 +141,7 @@
 							<option id="com.atollic.truestudio.toolchain_options.mcu.157769494" name="Microcontroller" superClass="com.atollic.truestudio.toolchain_options.mcu" value="STM32F407VG" valueType="string"/>
 							<option id="com.atollic.truestudio.toolchain_options.vendor.794518830" name="Vendor name" superClass="com.atollic.truestudio.toolchain_options.vendor" value="STMicroelectronics" valueType="string"/>
 							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="com.atollic.truestudio.exe.release.toolchain.platform.712343680" isAbstract="false" name="release platform" superClass="com.atollic.truestudio.exe.release.toolchain.platform"/>
-							<builder buildPath="${workspace_loc:/FSMC}/Release" customBuilderProperties="com.atollic.truestudio.common_options.target.mcu=STM32F407VG|com.atollic.truestudio.common_options.target.vendor=STMicroelectronics|" id="com.atollic.truestudio.mbs.builder1.730720598" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="CDT Internal Builder" superClass="com.atollic.truestudio.mbs.builder1"/>
+							<builder buildPath="${workspace_loc:/FSMC}/Release" customBuilderProperties="com.atollic.truestudio.common_options.target.vendor=STMicroelectronics|com.atollic.truestudio.common_options.target.mcu=STM32F407VG|" id="com.atollic.truestudio.mbs.builder1.730720598" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="CDT Internal Builder" superClass="com.atollic.truestudio.mbs.builder1"/>
 							<tool id="com.atollic.truestudio.exe.release.toolchain.as.444547000" name="Assembler" superClass="com.atollic.truestudio.exe.release.toolchain.as">
 								<option id="com.atollic.truestudio.common_options.target.endianess.148641463" name="Endianess" superClass="com.atollic.truestudio.common_options.target.endianess"/>
 								<option id="com.atollic.truestudio.common_options.target.mcpu.1136466086" name="Microcontroller" superClass="com.atollic.truestudio.common_options.target.mcpu" value="STM32F407VG" valueType="enumerated"/>
@@ -159,7 +159,7 @@
 									<listOptionValue builtIn="false" value="../Libraries/Device/STM32F4xx/Include"/>
 									<listOptionValue builtIn="false" value="../Libraries/STM32F4xx_StdPeriph_Driver/inc"/>
 								</option>
-								<option id="com.atollic.truestudio.common_options.target.interwork.1622805999" superClass="com.atollic.truestudio.common_options.target.interwork"/>
+								<option id="com.atollic.truestudio.common_options.target.interwork.1622805999" name="Mix ARM/Thumb" superClass="com.atollic.truestudio.common_options.target.interwork"/>
 								<inputType id="com.atollic.truestudio.as.input.588698776" name="Input" superClass="com.atollic.truestudio.as.input"/>
 							</tool>
 							<tool id="com.atollic.truestudio.exe.release.toolchain.gcc.1422970746" name="C Compiler" superClass="com.atollic.truestudio.exe.release.toolchain.gcc">
@@ -182,7 +182,7 @@
 								<option id="com.atollic.truestudio.common_options.target.fpu.93879919" name="Floating point" superClass="com.atollic.truestudio.common_options.target.fpu" value="com.atollic.truestudio.common_options.target.fpu.hard" valueType="enumerated"/>
 								<option id="com.atollic.truestudio.gcc.optimization.prep_garbage.924111497" name="Prepare dead code removal " superClass="com.atollic.truestudio.gcc.optimization.prep_garbage" value="true" valueType="boolean"/>
 								<option id="com.atollic.truestudio.gcc.optimization.prep_data.1034380414" name="Prepare dead data removal" superClass="com.atollic.truestudio.gcc.optimization.prep_data" value="true" valueType="boolean"/>
-								<option id="com.atollic.truestudio.common_options.target.interwork.1607388305" superClass="com.atollic.truestudio.common_options.target.interwork"/>
+								<option id="com.atollic.truestudio.common_options.target.interwork.1607388305" name="Mix ARM/Thumb" superClass="com.atollic.truestudio.common_options.target.interwork"/>
 								<inputType id="com.atollic.truestudio.gcc.input.1897870065" superClass="com.atollic.truestudio.gcc.input"/>
 							</tool>
 							<tool id="com.atollic.truestudio.exe.release.toolchain.ld.1451879774" name="C Linker" superClass="com.atollic.truestudio.exe.release.toolchain.ld">
@@ -194,7 +194,7 @@
 								<option id="com.atollic.truestudio.ld.general.clib.818757914" name="Runtime Library" superClass="com.atollic.truestudio.ld.general.clib"/>
 								<option id="com.atollic.truestudio.ld.general.scriptfile.855073058" name="Linker script" superClass="com.atollic.truestudio.ld.general.scriptfile" value="..\stm32f4_flash.ld" valueType="string"/>
 								<option id="com.atollic.truestudio.ld.optimization.do_garbage.11478796" name="Dead code removal " superClass="com.atollic.truestudio.ld.optimization.do_garbage" value="true" valueType="boolean"/>
-								<option id="com.atollic.truestudio.common_options.target.interwork.184866180" superClass="com.atollic.truestudio.common_options.target.interwork"/>
+								<option id="com.atollic.truestudio.common_options.target.interwork.184866180" name="Mix ARM/Thumb" superClass="com.atollic.truestudio.common_options.target.interwork"/>
 							</tool>
 							<tool id="com.atollic.truestudio.exe.release.toolchain.gpp.40371284" name="C++ Compiler" superClass="com.atollic.truestudio.exe.release.toolchain.gpp">
 								<option id="com.atollic.truestudio.gpp.symbols.defined.757320275" name="Defined symbols" superClass="com.atollic.truestudio.gpp.symbols.defined" valueType="definedSymbols">
@@ -218,7 +218,7 @@
 								<option id="com.atollic.truestudio.gpp.optimization.prep_data.1381206645" name="Prepare dead data removal" superClass="com.atollic.truestudio.gpp.optimization.prep_data" value="true" valueType="boolean"/>
 								<option id="com.atollic.truestudio.gpp.optimization.fno_rtti.532042319" name="Disable RTTI" superClass="com.atollic.truestudio.gpp.optimization.fno_rtti" value="true" valueType="boolean"/>
 								<option id="com.atollic.truestudio.gpp.optimization.fno_exceptions.1400611014" name="Disable exception handling" superClass="com.atollic.truestudio.gpp.optimization.fno_exceptions" value="true" valueType="boolean"/>
-								<option id="com.atollic.truestudio.common_options.target.interwork.1101607354" superClass="com.atollic.truestudio.common_options.target.interwork"/>
+								<option id="com.atollic.truestudio.common_options.target.interwork.1101607354" name="Mix ARM/Thumb" superClass="com.atollic.truestudio.common_options.target.interwork"/>
 								<inputType id="com.atollic.truestudio.gpp.input.1623116961" superClass="com.atollic.truestudio.gpp.input"/>
 							</tool>
 							<tool id="com.atollic.truestudio.exe.release.toolchain.ldcc.778654526" name="C++ Linker" superClass="com.atollic.truestudio.exe.release.toolchain.ldcc">
@@ -230,7 +230,7 @@
 								<option id="com.atollic.truestudio.ld.general.cclib.867722444" name="Runtime Library" superClass="com.atollic.truestudio.ld.general.cclib" value="com.atollic.truestudio.ld.general.cclib.CCSmallCSmall" valueType="enumerated"/>
 								<option id="com.atollic.truestudio.ldcc.optimization.do_garbage.1037757189" name="Dead code removal" superClass="com.atollic.truestudio.ldcc.optimization.do_garbage" value="true" valueType="boolean"/>
 								<option id="com.atollic.truestudio.ldcc.general.scriptfile.1697159687" name="Linker script" superClass="com.atollic.truestudio.ldcc.general.scriptfile" value="..\stm32f4_flash.ld" valueType="string"/>
-								<option id="com.atollic.truestudio.common_options.target.interwork.210938068" superClass="com.atollic.truestudio.common_options.target.interwork"/>
+								<option id="com.atollic.truestudio.common_options.target.interwork.210938068" name="Mix ARM/Thumb" superClass="com.atollic.truestudio.common_options.target.interwork"/>
 								<inputType id="com.atollic.truestudio.ldcc.input.71563232" name="Input" superClass="com.atollic.truestudio.ldcc.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>

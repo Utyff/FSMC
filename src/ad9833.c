@@ -188,7 +188,7 @@ void AD9833_setMode(uint8_t mode)
 }
 
 
-void init_SPI1(void)
+void SPI1_init(void)
   {
 
 	    GPIO_InitTypeDef GPIO_InitStruct;
@@ -246,9 +246,9 @@ void init_SPI1(void)
 	    SPI_Cmd(SPI1, ENABLE); // enable SPI1
 	}
 
-void init_AD9833() {
+void AD9833_init() {
 
-    init_SPI1();
+    SPI1_init();
 
     AD9833_setFreq(0, 100);
     AD9833_setFreqOut(0);

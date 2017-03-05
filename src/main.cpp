@@ -12,13 +12,13 @@
 #define LED_PORT GPIOD
 #define LED_PIN  GPIO_Pin_12
 
-void init_TIM4();
-void init_TIM7();
-void init_LED();
+void TIM4_init();
+void TIM7_init();
+void LED_init();
 
 extern "C" {
-  void init_ADC();
-  void init_AD9833();
+  void ADC_init();
+  void AD9833_init();
 }
 
 
@@ -28,17 +28,17 @@ int main()
 //  RCC_GetClocksFreq(&RCC_Clocks);
 
   DWT_Init();
-//  init_TIM4(); // Orange LED timer PWM-blink
-//  init_TIM7(); // Green LED interrupt blink
-//  init_AD9833();
-  init_LED();
+//  TIM4_init(); // Orange LED timer PWM-blink
+//  TIM7_init(); // Green LED interrupt blink
+//  AD9833_init();
+  LED_init();
   LCD_Init();
 
 //  FLASH->ACR &= (~FLASH_ACR_PRFTEN);
-  FLASH_PrefetchBufferCmd(DISABLE);
-  init_ADC();
+//  FLASH_PrefetchBufferCmd(DISABLE);
+  ADC_init();
 
-  u16 clrs[]={BLUE,RED,GREEN,YELLOW,LGRAY,MAGENTA,BROWN,BLACK};
+//  u16 clrs[]={BLUE,RED,GREEN,YELLOW,LGRAY,MAGENTA,BROWN,BLACK};
   int i=0;
 
   while(1)
@@ -70,7 +70,7 @@ int main()
 }
 
 
-void init_TIM4()
+void TIM4_init()
 {
   GPIO_InitTypeDef GPIO_InitStructure;
 
@@ -147,7 +147,7 @@ void init_TIM4()
 }
 
 
-void init_TIM7()
+void TIM7_init()
 {
   // ------------------Инициализация TIM7------------------
   RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM7,ENABLE);
@@ -161,7 +161,7 @@ void init_TIM7()
 }
 
 
-void init_LED() // init GPIO PD12 for Green LED
+void LED_init() // init GPIO PD12 for Green LED
 {
   // ------------------Инициализация портов светодиодов------------------
   GPIO_InitTypeDef GPIO_InitStructure;                // Структура содержащая настройки порта

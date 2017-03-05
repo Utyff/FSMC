@@ -14,7 +14,7 @@ uint32_t ADCHalfElapsedTick;   // the last time half buffer fill
 uint32_t ADCElapsedTick;       // the last time buffer fill
 
 
-static void init_ADC_GPIO()  // configure PC2 as ADC CH12
+static void ADC_GPIO_init()  // configure PC2 as ADC CH12
 {
   GPIO_InitTypeDef      GPIO_InitStructure;
 
@@ -66,9 +66,9 @@ static void dma()  // with IRQ when buffer fill
   DMA_ITConfig ( DMA2_Stream0, DMA_IT_HT | DMA_IT_TC, ENABLE ); // DMA_IT_HT |  // IRQ when transfer complete and half transfer
 }
 
-void init_ADC()  // DMA mode
+void ADC_init()  // DMA mode
 {
-  init_ADC_GPIO();
+  ADC_GPIO_init();
   dma();
 
   ADC_InitTypeDef ADC_InitStructure;

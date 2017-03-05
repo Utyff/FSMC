@@ -7,7 +7,9 @@
 #define SAMPLE_BUFFER_SIZE 2048
 
 __IO uint16_t SamplesBuffer[SAMPLE_BUFFER_SIZE];
-uint32_t ADCStartTick;  // time when start ADC buffer fill
+uint16_t graph[320];
+
+uint32_t ADCStartTick;         // time when start ADC buffer fill
 uint32_t ADCHalfElapsedTick;   // the last time half buffer fill
 uint32_t ADCElapsedTick;       // the last time buffer fill
 
@@ -107,21 +109,33 @@ void init_ADC()  // DMA mode
   ADCStartTick = DWT_Get_Current_Tick();
 }
 
+uint32_t GraphTick;
+void buildGraph(uint16_t *buf)
+{
+  uint32_t t0 = DWT_Get_Current_Tick();
+  int    i, j;
+  float  scaleX, x; //, scaleY=1;
+  scaleX = (float)320 / (float)SAMPLE_BUFFER_SIZE/2;
+
+  x=0; j=-1;
+  for( i=0; i<SAMPLE_BUFFER_SIZE/2; i++ )
+  {
+    if( (int)x!=j )
+    {
+      j=x;
+      graph[j] = buf[i];
+    }else
+    {
+      graph[j] = (graph[j]+buf[i]) /2;
+    }
+    x += scaleX;
+  }
+  GraphTick = DWT_Elapsed_Tick(t0);
+}
 
 // dma2 stream 0 irq handler
 void DMA2_Stream0_IRQHandler ( void )
 {
-  // Test on DMA Stream Transfer Complete interrupt
-  if ( DMA_GetITStatus(DMA2_Stream0, DMA_IT_TCIF0) )
-  {
-    // Clear Stream0 Transfer Complete
-    DMA_ClearITPendingBit(DMA2_Stream0, DMA_IT_TCIF0);
-
-    // count time for one circle
-    ADCElapsedTick = DWT_Elapsed_Tick(ADCStartTick);
-    ADCStartTick = DWT_Get_Current_Tick();
-  }
-
   // Test on DMA Stream HalfTransfer Complete interrupt
   if ( DMA_GetITStatus(DMA2_Stream0, DMA_IT_HTIF0) )
   {
@@ -132,4 +146,14 @@ void DMA2_Stream0_IRQHandler ( void )
     ADCHalfElapsedTick = DWT_Elapsed_Tick(ADCStartTick);
   }
 
+  // Test on DMA Stream Transfer Complete interrupt
+  if ( DMA_GetITStatus(DMA2_Stream0, DMA_IT_TCIF0) )
+  {
+    // Clear Stream0 Transfer Complete
+    DMA_ClearITPendingBit(DMA2_Stream0, DMA_IT_TCIF0);
+
+    // count time for one circle
+    ADCElapsedTick = DWT_Elapsed_Tick(ADCStartTick);
+    ADCStartTick = DWT_Get_Current_Tick();
+  }
 }

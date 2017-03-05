@@ -4,6 +4,7 @@
 
 #include "delay.h"
 #include "lcd.h"
+#include "screen.h"
 
 // for f4-disco GPIOD & GPIO_Pin_12
 // for ve-board GPIOA & GPIO_Pin_6
@@ -42,7 +43,7 @@ int main()
 
   while(1)
   {
-    DWT_Delay(250000); // 250ms / 4 times per second
+    DWT_Delay(50000); // 250ms / 4 times per second
     GPIO_ToggleBits(LED_PORT, LED_PIN); // Green LED toggle
 
     //LCD_Clear(clrs[i]);
@@ -64,6 +65,7 @@ int main()
     LCD_ShowNum (30,70, 79, 5,12);
     LCD_ShowxNum(30,90, 7989, 3,12, 9);
     LCD_ShowString(30,110,90,30, 12,"STrinG");
+    drawGraph();
   }
 }
 

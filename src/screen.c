@@ -15,3 +15,11 @@ void drawFrame()
 	for( x=step; x<MAX_X; x+=step )
 		LCD_DrawLine(x,0,x,MAX_Y);
 }
+
+void drawGraph()
+{
+  //buildGraph(SamplesBuffer);
+  for(int i=0; i<320; i++)
+    LCD_Fast_DrawPoint(i,SamplesBuffer[i]>>8,CYAN);
+//    LCD_Fast_DrawPoint(i,graph[i],RED);
+}

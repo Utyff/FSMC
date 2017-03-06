@@ -7,12 +7,12 @@
 #define SAMPLES_2_BUFFER_SIZE 2048
 #define SAMPLES_1_BUFFER_SIZE 4096
 
-typedef volatile union  {
+typedef volatile union SampleBuffer {
     u8 four[SAMPLES_4_BUFFER_SIZE][4];
     u8 two [SAMPLES_2_BUFFER_SIZE][2];
     u8 one [SAMPLES_1_BUFFER_SIZE];
-} SampleBuffer;
-extern SampleBuffer samplesBuffer;
+} SAMPLEBUFFER;
+extern union SampleBuffer samplesBuffer;
 
 #ifdef __cplusplus
 extern "C" {

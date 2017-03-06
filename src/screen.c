@@ -25,7 +25,7 @@ void buildGraph()
     uint32_t t0 = DWT_Get_Current_Tick();
     int    i, j;
     float  scaleX, x; //, scaleY=1;
-    scaleX = (float)320 / (float)SAMPLES_2_BUFFER_SIZE/2;
+    scaleX = (float)320 / (float)(SAMPLES_2_BUFFER_SIZE/2);
 
     x=0; j=-1;
     for( i=0; i<SAMPLES_2_BUFFER_SIZE/2; i++ )
@@ -46,12 +46,12 @@ void buildGraph()
 uint32_t DrawGraphTick;
 void drawGraph()
 {
-  //buildGraph(SamplesBuffer);
+  buildGraph();
   uint32_t t0 = DWT_Get_Current_Tick();
   for(u16 i=0; i<MAX_X; i++)
   {
-	LCD_Fast_DrawPoint(i, samplesBuffer.two[i][1], CYAN);
-//    LCD_Fast_DrawPoint(i,graph[i],RED);
+//    LCD_Fast_DrawPoint(i, samplesBuffer.two[i][1], CYAN);
+    LCD_Fast_DrawPoint(i,graph[i],CYAN);
   }
   DrawGraphTick = DWT_Elapsed_Tick(t0);
 }

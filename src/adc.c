@@ -4,7 +4,7 @@
 #include <adc.h>
 
 
-SampleBuffer samplesBuffer;
+union SampleBuffer samplesBuffer;
 
 uint32_t ADCStartTick;         // time when start ADC buffer fill
 uint32_t ADCHalfElapsedTick;   // the last time half buffer fill

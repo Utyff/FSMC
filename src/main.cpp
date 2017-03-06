@@ -3,6 +3,7 @@
 #include "stm32f4xx.h"
 
 #include "delay.h"
+#include "adc.h"
 #include "lcd.h"
 #include "screen.h"
 
@@ -17,7 +18,6 @@ void TIM7_init();
 void LED_init();
 
 extern "C" {
-  void ADC_init();
   void AD9833_init();
 }
 
@@ -43,7 +43,7 @@ int main()
 
   while(1)
   {
-    DWT_Delay(50000); // 250ms / 4 times per second
+    DWT_Delay(50000); // 50ms / 20 times per second
     GPIO_ToggleBits(LED_PORT, LED_PIN); // Green LED toggle
 
     //LCD_Clear(clrs[i]);
@@ -85,7 +85,7 @@ void TIM4_init()
   GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF;
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
   GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-  GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_DOWN; //NOPULL;
+  GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_DOWN;
   GPIO_Init(GPIOD, &GPIO_InitStructure);
 
   /* -----------------------------------------------------------------------

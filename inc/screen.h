@@ -1,12 +1,14 @@
+#ifndef __SCREEN_H
+#define __SCREEN_H
 
 #include "lcd.h"
+#include "adc.h"
 
 
 #define MAX_X 320
 #define MAX_Y 240
 
-extern __IO uint16_t SamplesBuffer[];
-extern uint16_t graph[];
+extern uint8_t graph[];
 
 #ifdef __cplusplus
  extern "C" {
@@ -19,3 +21,5 @@ void drawGraph();
 #ifdef __cplusplus
  }
 #endif
+
+#endif /* __SCREEN_H */

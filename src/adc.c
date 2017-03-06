@@ -1,13 +1,10 @@
 #include "stm32f4xx_conf.h"
 #include "stm32f4xx.h"
 #include <dwt.h>
+#include <adc.h>
 
-//#define ADC_CDR_ADDRESS    ((uint32_t)0x40012308)
-//#define ADC1_DR_ADDRESS    ((uint32_t)0x4001204C) // &ADC1->DR
-#define SAMPLE_BUFFER_SIZE 2048
 
-__IO uint16_t SamplesBuffer[SAMPLE_BUFFER_SIZE];
-uint16_t graph[320];
+SampleBuffer samplesBuffer;
 
 uint32_t ADCStartTick;         // time when start ADC buffer fill
 uint32_t ADCHalfElapsedTick;   // the last time half buffer fill
@@ -29,7 +26,7 @@ static void ADC_GPIO_init()  // configure PC2 as ADC CH12
 }
 
 
-static void dma()  // with IRQ when buffer fill
+static void ADC_DMA_init()  // with IRQ when buffer fill
 {
   DMA_InitTypeDef   DMA_InitStructure;
   NVIC_InitTypeDef  NVIC_InitStructure;
@@ -40,9 +37,9 @@ static void dma()  // with IRQ when buffer fill
   DMA_DeInit(DMA2_Stream0);
   DMA_InitStructure.DMA_Channel = DMA_Channel_0;
   DMA_InitStructure.DMA_PeripheralBaseAddr = (uint32_t) &ADC1->DR;
-  DMA_InitStructure.DMA_Memory0BaseAddr = (uint32_t) &SamplesBuffer;
+  DMA_InitStructure.DMA_Memory0BaseAddr = (uint32_t) &samplesBuffer;
   DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralToMemory;
-  DMA_InitStructure.DMA_BufferSize = SAMPLE_BUFFER_SIZE;
+  DMA_InitStructure.DMA_BufferSize = SAMPLES_2_BUFFER_SIZE;
   DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
   DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;
   DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_HalfWord;
@@ -69,7 +66,7 @@ static void dma()  // with IRQ when buffer fill
 void ADC_init()  // DMA mode
 {
   ADC_GPIO_init();
-  dma();
+  ADC_DMA_init();
 
   ADC_InitTypeDef ADC_InitStructure;
   ADC_CommonInitTypeDef ADC_CommonInitStructure;
@@ -107,30 +104,6 @@ void ADC_init()  // DMA mode
   // Start ADC1 Software Conversion
   ADC_SoftwareStartConv(ADC1);
   ADCStartTick = DWT_Get_Current_Tick();
-}
-
-uint32_t GraphTick;
-void buildGraph(uint16_t *buf)
-{
-  uint32_t t0 = DWT_Get_Current_Tick();
-  int    i, j;
-  float  scaleX, x; //, scaleY=1;
-  scaleX = (float)320 / (float)SAMPLE_BUFFER_SIZE/2;
-
-  x=0; j=-1;
-  for( i=0; i<SAMPLE_BUFFER_SIZE/2; i++ )
-  {
-    if( (int)x!=j )
-    {
-      j=x;
-      graph[j] = buf[i];
-    }else
-    {
-      graph[j] = (graph[j]+buf[i]) /2;
-    }
-    x += scaleX;
-  }
-  GraphTick = DWT_Elapsed_Tick(t0);
 }
 
 // dma2 stream 0 irq handler

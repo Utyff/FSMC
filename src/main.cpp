@@ -13,6 +13,7 @@
 #define LED_PORT GPIOD
 #define LED_PIN  GPIO_Pin_12
 
+void TIM1_init();
 void TIM4_init();
 void TIM7_init();
 void LED_init();
@@ -28,6 +29,7 @@ int main()
 //  RCC_GetClocksFreq(&RCC_Clocks);
 
   DWT_Init();
+  TIM1_init(); // Square generator
 //  TIM4_init(); // Orange LED timer PWM-blink
 //  TIM7_init(); // Green LED interrupt blink
 //  AD9833_init();
@@ -67,6 +69,82 @@ int main()
     LCD_ShowString(30,110,90,30, 12,"STrinG");
     drawGraph();
   }
+}
+
+// Configure TIM1 as square generator
+void TIM1_init()
+{
+  GPIO_InitTypeDef GPIO_InitStructure;
+
+  /* GPIOD clock enable */
+  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
+
+  /* Connect TIM1 pins to AF */
+  GPIO_PinAFConfig(GPIOA, GPIO_PinSource8, GPIO_AF_TIM1);
+
+  /* GPIOC Configuration: TIM1 CH1 (PA8) */
+  GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_8;
+  GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
+  GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+  GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_DOWN;
+  GPIO_Init(GPIOD, &GPIO_InitStructure);
+
+  /* -----------------------------------------------------------------------
+    TIM1 Configuration: generate 4 PWM signals with 4 different duty cycles.
+
+    In this example TIM1 input clock (TIM1CLK) is set to 2 * APB1 clock (PCLK1),
+    since APB1 prescaler is different from 1.
+      TIM1CLK = 2 * PCLK1
+      PCLK1 = HCLK / 4
+      => TIM1CLK = HCLK / 2 = SystemCoreClock /2
+
+    To get TIM1 counter clock at 1000 KHz, the prescaler is computed as follows:
+       Prescaler = (TIM1CLK / TIM1 counter clock) - 1
+       Prescaler = ((SystemCoreClock /2) /1000 KHz) - 1 // 83 (must be less then 0xFFFF)
+
+    To get TIM1 output clock at 1 Hz, the period (ARR)) is computed as follows:
+       ARR = (TIM1 counter clock / TIM1 output clock) - 1
+           = 9999
+
+    TIM1 Channel1 duty cycle = (TIM1_CCR2/ TIM1_ARR)* 100 = 37.5%
+
+    Note:
+     SystemCoreClock variable holds HCLK frequency and is defined in system_stm32f4xx.c file.
+     Each time the core clock (HCLK) changes, user had to call SystemCoreClockUpdate()
+     function to update SystemCoreClock variable value. Otherwise, any configuration
+     based on this variable will be incorrect.
+  ----------------------------------------------------------------------- */
+
+  TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
+  TIM_OCInitTypeDef  TIM_OCInitStructure;
+  uint16_t PrescalerValue;
+
+  // TIM1 clock enable
+  RCC_APB1PeriphClockCmd(RCC_APB2Periph_TIM1, ENABLE);
+
+  // Compute the prescaler value, TIM1CLK = APB1*2 = 84MHz
+  PrescalerValue = (uint16_t) (((SystemCoreClock) / 1000000) - 1); // 167;  167 > 1000KHz
+
+  // Time base configuration
+  TIM_TimeBaseStructure.TIM_Period = 99; // 1000KHz input freq;  100 > 10KHz
+  TIM_TimeBaseStructure.TIM_Prescaler = PrescalerValue;
+  TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;
+  TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
+  TIM_TimeBaseStructure.TIM_RepetitionCounter = 0;
+  TIM_TimeBaseInit(TIM1, &TIM_TimeBaseStructure);
+
+  // TIM1 enable counter
+  TIM_Cmd(TIM1, ENABLE);
+
+  // PWM1 Mode configuration: Channel1
+  TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM1;
+  TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
+  TIM_OCInitStructure.TIM_Pulse = 60;  // 60/100
+
+  TIM_OC1Init(TIM1, &TIM_OCInitStructure);
+  TIM_OC1PreloadConfig(TIM1, TIM_OCPreload_Enable);
+  TIM_ARRPreloadConfig(TIM1, ENABLE);
 }
 
 

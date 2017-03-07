@@ -71,6 +71,9 @@ void ADC_init()  // DMA mode
   ADC_InitTypeDef ADC_InitStructure;
   ADC_CommonInitTypeDef ADC_CommonInitStructure;
 
+//  FLASH->ACR &= (~FLASH_ACR_PRFTEN);
+//  FLASH_PrefetchBufferCmd(DISABLE);
+
   // разрешаем тактирование
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1, ENABLE);
   //RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1 | RCC_APB2Periph_ADC2 | RCC_APB2Periph_ADC3, ENABLE);

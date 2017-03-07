@@ -19,6 +19,31 @@ void drawFrame()
 		LCD_DrawLine(x,0,x,MAX_Y);
 }
 
+
+int triggerStart()
+{
+    int i;
+    u8  trgLvl = 128;
+    u8  trgRdy = 0;
+
+    for( i=0; i<SAMPLES_2_BUFFER_SIZE/2; i++ )
+    {
+        if( trgRdy==0 )
+        {
+            if( samplesBuffer.two[i][1]<trgLvl )
+                trgRdy = 1;
+            continue;
+        }
+
+        if( samplesBuffer.two[i][1]>trgLvl )
+            return i;
+    }
+    return 0;
+}
+
+// start position in buffer
+// number of samples to display
+
 uint32_t BuildGraphTick;
 void buildGraph()
 {
@@ -28,7 +53,8 @@ void buildGraph()
     scaleX = (float)320 / (float)(SAMPLES_2_BUFFER_SIZE/2);
 
     x=0; j=-1;
-    for( i=0; i<SAMPLES_2_BUFFER_SIZE/2; i++ )
+    i = 0; //triggerStart();
+    for( ; i<SAMPLES_2_BUFFER_SIZE/2; i++ )
     {
         if( (int)x!=j )
         {

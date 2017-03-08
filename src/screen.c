@@ -11,7 +11,7 @@ void drawFrame()
 	LCD_Clear(BLACK);
 	POINT_COLOR = GRAY;	// Drawing pen color
 	BACK_COLOR  = BLACK;
-
+return;
 	for( y=step; y<MAX_Y; y+=step )
 		LCD_DrawLine(0,y,MAX_X,y);
 
@@ -50,15 +50,16 @@ void buildGraph()
     uint32_t t0 = DWT_Get_Current_Tick();
     int    i, j;
     float  scaleX, x; //, scaleY=1;
-    scaleX = (float)320 / (float)(SAMPLES_2_BUFFER_SIZE/2);
+    scaleX = 0.5 ; // (float)320 / (float)(SAMPLES_2_BUFFER_SIZE/2);
 
     x=0; j=-1;
-    i = 0; //triggerStart();
+    i = triggerStart();
     for( ; i<SAMPLES_2_BUFFER_SIZE/2; i++ )
     {
         if( (int)x!=j )
         {
             j = (int)x;
+            if( j>MAX_X ) break;
             graph[j] = samplesBuffer.two[i][1];
         } else
         {

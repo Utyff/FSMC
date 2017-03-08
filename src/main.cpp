@@ -13,7 +13,7 @@
 #define LED_PORT      GPIOD
 #define LED_PIN       GPIO_Pin_12
 
-void TIM1_init();
+void TIM3_init();
 void TIM4_init();
 void TIM7_init();
 void LED_init();
@@ -29,7 +29,7 @@ int main()
 //  RCC_GetClocksFreq(&RCC_Clocks);
 
   DWT_Init();
-  TIM1_init(); // Square generator
+  TIM3_init(); // Square generator
 //  TIM4_init(); // Orange LED timer PWM-blink
 //  TIM7_init(); // Green LED interrupt blink
 //  AD9833_init();
@@ -64,50 +64,50 @@ int main()
   }
 }
 
-// Configure TIM1 as square generator
-void TIM1_init()
+// Configure TIM3 as square generator
+void TIM3_init()
 {
   GPIO_InitTypeDef GPIO_InitStructure;
 
   // GPIOA clock enable
-  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
+  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE);
 
-  // Connect TIM1 pins to AF
-  GPIO_PinAFConfig(GPIOA, GPIO_PinSource8, GPIO_AF_TIM1);
+  // Connect TIM3 pins to AF
+  GPIO_PinAFConfig(GPIOC, GPIO_PinSource6, GPIO_AF_TIM3);
 
-  // GPIOA Configuration: TIM1 CH1 (PA8)
-  GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_8;
+  // GPIOA Configuration: TIM3 CH1 (PC6)
+  GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_6;
   GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF;
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
   GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
   GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_DOWN;
-  GPIO_Init(GPIOA, &GPIO_InitStructure);
+  GPIO_Init(GPIOC, &GPIO_InitStructure);
 
   TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
   TIM_OCInitTypeDef        TIM_OCInitStructure;
 
-  // TIM1 clock enable
-  RCC_APB1PeriphClockCmd(RCC_APB2Periph_TIM1, ENABLE);
+  // TIM3 clock enable
+  RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);
 
   // Time base configuration
   TIM_TimeBaseStructure.TIM_Period = 99; // 1000KHz input freq;  100 > 10KHz
-  TIM_TimeBaseStructure.TIM_Prescaler = 167; //  TIM1CLK = APB2*2 = 168MHz;  167 > 1000KHz
+  TIM_TimeBaseStructure.TIM_Prescaler = 83; //  TIM3CLK = APB1*2 = 84MHz;  84 > 1000KHz
   TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;
   TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
   TIM_TimeBaseStructure.TIM_RepetitionCounter = 0;
-  TIM_TimeBaseInit(TIM1, &TIM_TimeBaseStructure);
+  TIM_TimeBaseInit(TIM3, &TIM_TimeBaseStructure);
 
-  // TIM1 enable counter
-  TIM_Cmd(TIM1, ENABLE);
+  // TIM3 enable counter
+  TIM_Cmd(TIM3, ENABLE);
 
   // PWM1 Mode configuration: Channel1
   TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM1;
   TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
   TIM_OCInitStructure.TIM_Pulse = 60;  // 60/100
 
-  TIM_OC1Init(TIM1, &TIM_OCInitStructure);
-  TIM_OC1PreloadConfig(TIM1, TIM_OCPreload_Enable);
-  TIM_ARRPreloadConfig(TIM1, ENABLE);
+  TIM_OC1Init(TIM3, &TIM_OCInitStructure);
+  TIM_OC1PreloadConfig(TIM3, TIM_OCPreload_Enable);
+  TIM_ARRPreloadConfig(TIM3, ENABLE);
 }
 
 

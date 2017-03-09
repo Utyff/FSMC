@@ -6,17 +6,17 @@ uint8_t graph[MAX_X];
 
 void drawFrame()
 {
-	u16 x,y, step=40;
+//	u16 x,y, step=40;
 
 	LCD_Clear(BLACK);
 	POINT_COLOR = GRAY;	// Drawing pen color
 	BACK_COLOR  = BLACK;
-return;
-	for( y=step; y<MAX_Y; y+=step )
+
+/*	for( y=step; y<MAX_Y; y+=step )
 		LCD_DrawLine(0,y,MAX_X,y);
 
 	for( x=step; x<MAX_X; x+=step )
-		LCD_DrawLine(x,0,x,MAX_Y);
+		LCD_DrawLine(x,0,x,MAX_Y); //*/
 }
 
 
@@ -59,7 +59,7 @@ void buildGraph()
         if( (int)x!=j )
         {
             j = (int)x;
-            if( j>MAX_X ) break;
+            if( j>=MAX_X ) break;
             graph[j] = samplesBuffer.two[i][1];
         } else
         {
@@ -73,12 +73,19 @@ void buildGraph()
 uint32_t DrawGraphTick;
 void drawGraph()
 {
+  u8 prev;
+
   buildGraph();
   uint32_t t0 = DWT_Get_Current_Tick();
-  for(u16 i=0; i<MAX_X; i++)
+
+  POINT_COLOR = CYAN;
+  prev = graph[0];
+  for(u16 i=1; i<MAX_X; i++)
   {
 //    LCD_Fast_DrawPoint(i, samplesBuffer.two[i][1], CYAN);
-    LCD_Fast_DrawPoint(i,graph[i],CYAN);
+//    LCD_Fast_DrawPoint(i,graph[i],CYAN);
+    LCD_DrawLine(i-(u16)1, prev, i, graph[i]);
   }
   DrawGraphTick = DWT_Elapsed_Tick(t0);
+  LCD_ShowxNum(220,150, DrawGraphTick, 10,12, 9);
 }

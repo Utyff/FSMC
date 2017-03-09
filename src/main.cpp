@@ -3,17 +3,18 @@
 
 #include "delay.h"
 #include "adc.h"
+#include "dac.h"
 #include "lcd.h"
 #include "screen.h"
 
 
-// for f4-disco GPIOD & GPIO_Pin_12
+// for f4-disco GPIOD & GPIO_Pin_12  Green LED
 // for ve-board GPIOA & GPIO_Pin_6
 #define LED_CLOCKPORT RCC_AHB1Periph_GPIOD
 #define LED_PORT      GPIOD
 #define LED_PIN       GPIO_Pin_12
 
-void TIM3_init();
+void TIM3_init(); // Configure TIM3 as square generator
 void TIM4_init();
 void TIM7_init();
 void LED_init();
@@ -36,6 +37,7 @@ int main()
   LED_init();
   LCD_Init();
   ADC_init();
+  DAC_init();
 
 
   while(1)

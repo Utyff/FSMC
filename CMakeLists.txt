@@ -45,6 +45,8 @@ set(SOURCE_FILES
         src/delay.c
         src/main.cpp
         src/stm32f4xx_it.c
-        src/system_stm32f4xx.c src/lib.c src/lib.h)
+        src/system_stm32f4xx.c
+        src/lib.c
+        src/dac.c)
 
 add_executable(FSMC ${SOURCE_FILES})

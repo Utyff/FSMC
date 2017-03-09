@@ -628,9 +628,9 @@ void LCD_Init(void)
   readWriteTiming.FSMC_AccessMode = FSMC_AccessMode_A;	 // Mode A
 
 
-	writeTiming.FSMC_AddressSetupTime =9;	      // Address setup time (ADDSET) for the nine HCLK =54ns
+	writeTiming.FSMC_AddressSetupTime =3;	      // Address setup time (ADDSET) for the nine HCLK =54ns
   writeTiming.FSMC_AddressHoldTime = 0x00;	 // Address hold time (A
-  writeTiming.FSMC_DataSetupTime = 8;		 // Data retention time 6ns *9 Ge HCLK =54ns
+  writeTiming.FSMC_DataSetupTime = 3;		 // Data retention time 6ns *9 Ge HCLK =54ns
   writeTiming.FSMC_BusTurnAroundDuration = 0x00;
   writeTiming.FSMC_CLKDivision = 0x00;
   writeTiming.FSMC_DataLatency = 0x00;
@@ -886,6 +886,8 @@ void LCD_Clear(u16 color)
 
     // count time for one circle
 	LCDClearTick = DWT_Elapsed_Tick(t0);
+	POINT_COLOR = YELLOW;
+    LCD_ShowxNum(100,220, LCDClearTick/168, 8,12, 9);
 }
 // Fill a single color in the designated area
 //(sx,sy),(ex,ey): filled rectangle coordinates diagonal , area size:(ex-sx+1)*(ey-sy+1)

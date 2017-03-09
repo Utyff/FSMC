@@ -37,13 +37,13 @@ void DAC_init()
     // TIM6 Configuration ------------------------------------------------
     TIM6_Config();
 
-//    DAC_Ch1_EscalatorConfig();
+    DAC_Ch1_EscalatorConfig();
     // Sine Wave generator -----------------------------------------------
-//    DAC_Ch2_SineWaveConfig();
+    DAC_Ch2_SineWaveConfig();
     // Noise Wave generator ----------------------------------------------
 //    DAC_Ch1_NoiseConfig();
     // Triangle Wave generator -------------------------------------------
-    DAC_Ch2_TriangleConfig();
+//    DAC_Ch2_TriangleConfig();
 }
 
 /**
@@ -76,7 +76,7 @@ static void TIM6_Config()
     ----------------------------------------------------------- */
     // Time base configuration
     TIM_TimeBaseStructInit(&TIM_TimeBaseStructure);
-    TIM_TimeBaseStructure.TIM_Period = 0xFF;
+    TIM_TimeBaseStructure.TIM_Period = 0x17F;
     TIM_TimeBaseStructure.TIM_Prescaler = 0;
     TIM_TimeBaseStructure.TIM_ClockDivision = 0;
     TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
@@ -102,13 +102,13 @@ void DAC_Ch2_SineWaveConfig()
     // DAC channel2 Configuration
     DAC_InitStructure.DAC_Trigger = DAC_Trigger_T6_TRGO;
     DAC_InitStructure.DAC_WaveGeneration = DAC_WaveGeneration_None;
-    DAC_InitStructure.DAC_OutputBuffer = DAC_OutputBuffer_Enable;
+    DAC_InitStructure.DAC_OutputBuffer = DAC_OutputBuffer_Disable;
     DAC_Init(DAC_Channel_2, &DAC_InitStructure);
 
     // DMA1_Stream6 channel7 configuration **************************************
     DMA_DeInit(DMA1_Stream6);
     DMA_InitStructure.DMA_Channel = DMA_Channel_7;
-    DMA_InitStructure.DMA_PeripheralBaseAddr = DAC->DHR12R2; // (uint32_t)DAC_DHR12R2_ADDRESS;
+    DMA_InitStructure.DMA_PeripheralBaseAddr = (uint32_t)&DAC->DHR12R2; //DAC_DHR12R2_ADDRESS; //
     DMA_InitStructure.DMA_Memory0BaseAddr = (uint32_t)&aSine12bit;
     DMA_InitStructure.DMA_DIR = DMA_DIR_MemoryToPeripheral;
     DMA_InitStructure.DMA_BufferSize = 32;
@@ -153,7 +153,7 @@ void DAC_Ch1_EscalatorConfig()
     // DMA1_Stream5 channel7 configuration **************************************
     DMA_DeInit(DMA1_Stream5);
     DMA_InitStructure.DMA_Channel = DMA_Channel_7;
-    DMA_InitStructure.DMA_PeripheralBaseAddr = DAC->DHR8R1; // DAC_DHR8R1_ADDRESS;
+    DMA_InitStructure.DMA_PeripheralBaseAddr = (uint32_t)&DAC->DHR8R1; // DAC_DHR8R1_ADDRESS;
     DMA_InitStructure.DMA_Memory0BaseAddr = (uint32_t)&aEscalator8bit;
     DMA_InitStructure.DMA_BufferSize = 6;
     DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_Byte;
@@ -191,15 +191,15 @@ void DAC_Ch2_TriangleConfig()
     // DAC channel2 Configuration
     DAC_InitStructure.DAC_Trigger = DAC_Trigger_T6_TRGO;
     DAC_InitStructure.DAC_WaveGeneration = DAC_WaveGeneration_Triangle;
-    DAC_InitStructure.DAC_LFSRUnmask_TriangleAmplitude = DAC_TriangleAmplitude_1023;
-    DAC_InitStructure.DAC_OutputBuffer = DAC_OutputBuffer_Enable;
+    DAC_InitStructure.DAC_LFSRUnmask_TriangleAmplitude = DAC_TriangleAmplitude_4095;
+    DAC_InitStructure.DAC_OutputBuffer = DAC_OutputBuffer_Disable;
     DAC_Init(DAC_Channel_2, &DAC_InitStructure);
 
     // Enable DAC Channel2
     DAC_Cmd(DAC_Channel_2, ENABLE);
 
     // Set DAC channel2 DHR12RD register
-    DAC_SetChannel2Data(DAC_Align_12b_R, 0x100);
+    DAC_SetChannel2Data(DAC_Align_12b_R, 0x0);
 }
 
 /**
@@ -214,7 +214,7 @@ void DAC_Ch1_NoiseConfig()
     // DAC channel1 Configuration
     DAC_InitStructure.DAC_Trigger = DAC_Trigger_T6_TRGO;
     DAC_InitStructure.DAC_WaveGeneration = DAC_WaveGeneration_Noise;
-    DAC_InitStructure.DAC_LFSRUnmask_TriangleAmplitude = DAC_LFSRUnmask_Bits10_0;
+    DAC_InitStructure.DAC_LFSRUnmask_TriangleAmplitude = DAC_LFSRUnmask_Bits11_0;
     DAC_InitStructure.DAC_OutputBuffer = DAC_OutputBuffer_Enable;
     DAC_Init(DAC_Channel_1, &DAC_InitStructure);
 
@@ -222,6 +222,6 @@ void DAC_Ch1_NoiseConfig()
     DAC_Cmd(DAC_Channel_1, ENABLE);
 
     // Set DAC Channel1 DHR12L register
-    DAC_SetChannel1Data(DAC_Align_12b_L, 0x7FF0);
+    DAC_SetChannel1Data(DAC_Align_12b_L, 0x0);//7FF0);
 }
 

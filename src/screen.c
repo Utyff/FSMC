@@ -83,10 +83,10 @@ void drawGraph()
   for(u16 i=1; i<MAX_X; i++)
   {
 //    LCD_Fast_DrawPoint(i, samplesBuffer.two[i][1], CYAN);
-//    LCD_Fast_DrawPoint(i,graph[i],CYAN);
+//    LCD_Fast_DrawPoint(i, graph[i], CYAN);
     LCD_DrawLine(i-(u16)1, prev, i, graph[i]);
     prev = graph[i];
   }
   DrawGraphTick = DWT_Elapsed_Tick(t0);
-  LCD_ShowxNum(150,220, DrawGraphTick/168, 10,12, 9);
+  LCD_ShowxNum(150,228, DrawGraphTick/168, 10,12, 9);
 }

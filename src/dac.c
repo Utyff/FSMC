@@ -1,15 +1,33 @@
 #include "stm32f4xx_conf.h"
 #include <dac.h>
 
+#define SIN_TABLE_SIZE  128
 
-//#define DAC_DHR12R2_ADDRESS    0x40007414
-//#define DAC_DHR8R1_ADDRESS     0x40007410
-
-const uint16_t aSine12bit[32] = {
+#if   SIN_TABLE_SIZE==23
+const uint16_t sinTable[32] = {
         2047, 2447, 2831, 3185, 3498, 3750, 3939, 4056, 4095, 4056,
         3939, 3750, 3495, 3185, 2831, 2447, 2047, 1647, 1263, 909,
         599, 344, 155, 38, 0, 38, 155, 344, 599, 909, 1263, 1647};
+#elif SIN_TABLE_SIZE==128
+const uint16_t sinTable[128] = {
+        2048,  2148,  2248,  2348,  2447,  2545,  2642,  2737,
+        2831,  2923,  3013,  3100,  3185,  3267,  3347,  3423,
+        3496,  3565,  3631,  3692,  3750,  3804,  3854,  3899,
+        3940,  3976,  4007,  4034,  4056,  4073,  4086,  4093,
+        4096,  4093,  4086,  4073,  4056,  4034,  4007,  3976,
+        3940,  3899,  3854,  3804,  3750,  3692,  3631,  3565,
+        3496,  3423,  3347,  3267,  3185,  3100,  3013,  2923,
+        2831,  2737,  2642,  2545,  2447,  2348,  2248,  2148,
+        2048,  1947,  1847,  1747,  1648,  1550,  1453,  1358,
+        1264,  1172,  1082,   995,   910,   828,   748,   672,
+         599,   530,   464,   403,   345,   291,   241,   196,
+         155,   119,    88,    61,    39,    22,     9,     2,
+           0,     2,     9,    22,    39,    61,    88,   119,
+         155,   196,   241,   291,   345,   403,   464,   530,
+         599,   672,   748,   828,   910,   995,  1082,  1172,
+        1264,  1358,  1453,  1550,  1648,  1747,  1847,  1947};
 const uint8_t aEscalator8bit[6] = {0x0, 0x33, 0x66, 0x99, 0xCC, 0xFF};
+#endif
 
 static void TIM6_Config();
 
@@ -37,6 +55,7 @@ void DAC_init()
     // TIM6 Configuration ------------------------------------------------
     TIM6_Config();
 
+    // Escalator generator -----------------------------------------------
     DAC_Ch1_EscalatorConfig();
     // Sine Wave generator -----------------------------------------------
     DAC_Ch2_SineWaveConfig();
@@ -47,11 +66,8 @@ void DAC_init()
 }
 
 /**
-  * @brief  TIM6 Configuration
   * @note   TIM6 configuration is based on APB1 frequency
   * @note   TIM6 Update event occurs each TIM6CLK/256
-  * @param  None
-  * @retval None
   */
 static void TIM6_Config()
 {
@@ -59,25 +75,10 @@ static void TIM6_Config()
     // TIM6 Periph clock enable
     RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM6, ENABLE);
 
-    /* --------------------------------------------------------
-    TIM3 input clock (TIM6CLK) is set to 2 * APB1 clock (PCLK1),
-    since APB1 prescaler is different from 1.
-      TIM6CLK = 2 * PCLK1
-      TIM6CLK = HCLK / 2 = SystemCoreClock /2
-
-    TIM6 Update event occurs each TIM6CLK/256
-
-    Note:
-     SystemCoreClock variable holds HCLK frequency and is defined in system_stm32f4xx.c file.
-     Each time the core clock (HCLK) changes, user had to call SystemCoreClockUpdate()
-     function to update SystemCoreClock variable value. Otherwise, any configuration
-     based on this variable will be incorrect.
-
-    ----------------------------------------------------------- */
     // Time base configuration
     TIM_TimeBaseStructInit(&TIM_TimeBaseStructure);
-    TIM_TimeBaseStructure.TIM_Period = 0x17F;
-    TIM_TimeBaseStructure.TIM_Prescaler = 0;
+    TIM_TimeBaseStructure.TIM_Period = 0x17F; // TIM6CLK = 2 * PCLK1 = HCLK /2 = SystemCoreClock /2 = 84MHz
+    TIM_TimeBaseStructure.TIM_Prescaler = 0;  // 84MHz / 0x17F = 219KHz
     TIM_TimeBaseStructure.TIM_ClockDivision = 0;
     TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
     TIM_TimeBaseInit(TIM6, &TIM_TimeBaseStructure);
@@ -91,12 +92,10 @@ static void TIM6_Config()
 
 /**
   * @brief  DAC  Channel2 SineWave Configuration
-  * @param  None
-  * @retval None
   */
 void DAC_Ch2_SineWaveConfig()
 {
-    DMA_InitTypeDef DMA_InitStructure;
+    DMA_InitTypeDef  DMA_InitStructure;
     DAC_InitTypeDef  DAC_InitStructure;
 
     // DAC channel2 Configuration
@@ -109,9 +108,9 @@ void DAC_Ch2_SineWaveConfig()
     DMA_DeInit(DMA1_Stream6);
     DMA_InitStructure.DMA_Channel = DMA_Channel_7;
     DMA_InitStructure.DMA_PeripheralBaseAddr = (uint32_t)&DAC->DHR12R2; //DAC_DHR12R2_ADDRESS; //
-    DMA_InitStructure.DMA_Memory0BaseAddr = (uint32_t)&aSine12bit;
+    DMA_InitStructure.DMA_Memory0BaseAddr = (uint32_t)&sinTable;
     DMA_InitStructure.DMA_DIR = DMA_DIR_MemoryToPeripheral;
-    DMA_InitStructure.DMA_BufferSize = 32;
+    DMA_InitStructure.DMA_BufferSize = SIN_TABLE_SIZE;
     DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
     DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;
     DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_HalfWord;
@@ -136,12 +135,10 @@ void DAC_Ch2_SineWaveConfig()
 
 /**
   * @brief  DAC Channel1 Escalator Configuration
-  * @param  None
-  * @retval None
   */
 void DAC_Ch1_EscalatorConfig()
 {
-    DMA_InitTypeDef DMA_InitStructure;
+    DMA_InitTypeDef  DMA_InitStructure;
     DAC_InitTypeDef  DAC_InitStructure;
 
     // DAC channel1 Configuration
@@ -181,8 +178,6 @@ void DAC_Ch1_EscalatorConfig()
 
 /**
   * @brief  DAC Channel2 Triangle Configuration
-  * @param  None
-  * @retval None
   */
 void DAC_Ch2_TriangleConfig()
 {
@@ -199,13 +194,12 @@ void DAC_Ch2_TriangleConfig()
     DAC_Cmd(DAC_Channel_2, ENABLE);
 
     // Set DAC channel2 DHR12RD register
-    DAC_SetChannel2Data(DAC_Align_12b_R, 0x0);
+    //DAC_SetChannel2Data(DAC_Align_12b_R, 0x0);
+    DAC->DHR12R2 = 0;
 }
 
 /**
   * @brief  DAC  Channel1 Noise Configuration
-  * @param  None
-  * @retval None
   */
 void DAC_Ch1_NoiseConfig()
 {
@@ -224,4 +218,3 @@ void DAC_Ch1_NoiseConfig()
     // Set DAC Channel1 DHR12L register
     DAC_SetChannel1Data(DAC_Align_12b_L, 0x0);//7FF0);
 }
-

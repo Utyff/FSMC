@@ -887,7 +887,7 @@ void LCD_Clear(u16 color)
     // count time for one circle
 	LCDClearTick = DWT_Elapsed_Tick(t0);
 	POINT_COLOR = YELLOW;
-    LCD_ShowxNum(100,228, LCDClearTick/168, 8,12, 9);
+    LCD_ShowxNum(100,227, LCDClearTick/168, 8,12, 9);
 }
 // Fill a single color in the designated area
 //(sx,sy),(ex,ey): filled rectangle coordinates diagonal , area size:(ex-sx+1)*(ey-sy+1)

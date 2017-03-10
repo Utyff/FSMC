@@ -10,22 +10,22 @@ const uint16_t sinTable[32] = {
         599, 344, 155, 38, 0, 38, 155, 344, 599, 909, 1263, 1647};
 #elif SIN_TABLE_SIZE==128
 const uint16_t sinTable[128] = {
-        2048,  2148,  2248,  2348,  2447,  2545,  2642,  2737,
-        2831,  2923,  3013,  3100,  3185,  3267,  3347,  3423,
-        3496,  3565,  3631,  3692,  3750,  3804,  3854,  3899,
-        3940,  3976,  4007,  4034,  4056,  4073,  4086,  4093,
-        4096,  4093,  4086,  4073,  4056,  4034,  4007,  3976,
-        3940,  3899,  3854,  3804,  3750,  3692,  3631,  3565,
-        3496,  3423,  3347,  3267,  3185,  3100,  3013,  2923,
-        2831,  2737,  2642,  2545,  2447,  2348,  2248,  2148,
-        2048,  1947,  1847,  1747,  1648,  1550,  1453,  1358,
-        1264,  1172,  1082,   995,   910,   828,   748,   672,
-         599,   530,   464,   403,   345,   291,   241,   196,
-         155,   119,    88,    61,    39,    22,     9,     2,
-           0,     2,     9,    22,    39,    61,    88,   119,
-         155,   196,   241,   291,   345,   403,   464,   530,
-         599,   672,   748,   828,   910,   995,  1082,  1172,
-        1264,  1358,  1453,  1550,  1648,  1747,  1847,  1947};
+		  2000,  2093,  2186,  2278,  2370,  2461,  2551,  2640,
+		  2727,  2812,  2895,  2976,  3055,  3131,  3205,  3275,
+		  3343,  3407,  3468,  3526,  3579,  3629,  3675,  3717,
+		  3755,  3788,  3818,  3843,  3863,  3879,  3890,  3897,
+		  3900,  3897,  3890,  3879,  3863,  3843,  3818,  3788,
+		  3755,  3717,  3675,  3629,  3579,  3526,  3468,  3407,
+		  3343,  3275,  3205,  3131,  3055,  2976,  2895,  2812,
+		  2727,  2640,  2551,  2461,  2370,  2278,  2186,  2093,
+		  2000,  1906,  1813,  1721,  1629,  1538,  1448,  1359,
+		  1272,  1187,  1104,  1023,   944,   868,   794,   724,
+		   656,   592,   531,   473,   420,   370,   324,   282,
+		   244,   211,   181,   156,   136,   120,   109,   102,
+		   100,   102,   109,   120,   136,   156,   181,   211,
+		   244,   282,   324,   370,   420,   473,   531,   592,
+		   656,   724,   794,   868,   944,  1023,  1104,  1187,
+		  1272,  1359,  1448,  1538,  1629,  1721,  1813,  1906};
 const uint8_t aEscalator8bit[6] = {0x0, 0x33, 0x66, 0x99, 0xCC, 0xFF};
 #endif
 
@@ -56,11 +56,11 @@ void DAC_init()
     TIM6_Config();
 
     // Escalator generator -----------------------------------------------
-    DAC_Ch1_EscalatorConfig();
+//    DAC_Ch1_EscalatorConfig();
     // Sine Wave generator -----------------------------------------------
     DAC_Ch2_SineWaveConfig();
     // Noise Wave generator ----------------------------------------------
-//    DAC_Ch1_NoiseConfig();
+    DAC_Ch1_NoiseConfig();
     // Triangle Wave generator -------------------------------------------
 //    DAC_Ch2_TriangleConfig();
 }
@@ -77,7 +77,7 @@ static void TIM6_Config()
 
     // Time base configuration
     TIM_TimeBaseStructInit(&TIM_TimeBaseStructure);
-    TIM_TimeBaseStructure.TIM_Period = 0x17F; // TIM6CLK = 2 * PCLK1 = HCLK /2 = SystemCoreClock /2 = 84MHz
+    TIM_TimeBaseStructure.TIM_Period = 0x7F; // TIM6CLK = 2 * PCLK1 = HCLK /2 = SystemCoreClock /2 = 84MHz
     TIM_TimeBaseStructure.TIM_Prescaler = 0;  // 84MHz / 0x17F = 219KHz
     TIM_TimeBaseStructure.TIM_ClockDivision = 0;
     TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
@@ -209,12 +209,12 @@ void DAC_Ch1_NoiseConfig()
     DAC_InitStructure.DAC_Trigger = DAC_Trigger_T6_TRGO;
     DAC_InitStructure.DAC_WaveGeneration = DAC_WaveGeneration_Noise;
     DAC_InitStructure.DAC_LFSRUnmask_TriangleAmplitude = DAC_LFSRUnmask_Bits11_0;
-    DAC_InitStructure.DAC_OutputBuffer = DAC_OutputBuffer_Enable;
+    DAC_InitStructure.DAC_OutputBuffer = DAC_OutputBuffer_Disable;
     DAC_Init(DAC_Channel_1, &DAC_InitStructure);
 
     // Enable DAC Channel1
     DAC_Cmd(DAC_Channel_1, ENABLE);
 
     // Set DAC Channel1 DHR12L register
-    DAC_SetChannel1Data(DAC_Align_12b_L, 0x0);//7FF0);
+    DAC_SetChannel1Data(DAC_Align_12b_L, 0x7FF0);
 }

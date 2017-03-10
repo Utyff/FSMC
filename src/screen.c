@@ -88,5 +88,5 @@ void drawGraph()
     prev = graph[i];
   }
   DrawGraphTick = DWT_Elapsed_Tick(t0);
-  LCD_ShowxNum(150,228, DrawGraphTick/168, 10,12, 9);
+  LCD_ShowxNum(150,227, DrawGraphTick/168, 10,12, 9);
 }

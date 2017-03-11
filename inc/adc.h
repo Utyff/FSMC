@@ -13,6 +13,8 @@ typedef volatile union SampleBuffer {
     u8 one [SAMPLES_1_BUFFER_SIZE];
 } SAMPLEBUFFER;
 extern union SampleBuffer samplesBuffer;
+extern u8    half;
+
 
 #ifdef __cplusplus
 extern "C" {

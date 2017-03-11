@@ -5,6 +5,7 @@
 
 
 union SampleBuffer samplesBuffer;
+u8    half=0;
 
 uint32_t ADCStartTick;         // time when start ADC buffer fill
 uint32_t ADCHalfElapsedTick;   // the last time half buffer fill
@@ -120,6 +121,7 @@ void DMA2_Stream0_IRQHandler ( void )
 
     // count time for half circle
     ADCHalfElapsedTick = DWT_Elapsed_Tick(ADCStartTick);
+    half = 0;
   }
 
   // Test on DMA Stream Transfer Complete interrupt
@@ -131,5 +133,6 @@ void DMA2_Stream0_IRQHandler ( void )
     // count time for one circle
     ADCElapsedTick = DWT_Elapsed_Tick(ADCStartTick);
     ADCStartTick = DWT_Get_Current_Tick();
+    half = 1;
   }
 }

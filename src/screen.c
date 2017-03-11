@@ -20,7 +20,7 @@ void drawFrame()
 }
 
 
-int triggerStart()
+int triggerStart(u8 (*samples)[2])
 {
     int i;
     u8  trgLvl = 128;
@@ -30,12 +30,12 @@ int triggerStart()
     {
         if( trgRdy==0 )
         {
-            if( samplesBuffer.two[i][1]<trgLvl )
+            if( samples[i][1]<trgLvl )
                 trgRdy = 1;
             continue;
         }
 
-        if( samplesBuffer.two[i][1]>trgLvl )
+        if( samples[i][1]>trgLvl )
             return i;
     }
     return 0;
@@ -50,20 +50,23 @@ void buildGraph()
     uint32_t t0 = DWT_Get_Current_Tick();
     int    i, j;
     float  scaleX, x; //, scaleY=1;
+    u8     (*samples)[2] = samplesBuffer.two;
+    if( half!=0 ) samples += 1024;
+
     scaleX = 0.5 ; // (float)320 / (float)(SAMPLES_2_BUFFER_SIZE/2);
 
     x=0; j=-1;
-    i = triggerStart();
+    i = triggerStart(samples);
     for( ; i<SAMPLES_2_BUFFER_SIZE/2; i++ )
     {
         if( (int)x!=j )
         {
             j = (int)x;
             if( j>=MAX_X ) break;
-            graph[j] = samplesBuffer.two[i][1];
+            graph[j] = samples[i][1];
         } else
         {
-            graph[j] = (graph[j]+samplesBuffer.two[i][1]) >>1; // arithmetical mean
+            graph[j] = (graph[j]+samples[i][1]) >>1; // arithmetical mean
         }
         x += scaleX;
     }
@@ -80,12 +83,12 @@ void drawGraph()
 
   POINT_COLOR = CYAN;
   prev = graph[0];
-  for(u16 i=1; i<MAX_X; i++)
+  for(u16 i=0; i<MAX_X; i++)
   {
 //    LCD_Fast_DrawPoint(i, samplesBuffer.two[i][1], CYAN);
-//    LCD_Fast_DrawPoint(i, graph[i], CYAN);
-    LCD_DrawLine(i-(u16)1, prev, i, graph[i]);
-    prev = graph[i];
+    LCD_Fast_DrawPoint(i, graph[i], CYAN);
+//    LCD_DrawLine(i-(u16)1, prev, i, graph[i]);
+//    prev = graph[i];
   }
   DrawGraphTick = DWT_Elapsed_Tick(t0);
   LCD_ShowxNum(150,227, DrawGraphTick/168, 10,12, 9);

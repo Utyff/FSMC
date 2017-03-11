@@ -75,7 +75,7 @@ void buildGraph1ch()
     u8     *samples = samplesBuffer.one;
     if( half!=0 ) samples += SAMPLES_1_BUFFER_SIZE/2;
 
-    scaleX = 0.5 ; // (float)320 / (float)(SAMPLES_2_BUFFER_SIZE/2);
+    scaleX = 0.5; // (float)320 / (float)(SAMPLES_2_BUFFER_SIZE/2);
 
     x=0; j=-1;
     i = triggerStart1ch(samples);
@@ -129,7 +129,7 @@ void drawGraph()
 {
   u8 prev;
 
-  buildGraph2ch();
+  buildGraph1ch();
   uint32_t t0 = DWT_Get_Current_Tick();
 
   POINT_COLOR = CYAN;

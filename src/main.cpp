@@ -47,22 +47,6 @@ int main()
 
     drawFrame();
     drawGraph();
-/*    POINT_COLOR=YELLOW;
-    LCD_Draw_Circle(20,20,15);
-    POINT_COLOR=BLUE;
-    LCD_Draw_Circle(300,20,15);
-    POINT_COLOR=GREEN;
-    LCD_Draw_Circle(300,220,15);
-    POINT_COLOR=RED;
-    LCD_Draw_Circle(20,220,15);
-
-    LCD_ShowChar(30,30,'A',12,1);
-    LCD_ShowChar(50,30,'B',12,0);
-    LCD_ShowNum (30,50, 79, 3,12);
-    LCD_ShowNum (90,50, 12345, 3,12);
-    LCD_ShowNum (30,70, 79, 5,12);
-    LCD_ShowxNum(30,90, 7989, 3,12, 9);
-    LCD_ShowString(30,110,90,30, 12,"STrinG"); //*/
   }
 }
 

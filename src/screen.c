@@ -9,7 +9,7 @@ void drawFrame()
 //	u16 x,y, step=40;
 
 	LCD_Clear(BLACK);
-	POINT_COLOR = GRAY;	// Drawing pen color
+	POINT_COLOR = GRAY;  // Drawing pen color
 	BACK_COLOR  = BLACK;
 
 /*	for( y=step; y<MAX_Y; y+=step )

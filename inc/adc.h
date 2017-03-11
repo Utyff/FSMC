@@ -4,8 +4,8 @@
 #include "stm32f4xx.h"
 
 #define SAMPLES_4_BUFFER_SIZE 1024
-#define SAMPLES_2_BUFFER_SIZE 2048
-#define SAMPLES_1_BUFFER_SIZE 4096
+#define SAMPLES_2_BUFFER_SIZE 2*SAMPLES_4_BUFFER_SIZE
+#define SAMPLES_1_BUFFER_SIZE 4*SAMPLES_4_BUFFER_SIZE
 
 typedef volatile union SampleBuffer {
     u8 four[SAMPLES_4_BUFFER_SIZE][4];

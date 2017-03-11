@@ -20,7 +20,28 @@ void drawFrame()
 }
 
 
-int triggerStart(u8 (*samples)[2])
+int triggerStart1ch(u8 *samples)
+{
+    int i;
+    u8  trgLvl = 128;
+    u8  trgRdy = 0;
+
+    for( i=0; i<SAMPLES_1_BUFFER_SIZE/2; i++ )
+    {
+        if( trgRdy==0 )
+        {
+            if( samples[i]<trgLvl )
+                trgRdy = 1;
+            continue;
+        }
+
+        if( samples[i]>trgLvl )
+            return i;
+    }
+    return 0;
+}
+
+int triggerStart2ch(u8 (*samples)[2])
 {
     int i;
     u8  trgLvl = 128;
@@ -45,18 +66,48 @@ int triggerStart(u8 (*samples)[2])
 // number of samples to display
 
 uint32_t BuildGraphTick;
-void buildGraph()
+void buildGraph1ch()
 {
     uint32_t t0 = DWT_Get_Current_Tick();
     int    i, j;
     float  scaleX, x; //, scaleY=1;
-    u8     (*samples)[2] = samplesBuffer.two;
-    if( half!=0 ) samples += 1024;
+
+    u8     *samples = samplesBuffer.one;
+    if( half!=0 ) samples += SAMPLES_1_BUFFER_SIZE/2;
 
     scaleX = 0.5 ; // (float)320 / (float)(SAMPLES_2_BUFFER_SIZE/2);
 
     x=0; j=-1;
-    i = triggerStart(samples);
+    i = triggerStart1ch(samples);
+    for( ; i<SAMPLES_1_BUFFER_SIZE/2; i++ )
+    {
+        if( (int)x!=j )
+        {
+            j = (int)x;
+            if( j>=MAX_X ) break;
+            graph[j] = samples[i];
+        } else
+        {
+            graph[j] = (graph[j]+samples[i]) >>1; // arithmetical mean
+        }
+        x += scaleX;
+    }
+    BuildGraphTick = DWT_Elapsed_Tick(t0);
+}
+
+void buildGraph2ch()
+{
+    uint32_t t0 = DWT_Get_Current_Tick();
+    int    i, j;
+    float  scaleX, x; //, scaleY=1;
+
+    u8     (*samples)[2] = samplesBuffer.two;
+    if( half!=0 ) samples += SAMPLES_2_BUFFER_SIZE/2;
+
+    scaleX = 0.5 ; // (float)320 / (float)(SAMPLES_2_BUFFER_SIZE/2);
+
+    x=0; j=-1;
+    i = triggerStart2ch(samples);
     for( ; i<SAMPLES_2_BUFFER_SIZE/2; i++ )
     {
         if( (int)x!=j )
@@ -78,7 +129,7 @@ void drawGraph()
 {
   u8 prev;
 
-  buildGraph();
+  buildGraph2ch();
   uint32_t t0 = DWT_Get_Current_Tick();
 
   POINT_COLOR = CYAN;

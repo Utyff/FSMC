@@ -6,6 +6,7 @@
 #include "dac.h"
 #include "lcd.h"
 #include "screen.h"
+#include "exti.h"
 
 
 // for f4-disco GPIOD & GPIO_Pin_12  Green LED
@@ -21,6 +22,7 @@ void LED_init();
 
 extern "C" {
   void AD9833_init();
+  void EXTI_init();
 }
 
 
@@ -38,6 +40,7 @@ int main()
   LCD_Init();
   ADC_init();
   DAC_init();
+  EXTI_init();
 
 
   while(1)
@@ -46,6 +49,7 @@ int main()
     GPIO_ToggleBits(LED_PORT, LED_PIN); // Green LED toggle
 
     drawFrame();
+    LCD_ShowxNum(10,227, buttonCount, 8,12, 9);
     drawGraph();
   }
 }

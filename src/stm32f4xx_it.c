@@ -29,6 +29,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx_it.h"
+#include "exti.h"
 
 /** @addtogroup Template_Project
   * @{
@@ -161,6 +162,21 @@ void TIM7_IRQHandler()
 {
   TIM7->SR &= ~TIM_SR_UIF; //—брасываем флаг прерывани€
 //  GPIO_ToggleBits(GPIOD, GPIO_Pin_12); // Green toggle
+}
+
+
+// This function handles External line 0 interrupt request.
+void EXTI0_IRQHandler(void)
+{
+  if(EXTI_GetITStatus(EXTI_Line0) != RESET)
+  {
+    /* Toggle LED4 */
+    // STM_EVAL_LEDToggle(LED4);
+    buttonCount++;
+
+    /* Clear the EXTI line 0 pending bit */
+    EXTI_ClearITPendingBit(EXTI_Line0);
+  }
 }
 
 /******************************************************************************/

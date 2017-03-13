@@ -47,6 +47,7 @@ set(SOURCE_FILES
         src/stm32f4xx_it.c
         src/system_stm32f4xx.c
         src/lib.c
-        src/dac.c)
+        src/dac.c
+        inc/exti.h)
 
 add_executable(FSMC ${SOURCE_FILES})

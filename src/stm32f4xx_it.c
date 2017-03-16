@@ -29,7 +29,8 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx_it.h"
-#include "exti.h"
+#include <exti.h>
+#include <dwt.h>
 
 /** @addtogroup Template_Project
   * @{
@@ -164,19 +165,23 @@ void TIM7_IRQHandler()
 //  GPIO_ToggleBits(GPIOD, GPIO_Pin_12); // Green toggle
 }
 
+#define BOUNCING_TIME  50*(168000000/1000)  // 50 milliseconds in DWT ticks
 
 // This function handles External line 0 interrupt request.
-void EXTI0_IRQHandler(void)
+void EXTI0_IRQHandler()
 {
-  if(EXTI_GetITStatus(EXTI_Line0) != RESET)
-  {
-    /* Toggle LED4 */
-    // STM_EVAL_LEDToggle(LED4);
-    buttonCount++;
+  static u32 t0 = 0;
 
-    /* Clear the EXTI line 0 pending bit */
-    EXTI_ClearITPendingBit(EXTI_Line0);
+  if ( DWT_GetDelta(t0)>BOUNCING_TIME )
+  {
+    t0 = DWT_Get_Current_Tick();
+    if (EXTI_GetITStatus(EXTI_Line0) != RESET)
+    {
+      buttonCount++;
+    }
   }
+  // Clear the EXTI line 0 pending bit
+  EXTI_ClearITPendingBit(EXTI_Line0);
 }
 
 /******************************************************************************/

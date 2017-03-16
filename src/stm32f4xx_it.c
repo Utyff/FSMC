@@ -172,16 +172,16 @@ void EXTI0_IRQHandler()
 {
   static u32 t0 = 0;
 
-  if ( DWT_GetDelta(t0)>BOUNCING_TIME )
+  if (EXTI_GetITStatus(EXTI_Line0) != RESET)
   {
-    t0 = DWT_Get_Current_Tick();
-    if (EXTI_GetITStatus(EXTI_Line0) != RESET)
+    if ( DWT_GetDelta(t0)>BOUNCING_TIME )
     {
+      t0 = DWT_Get_Current_Tick();
       buttonCount++;
     }
+    // Clear the EXTI line 0 pending bit
+    EXTI_ClearITPendingBit(EXTI_Line0);
   }
-  // Clear the EXTI line 0 pending bit
-  EXTI_ClearITPendingBit(EXTI_Line0);
 }
 
 /******************************************************************************/

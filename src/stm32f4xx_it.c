@@ -177,7 +177,9 @@ void EXTI0_IRQHandler()
     if ( DWT_GetDelta(t0)>BOUNCING_TIME )
     {
       t0 = DWT_Get_Current_Tick();
-      buttonCount++;
+//      if( GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_0) != 0 )
+      if( (GPIOA->IDR & GPIO_Pin_0) != 0 )
+        buttonCount++;   // need to increment only on rising trigger (button down)
     }
     // Clear the EXTI line 0 pending bit
     EXTI_ClearITPendingBit(EXTI_Line0);

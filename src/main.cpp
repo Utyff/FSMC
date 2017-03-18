@@ -49,7 +49,9 @@ int main()
     GPIO_ToggleBits(LED_PORT, LED_PIN); // Green LED toggle
 
     drawFrame();
-    LCD_ShowxNum(10,227, buttonCount, 8,12, 9);
+    LCD_ShowxNum(0,  227, button0Count, 5,12, 9);
+    LCD_ShowxNum(30, 227, button1Count, 5,12, 9);
+    LCD_ShowxNum(60, 227, button2Count, 5,12, 9);
     drawGraph();
   }
 }

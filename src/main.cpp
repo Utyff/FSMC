@@ -7,6 +7,7 @@
 #include "lcd.h"
 #include "screen.h"
 #include "exti.h"
+#include "menu.h"
 
 
 // for f4-disco GPIOD & GPIO_Pin_12  Green LED
@@ -49,10 +50,11 @@ int main()
     GPIO_ToggleBits(LED_PORT, LED_PIN); // Green LED toggle
 
     drawFrame();
+    drawGraph();
     LCD_ShowxNum(0,  227, button0Count, 5,12, 9);
     LCD_ShowxNum(30, 227, button1Count, 5,12, 9);
     LCD_ShowxNum(60, 227, button2Count, 5,12, 9);
-    drawGraph();
+    drawMenu1();
   }
 }
 

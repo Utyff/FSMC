@@ -628,9 +628,9 @@ void LCD_Init(void)
   readWriteTiming.FSMC_AccessMode = FSMC_AccessMode_A;	 // Mode A
 
 
-	writeTiming.FSMC_AddressSetupTime =3;	      // Address setup time (ADDSET) for the nine HCLK =54ns
+	writeTiming.FSMC_AddressSetupTime =5;	      // Address setup time (ADDSET) for the nine HCLK =54ns
   writeTiming.FSMC_AddressHoldTime = 0x00;	 // Address hold time (A
-  writeTiming.FSMC_DataSetupTime = 3;		 // Data retention time 6ns *9 Ge HCLK =54ns
+  writeTiming.FSMC_DataSetupTime = 5;		 // Data retention time 6ns *9 Ge HCLK =54ns
   writeTiming.FSMC_BusTurnAroundDuration = 0x00;
   writeTiming.FSMC_CLKDivision = 0x00;
   writeTiming.FSMC_DataLatency = 0x00;

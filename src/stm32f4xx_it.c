@@ -31,6 +31,7 @@
 #include "stm32f4xx_it.h"
 #include <exti.h>
 #include <dwt.h>
+#include <menu.h>
 
 /** @addtogroup Template_Project
   * @{
@@ -179,14 +180,17 @@ void EXTI0_IRQHandler()
       t0 = DWT_Get_Current_Tick();
 //      if( GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_0) != 0 )
       if( (GPIOA->IDR & GPIO_Pin_0) != 0 )
+      {
         button0Count++;   // only on rising trigger (button down)
+        menu1Next();
+      }
     }
     // Clear the EXTI line 0 pending bit
     EXTI_ClearITPendingBit(EXTI_Line0);
   }
 }
 
-// This function handles External line 0 interrupt request.
+// This function handles External line 1 interrupt request.
 void EXTI1_IRQHandler()
 {
   static u32 t0 = 0;
@@ -205,7 +209,7 @@ void EXTI1_IRQHandler()
   }
 }
 
-// This function handles External line 0 interrupt request.
+// This function handles External line 2 interrupt request.
 void EXTI2_IRQHandler()
 {
   static u32 t0 = 0;

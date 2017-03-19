@@ -1115,7 +1115,7 @@ void LCD_ShowxNum(u16 x,u16 y,u32 num,u8 len,u8 size,u8 mode)
 //width,height: size of the area
 //size: Font Size
 //*p: string starting address
-void LCD_ShowString(u16 x,u16 y,u16 width,u16 height,u8 size,const char *p)
+void LCD_ShowString(u16 x,u16 y,u16 width,u16 height,u8 size,const char *p, u8 mode)
 {
 	u8 x0=x;
 	width+=x;
@@ -1124,7 +1124,7 @@ void LCD_ShowString(u16 x,u16 y,u16 width,u16 height,u8 size,const char *p)
     {
         if(x>=width){x=x0;y+=size;}
         if(y>=height)break;//Exit
-        LCD_ShowChar(x,y,*p,size,0);
+        LCD_ShowChar(x,y,*p,size,mode);
         x+=size/2;
         p++;
     }

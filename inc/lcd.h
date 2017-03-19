@@ -85,6 +85,10 @@ typedef struct
 	u16 LCD_REG;
 	u16 LCD_RAM;
 } LCD_TypeDef;
+
+// Note: LCD /CS is NE1 - Bank 1 of NOR/SRAM Bank 1~4
+//#define LCD_BASE           ((uint32_t)(0x60000000 | 0x0001fffE))
+
 // use Bank1.sector1 of NOR / SRAM, address bits HADDR [27,26]=00   A18 as command line for data command
 // Note that the STM32 will shift to the right one bit when set!
 #define LCD_BASE        ((u32)(0x60000000 | 0x00007FFFE))
@@ -153,7 +157,7 @@ void LCD_Color_Fill(u16 sx,u16 sy,u16 ex,u16 ey,u16 *color);				// fill in the s
 void LCD_ShowChar(u16 x,u16 y,u8 num,u8 size,u8 mode);						// display a character
 void LCD_ShowNum(u16 x,u16 y,u32 num,u8 len,u8 size);  						// display a number
 void LCD_ShowxNum(u16 x,u16 y,u32 num,u8 len,u8 size,u8 mode);				// display numbers
-void LCD_ShowString(u16 x,u16 y,u16 width,u16 height,u8 size,const char *p);		// display a string,12/16 font
+void LCD_ShowString(u16 x,u16 y,u16 width,u16 height,u8 size,const char *p, u8 mode);	// display a string,12/16 font
 
 void LCD_WriteReg(u16 LCD_Reg, u16 LCD_RegValue);
 u16 LCD_ReadReg(u16 LCD_Reg);

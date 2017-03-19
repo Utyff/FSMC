@@ -14,8 +14,12 @@ void menu1Next()
 
 void drawMenu1()
 {
+  POINT_COLOR = BLUE;  // Drawing pen color
+
   for( u16 i=0; i<4; i++ )
   {
-    LCD_ShowString(i*40, 0, 40,14, 12, menu[i]);
+	if( i==menu1 ) BACK_COLOR=YELLOW;
+	else BACK_COLOR = GRAY;
+    LCD_ShowString(i*50, 0, 40,14, 16, menu[i], 0);
   }
 }

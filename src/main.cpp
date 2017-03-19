@@ -51,10 +51,10 @@ int main()
 
     drawFrame();
     drawGraph();
+    drawMenu1();
     LCD_ShowxNum(0,  227, button0Count, 5,12, 9);
     LCD_ShowxNum(30, 227, button1Count, 5,12, 9);
     LCD_ShowxNum(60, 227, button2Count, 5,12, 9);
-    drawMenu1();
   }
 }
 

@@ -3,6 +3,10 @@
 #include <dwt.h>
 #include <adc.h>
 
+/*
+ *
+ *
+*/
 
 union SampleBuffer samplesBuffer;
 u8    half=0;
@@ -23,6 +27,7 @@ static void ADC_GPIO_init()  // configure PC2 as ADC CH12
   GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2;
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AN;
   GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
   GPIO_Init(GPIOC, &GPIO_InitStructure);
 }
 

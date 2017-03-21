@@ -50,7 +50,7 @@ void DAC_init()
     GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4 | GPIO_Pin_5;
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AN;
     GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
-    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
     GPIO_Init(GPIOA, &GPIO_InitStructure);
 
     // TIM6 Configuration ------------------------------------------------
@@ -60,9 +60,9 @@ void DAC_init()
 //    DAC_Ch1_EscalatorConfig();
     // Sine Wave generator -----------------------------------------------
     DAC_Ch2_SineWaveConfig();
-    // Noise Wave generator ----------------------------------------------
+    // Noise signal generator ----------------------------------------------
     DAC_Ch1_NoiseConfig();
-    // Triangle Wave generator -------------------------------------------
+    // Triangle signal generator -------------------------------------------
 //    DAC_Ch2_TriangleConfig();
 }
 

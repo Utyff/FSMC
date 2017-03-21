@@ -4,7 +4,10 @@
 #include <adc.h>
 
 /*
- *
+ * ADCCLK = APB2 / ADC_Prescaler =  84 MHz / 4 = 21 MHz
+ * 1 Tick = 1 / 21 MHz =  47 nanoseconds
+ * SampleTime = ADC_SampleTime + ADC_Resolution = 3 + 8 = 11 Tick
+ * SamplePerSec = 21MHz / 11 = 1,9 MSPS
  *
 */
 

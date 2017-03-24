@@ -28,7 +28,7 @@ void EXTI_init()
   GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1;
   GPIO_Init(GPIOB, &GPIO_InitStructure);
 
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2;
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2 | GPIO_Pin_5 | GPIO_Pin_6;
   GPIO_Init(GPIOE, &GPIO_InitStructure);
 
   // Connect EXTI Line0 to PA0 pin
@@ -51,6 +51,13 @@ void EXTI_init()
   EXTI_InitStructure.EXTI_Line = EXTI_Line2;
   EXTI_Init(&EXTI_InitStructure);
 
+  // Configure EXTI Line5
+  EXTI_InitStructure.EXTI_Line = EXTI_Line5;
+  EXTI_Init(&EXTI_InitStructure);
+  // Configure EXTI Line6
+  EXTI_InitStructure.EXTI_Line = EXTI_Line6;
+  EXTI_Init(&EXTI_InitStructure);
+
   // Enable and set EXTI Line0 Interrupt to the lowest priority
   NVIC_InitStructure.NVIC_IRQChannel = EXTI0_IRQn;
   NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0x01;
@@ -64,5 +71,9 @@ void EXTI_init()
 
   // Enable and set EXTI Line2 Interrupt to the lowest priority
   NVIC_InitStructure.NVIC_IRQChannel = EXTI2_IRQn;
+  NVIC_Init(&NVIC_InitStructure);
+
+  // Enable and set EXTI Line9-5 Interrupt to the lowest priority
+  NVIC_InitStructure.NVIC_IRQChannel = EXTI9_5_IRQn;
   NVIC_Init(&NVIC_InitStructure);
 }

@@ -228,6 +228,51 @@ void EXTI2_IRQHandler()
   }
 }
 
+// This function handles External line 2 interrupt request.
+void EXTI9_5_IRQHandler()
+{
+  static u32 t0 = 0;
+
+  if (EXTI_GetITStatus(EXTI_Line5) != RESET)
+  {
+    if ( DWT_GetDelta(t0)>BOUNCING_TIME )
+    {
+      t0 = DWT_Get_Current_Tick();
+//      if( GPIO_ReadInputDataBit(GPIOE, GPIO_Pin_5) != 0 )
+      if( (GPIOE->IDR & GPIO_Pin_5) != 0 )
+        button1Count++;   // only on rising trigger (button down)
+    }
+    EXTI_ClearITPendingBit(EXTI_Line5);
+  }
+
+  if (EXTI_GetITStatus(EXTI_Line6) != RESET)
+  {
+    if ( DWT_GetDelta(t0)>BOUNCING_TIME )
+    {
+      t0 = DWT_Get_Current_Tick();
+//      if( GPIO_ReadInputDataBit(GPIOE, GPIO_Pin_6) != 0 )
+      if( (GPIOE->IDR & GPIO_Pin_6) != 0 )
+        button2Count++;   // only on rising trigger (button down)
+    }
+    EXTI_ClearITPendingBit(EXTI_Line6);
+  }
+
+  if (EXTI_GetITStatus(EXTI_Line7) != RESET)
+  {
+    EXTI_ClearITPendingBit(EXTI_Line7);
+  }
+
+  if (EXTI_GetITStatus(EXTI_Line8) != RESET)
+  {
+    EXTI_ClearITPendingBit(EXTI_Line8);
+  }
+
+  if (EXTI_GetITStatus(EXTI_Line9) != RESET)
+  {
+    EXTI_ClearITPendingBit(EXTI_Line9);
+  }
+}
+
 /******************************************************************************/
 /*                 STM32F4xx Peripherals Interrupt Handlers                   */
 /*  Add here the Interrupt Handler for the used peripheral(s) (PPP), for the  */

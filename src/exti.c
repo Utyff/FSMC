@@ -35,6 +35,8 @@ void EXTI_init()
   SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOA, EXTI_PinSource0);
   SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOB, EXTI_PinSource1);
   SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOE, EXTI_PinSource2);
+  SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOE, EXTI_PinSource5);
+  SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOE, EXTI_PinSource6);
 
   // Configure EXTI Line0
   EXTI_InitStructure.EXTI_Line = EXTI_Line0;

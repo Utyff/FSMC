@@ -166,7 +166,7 @@ void TIM7_IRQHandler()
 //  GPIO_ToggleBits(GPIOD, GPIO_Pin_12); // Green toggle
 }
 
-#define BOUNCING_TIME  100*(168000000/1000)  // 100 milliseconds in DWT ticks
+#define BOUNCING_TIME  10*(168000000/1000)  // 100 milliseconds in DWT ticks
 
 // This function handles External line 0 interrupt request.
 void EXTI0_IRQHandler()
@@ -216,9 +216,9 @@ void EXTI2_IRQHandler()
 
   if (EXTI_GetITStatus(EXTI_Line2) != RESET)
   {
-    if ( DWT_GetDelta(t0)>BOUNCING_TIME )
+//    if ( DWT_GetDelta(t0)>BOUNCING_TIME )
     {
-      t0 = DWT_Get_Current_Tick();
+//      t0 = DWT_Get_Current_Tick();
 //      if( GPIO_ReadInputDataBit(GPIOE, GPIO_Pin_2) != 0 )
       if( (GPIOE->IDR & GPIO_Pin_2) != 0 )
         button2Count++;   // only on rising trigger (button down)
@@ -235,10 +235,9 @@ void EXTI9_5_IRQHandler()
 
   if (EXTI_GetITStatus(EXTI_Line5) != RESET)
   {
-    if ( DWT_GetDelta(t0)>BOUNCING_TIME )
+//    if ( DWT_GetDelta(t0)>BOUNCING_TIME )
     {
-      t0 = DWT_Get_Current_Tick();
-//      if( GPIO_ReadInputDataBit(GPIOE, GPIO_Pin_5) != 0 )
+//      t0 = DWT_Get_Current_Tick();
       if( (GPIOE->IDR & GPIO_Pin_5) != 0 )
         button1Count++;   // only on rising trigger (button down)
     }
@@ -247,10 +246,9 @@ void EXTI9_5_IRQHandler()
 
   if (EXTI_GetITStatus(EXTI_Line6) != RESET)
   {
-    if ( DWT_GetDelta(t0)>BOUNCING_TIME )
+//    if ( DWT_GetDelta(t0)>BOUNCING_TIME )
     {
-      t0 = DWT_Get_Current_Tick();
-//      if( GPIO_ReadInputDataBit(GPIOE, GPIO_Pin_6) != 0 )
+//      t0 = DWT_Get_Current_Tick();
       if( (GPIOE->IDR & GPIO_Pin_6) != 0 )
         button2Count++;   // only on rising trigger (button down)
     }

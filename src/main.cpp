@@ -24,14 +24,11 @@ void LED_init();
 
 extern "C" {
   void AD9833_init();
-  void EXTI_init();
-  void Encoder_Init();
 }
 
 
 int main()
 {
-  char  str[20];
 //  RCC_ClocksTypeDef RCC_Clocks;
 //  RCC_GetClocksFreq(&RCC_Clocks);
 
@@ -45,7 +42,7 @@ int main()
   ADC_init();
   DAC_init();
 //  EXTI_init();
-  Encoder_Init();
+  Encoder_init();
 
   while(1)
   {
@@ -55,13 +52,13 @@ int main()
     drawFrame();
     drawGraph();
     drawMenu1();
+
+    POINT_COLOR = MAGENTA;
+    BACK_COLOR  = BLUE;
     LCD_ShowxNum(0,   227, button0Count, 5,12, 9);
     LCD_ShowxNum(30,  227, button1Count, 5,12, 9);
     LCD_ShowxNum(60,  227, button2Count, 5,12, 9);
-    u32 qq = TIM_GetCounter(TIM2);
-    LCD_ShowxNum(260, 227, TIM2->CNT,    5,12, 9);
-//    itoa(button0Count, str);
-//    LCD_ShowString(0, 227, );
+    LCD_ShowxNum(260, 227, encoder,      5,12, 9);
   }
 }
 

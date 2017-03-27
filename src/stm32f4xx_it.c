@@ -32,6 +32,7 @@
 #include <exti.h>
 #include <dwt.h>
 #include <menu.h>
+#include <stm32f4xx.h>
 
 /** @addtogroup Template_Project
   * @{
@@ -150,20 +151,27 @@ void SysTick_Handler(void)
 // Обработчик прерывания TIM4_DAC
 void TIM4_IRQHandler(void)
 {
-  TIM4->SR &= ~TIM_SR_UIF; //Сбрасываем флаг прерывания
   if( OraStat )
        GPIO_SetBits(GPIOD, GPIO_Pin_13);
   else
        GPIO_ResetBits(GPIOD, GPIO_Pin_13);
   OraStat = !OraStat;
+  TIM4->SR &= ~TIM_SR_UIF; //Сбрасываем флаг прерывания
 } //*/
 
 
 // Обработчик прерывания TIM7
+void TIM2_IRQHandler()
+{
+  encoder = TIM2->CNT;
+  TIM2->SR &= ~TIM_SR_UIF; //Сбрасываем флаг прерывания
+}
+
+// Обработчик прерывания TIM7
 void TIM7_IRQHandler()
 {
-  TIM7->SR &= ~TIM_SR_UIF; //Сбрасываем флаг прерывания
 //  GPIO_ToggleBits(GPIOD, GPIO_Pin_12); // Green toggle
+  TIM7->SR &= ~TIM_SR_UIF; //Сбрасываем флаг прерывания
 }
 
 #define BOUNCING_TIME  10*(168000000/1000)  // 100 milliseconds in DWT ticks

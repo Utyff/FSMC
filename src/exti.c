@@ -105,7 +105,41 @@ void encoder()
   TIM_Cmd(TIM8, ENABLE);
 }
 
+// http://forum.easyelectronics.ru/viewtopic.php?f=35&t=9461
 void Encoder_Init()
+{
+  TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
+  GPIO_InitTypeDef GPIO_InitStructure;
+
+#define   ENCODER_TIM             TIM5
+#define   MAX_COUNT               100
+
+  RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM5, ENABLE);        // Включаем тактирование Таймера 5
+  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA,ENABLE);        // Включаем тактирование Порта А
+
+  GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_0 | GPIO_Pin_1;      // Настраиваем ноги порта А (под таймер 5 можно посмотреть в даташите на кристал используются ноги PA0 и PA1 вот их и настраиваем)
+  GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+  GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+  GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_UP;
+  GPIO_Init(GPIOA,&GPIO_InitStructure);
+
+  GPIO_PinAFConfig(GPIOA, GPIO_PinSource0, GPIO_AF_TIM5);     // Указываем что для ноги PA0 используем альтернативные функции Таймера 5
+  GPIO_PinAFConfig(GPIOA, GPIO_PinSource1, GPIO_AF_TIM5);     // Аналогично для PA1
+
+  TIM_TimeBaseStructure.TIM_Prescaler = 0;                    // Делитель таймера (не совсем понятно почему 0)
+  TIM_TimeBaseStructure.TIM_Period = (MAX_COUNT*2)-1;         // Значение автоперегрузки счетчика (не понятно почему 100*2-1, для счета до 100 я думал будет 100-1)
+  TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;     // Задает деление таймера используются константы TIM_CKD_DIV1, TIM_CKD_DIV2, TIM_CKD_DIV4 (понятия не имею что обозначает)
+  TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up; // Определяет режим подсчета импульсов (по фронту или по спаду)
+
+  TIM_TimeBaseInit(ENCODER_TIM, &TIM_TimeBaseStructure);      // Инициализировали выше указанные настройки для таймера 5
+  TIM_EncoderInterfaceConfig(ENCODER_TIM, TIM_EncoderMode_TI12, TIM_ICPolarity_Rising, TIM_ICPolarity_Rising); //Используем таймер в режиме работы с энкодером
+
+  ENCODER_TIM->CNT = 0;                                       // Сбрасываем значение регистра счета CNT в таймере здесь должны быть значения от 0...99 в зависимости от поворота энкодера
+  TIM_Cmd(ENCODER_TIM, ENABLE);                               // Собственно включаем всю эту байду
+}
+
+void Encoder_Init11()
 {
   NVIC_InitTypeDef         NVIC_InitStructure;
   GPIO_InitTypeDef         GPIO_InitStructure;
@@ -120,10 +154,16 @@ void Encoder_Init()
 
   // Encoder unit connected to TIM2, quadrature mode
   // GPIOA Config
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
-  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
-  GPIO_InitStructure.GPIO_Pin  = GPIO_Pin_0 | GPIO_Pin_1;
+//  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
+  GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
+  GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+  GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_UP;
+  GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_0 | GPIO_Pin_1;
   GPIO_Init(GPIOA, &GPIO_InitStructure);
+
+  GPIO_PinAFConfig(GPIOA, GPIO_PinSource0, GPIO_AF_TIM2);     // Указываем что для ноги PA0 используем альтернативные функции Таймера 2
+  GPIO_PinAFConfig(GPIOA, GPIO_PinSource1, GPIO_AF_TIM2);     // Аналогично для PA1
 
   // Enable the TIM2 Update Interrupt for left encoder
   NVIC_InitStructure.NVIC_IRQChannel = TIM2_IRQn;
@@ -133,9 +173,9 @@ void Encoder_Init()
   NVIC_Init(&NVIC_InitStructure);
 
   // Timer configuration in Encoder mode for left encoder
-  TIM_TimeBaseStructure.TIM_Prescaler = 0x00;              // No prescaling
-  TIM_TimeBaseStructure.TIM_Period = 0xffffffff;           // max resolution
-  TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;  // divide by clock by one
+  TIM_TimeBaseStructure.TIM_Prescaler = 0x00;                 // No prescaling
+  TIM_TimeBaseStructure.TIM_Period = 0x3f;                    // max resolution
+  TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;     // divide by clock by one
   TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up; // count up
   TIM_TimeBaseInit(TIM2, &TIM_TimeBaseStructure);
 
@@ -149,7 +189,7 @@ void Encoder_Init()
   TIM_ITConfig(TIM2, TIM_IT_Update, ENABLE);
 
   //Reset counter
-  TIM2->CNT = 1000;     // prevent exceeding 0 when turning wheel backwards
+  TIM2->CNT = 0;         // prevent exceeding 0 when turning wheel backwards
   TIM_Cmd(TIM2, ENABLE); // enable left encoder
 }
 

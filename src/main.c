@@ -1,4 +1,3 @@
-#include <stm32f4xx.h>
 #include <stm32f4xx_conf.h>
 #include <stm32f4xx.h>
 #include <delay.h>
@@ -21,13 +20,11 @@ void TIM3_init(); // Configure TIM3 as square generator
 void TIM4_init();
 void TIM7_init();
 void LED_init();
-
-extern "C" {
-  void AD9833_init();
-}
+void AD9833_init();
 
 
-void main()
+
+int main()
 {
 //  RCC_ClocksTypeDef RCC_Clocks;
 //  RCC_GetClocksFreq(&RCC_Clocks);

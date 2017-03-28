@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.6)
 project(FSMC)
 
+add_definitions(-DSTM32F4xx)
 set(CMAKE_CXX_STANDARD 11)
 
 include_directories(
@@ -43,7 +44,7 @@ set(SOURCE_FILES
         Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_wwdg.c
         src/AsciiLib.c
         src/delay.c
-        src/main.cpp
+        src/main.c
         src/stm32f4xx_it.c
         src/system_stm32f4xx.c
         src/lib.c

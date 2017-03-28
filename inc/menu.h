@@ -14,6 +14,8 @@ extern "C" {
 #endif
 
 void menu1Next();
+void menu1Prev();
+void menu1Step(s16 step);
 void drawMenu1();
 
 #ifdef __cplusplus

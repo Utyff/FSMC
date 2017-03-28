@@ -14,7 +14,6 @@ extern "C" {
 #endif
 
 void EXTI_init();
-void Encoder_init();
 
 #ifdef __cplusplus
 }

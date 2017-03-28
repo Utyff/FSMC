@@ -1,14 +1,14 @@
-#include "stm32f4xx_conf.h"
-#include "stm32f4xx.h"
-
-#include "delay.h"
-#include "adc.h"
-#include "dac.h"
-#include "lcd.h"
-#include "screen.h"
-#include "exti.h"
-#include "menu.h"
-#include "lib.h"
+#include <stm32f4xx.h>
+#include <stm32f4xx_conf.h>
+#include <stm32f4xx.h>
+#include <delay.h>
+#include <adc.h>
+#include <dac.h>
+#include <lcd.h>
+#include <screen.h>
+#include <exti.h>
+#include <encoder.h>
+#include <menu.h>
 
 
 // for f4-disco GPIOD & GPIO_Pin_12  Green LED
@@ -27,7 +27,7 @@ extern "C" {
 }
 
 
-int main()
+void main()
 {
 //  RCC_ClocksTypeDef RCC_Clocks;
 //  RCC_GetClocksFreq(&RCC_Clocks);
@@ -51,14 +51,16 @@ int main()
 
     drawFrame();
     drawGraph();
-    drawMenu1();
 
     POINT_COLOR = MAGENTA;
     BACK_COLOR  = BLUE;
     LCD_ShowxNum(0,   227, button0Count, 5,12, 9);
     LCD_ShowxNum(30,  227, button1Count, 5,12, 9);
     LCD_ShowxNum(60,  227, button2Count, 5,12, 9);
-    LCD_ShowxNum(260, 227, encoder,      5,12, 9);
+    LCD_ShowxNum(260, 227, TIM2->CNT,    5,12, 9);
+
+    menu1Step(Encoder_get());
+    drawMenu1();
   }
 }
 

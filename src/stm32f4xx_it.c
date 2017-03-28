@@ -160,12 +160,12 @@ void TIM4_IRQHandler(void)
 } //*/
 
 
-// Обработчик прерывания TIM7
+/*/ Обработчик прерывания TIM2
 void TIM2_IRQHandler()
 {
   encoder = TIM2->CNT;
   TIM2->SR &= ~TIM_SR_UIF; //Сбрасываем флаг прерывания
-}
+} //*/
 
 // Обработчик прерывания TIM7
 void TIM7_IRQHandler()

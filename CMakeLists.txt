@@ -48,6 +48,8 @@ set(SOURCE_FILES
         src/system_stm32f4xx.c
         src/lib.c
         src/dac.c
-        src/menu.c)
+        src/menu.c
+        src/encoder.c
+        )
 
 add_executable(FSMC ${SOURCE_FILES})

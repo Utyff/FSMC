@@ -6,8 +6,8 @@
 #define MENU1_MAX 4
 
 extern const char menu[5][8];
-extern u8 menu1;
-extern u8 menu2;
+extern u16 menu1;
+extern u16 menu2;
 
 #ifdef __cplusplus
 extern "C" {

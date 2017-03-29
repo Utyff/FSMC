@@ -3,8 +3,8 @@
 
 const char menu[5][8] = {"ch 1","trig","swipe","gain", "aa555"};
 
-u8 menu1 = 0;
-u8 menu2 = 0;
+u16 menu1 = 0;
+u16 menu2 = 0;
 
 void menu1Next()
 {
@@ -20,7 +20,9 @@ void menu1Prev()
 
 void menu1Step(s16 step)
 {
-  menu1 = (u8) ((menu1 + step) % MENU1_MAX);   // TODO fix sign
+  menu1 += step%MENU1_MAX;
+  if( (s16)menu1<0 ) menu1 += MENU1_MAX;
+  if( menu1>=MENU1_MAX ) menu1 -= MENU1_MAX;
 }
 
 void drawMenu1()

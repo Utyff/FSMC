@@ -2,7 +2,7 @@
 #include <encoder.h>
 
 #define MAX_ENCODER   63  // max encoder value
-#define MID_ENCODER   MAX_ENCODER/2
+#define MID_ENCODER   32
 #define ENCODER_STEP  2   // counts per step
 
 //static u16 lastEncoder = MAX_ENCODER / 2;
@@ -48,7 +48,7 @@ void Encoder_init()
   TIM_Cmd(TIM2, ENABLE);   // enable encoder control
   //Reset counter
   DWT_Delay(100);          // pause 100 microseconds for first count
-  TIM2->CNT = MID_ENCODER; // set initial value
+  TIM2->CNT = MID_ENCODER+1; // set initial value
 }
 
 

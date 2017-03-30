@@ -174,7 +174,7 @@ void TIM7_IRQHandler()
   TIM7->SR &= ~TIM_SR_UIF; //—брасываем флаг прерывани€
 }
 
-#define BOUNCING_TIME  10*(168000000/1000)  // 100 milliseconds in DWT ticks
+#define BOUNCING_TIME  50*(168000000/1000)  // 100 milliseconds in DWT ticks
 
 // This function handles External line 0 interrupt request.
 void EXTI0_IRQHandler()
@@ -190,7 +190,7 @@ void EXTI0_IRQHandler()
       if( (GPIOA->IDR & GPIO_Pin_0) != 0 )
       {
         button0Count++;   // only on rising trigger (button down)
-        menu1Next();
+//        menu1Next();
       }
     }
     // Clear the EXTI line 0 pending bit

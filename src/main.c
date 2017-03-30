@@ -38,7 +38,7 @@ int main()
   LCD_Init();
   ADC_init();
   DAC_init();
-//  EXTI_init();
+  EXTI_init();
   Encoder_init();
 
   while(1)

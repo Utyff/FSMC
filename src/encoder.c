@@ -5,7 +5,6 @@
 #define MID_ENCODER   32
 #define ENCODER_STEP  2   // counts per step
 
-//static u16 lastEncoder = MAX_ENCODER / 2;
 
 
 void Encoder_init()
@@ -15,40 +14,44 @@ void Encoder_init()
   TIM_ICInitTypeDef        TIM_ICInitStructure;
 
   // TIM2 clock source enable
-  RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
+#if   ENCODER_TIM_AHB == 1
+  RCC_APB1PeriphClockCmd(ENCODER_CLOCK, ENABLE);
+#elif ENCODER_TIM_AHB == 2
+  RCC_APB2PeriphClockCmd(ENCODER_CLOCK, ENABLE);
+#endif
 
-  // Enable GPIOA, clock
-  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
+  // Enable GPIOx clock
+  RCC_AHB1PeriphClockCmd(ENCODER_GPIO_CLOCK, ENABLE);
 
   // Encoder unit connected to TIM2, quadrature mode
-  // GPIOA Pins 0 and 1 Config
+  // GPIOx Pins 0 and 1 Config
   GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF;
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
   GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
   GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_UP;
-  GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_0 | GPIO_Pin_1;
-  GPIO_Init(GPIOA, &GPIO_InitStructure);
+  GPIO_InitStructure.GPIO_Pin   = ENCODER_PIN_A | ENCODER_PIN_B;
+  GPIO_Init(ENCODER_GPIO, &GPIO_InitStructure);
 
-  GPIO_PinAFConfig(GPIOA, GPIO_PinSource0, GPIO_AF_TIM2);     // set alternate function TIM2 for PA0 and PA1
-  GPIO_PinAFConfig(GPIOA, GPIO_PinSource1, GPIO_AF_TIM2);
+  GPIO_PinAFConfig(ENCODER_GPIO, ENCODER_PIN_SRC_A, ENCODER_GPIO_AF);  // set alternate function TIM2 for PA0 and PA1
+  GPIO_PinAFConfig(ENCODER_GPIO, ENCODER_PIN_SRC_B, ENCODER_GPIO_AF);
 
   // Timer configuration in Encoder mode for left encoder
-  TIM_TimeBaseStructure.TIM_Prescaler = 0x00;                 // No prescaling
-  TIM_TimeBaseStructure.TIM_Period = MAX_ENCODER;             // counter limit
-  TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;     // divide by clock by one
-  TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up; // count up
-  TIM_TimeBaseInit(TIM2, &TIM_TimeBaseStructure);
+  TIM_TimeBaseStructure.TIM_Prescaler     = 0x00;               // No prescaling
+  TIM_TimeBaseStructure.TIM_Period        = MAX_ENCODER;        // counter limit
+  TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;       // divide by clock by one
+  TIM_TimeBaseStructure.TIM_CounterMode   = TIM_CounterMode_Up; // count up
+  TIM_TimeBaseInit(ENCODER_TIM, &TIM_TimeBaseStructure);
 
-  TIM_EncoderInterfaceConfig(TIM2, TIM_EncoderMode_TI1, TIM_ICPolarity_Rising, TIM_ICPolarity_Rising);
+  TIM_EncoderInterfaceConfig(ENCODER_TIM, TIM_EncoderMode_TI1, TIM_ICPolarity_Rising, TIM_ICPolarity_Rising);
 
   TIM_ICStructInit(&TIM_ICInitStructure);
   TIM_ICInitStructure.TIM_ICFilter = 6;
-  TIM_ICInit(TIM2, &TIM_ICInitStructure);
+  TIM_ICInit(ENCODER_TIM, &TIM_ICInitStructure);
 
-  TIM_Cmd(TIM2, ENABLE);   // enable encoder control
-  //Reset counter
-  DWT_Delay(100);          // pause 100 microseconds for first count
-  TIM2->CNT = MID_ENCODER+1; // set initial value
+  TIM_Cmd(ENCODER_TIM, ENABLE);     // enable encoder control
+  // Reset counter
+  DWT_Delay(100);                   // pause 100 microseconds for first count
+  ENCODER_TIM->CNT = MID_ENCODER+1; // set initial value
 }
 
 
@@ -56,13 +59,13 @@ s16 Encoder_get()
 {
   s16 result=0;
 
-  s16 step = (s16)(TIM2->CNT-MID_ENCODER);
+  s16 step = (s16)(ENCODER_TIM->CNT - MID_ENCODER);
   if( step >= ENCODER_STEP || step <= -ENCODER_STEP )
   {
     result =  step / (s16)ENCODER_STEP;
 
     __disable_irq();
-    TIM2->CNT -= result*ENCODER_STEP;
+    ENCODER_TIM->CNT -= result*ENCODER_STEP;
     __enable_irq();
   }
 

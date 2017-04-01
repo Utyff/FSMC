@@ -30,7 +30,7 @@ int main()
 //  RCC_GetClocksFreq(&RCC_Clocks);
 
   DWT_Init();
-  TIM3_init(); // Square generator
+//  TIM3_init(); // Square generator
 //  TIM4_init(); // Orange LED timer PWM-blink
 //  TIM7_init(); // Green LED interrupt blink
 //  AD9833_init();
@@ -54,7 +54,7 @@ int main()
     LCD_ShowxNum(0,   227, button0Count, 5,12, 9);
     LCD_ShowxNum(30,  227, button1Count, 5,12, 9);
     LCD_ShowxNum(60,  227, button2Count, 5,12, 9);
-    LCD_ShowxNum(260, 227, TIM2->CNT,    5,12, 9);
+    LCD_ShowxNum(260, 227, ENCODER_TIM->CNT, 5,12, 9);
 
     menu1Step(Encoder_get());
     drawMenu1();
@@ -73,6 +73,7 @@ void TIM3_init()
   GPIO_PinAFConfig(GPIOC, GPIO_PinSource6, GPIO_AF_TIM3);
 
   // GPIOA Configuration: TIM3 CH1 (PC6)
+//!!! USED BY ENCODER
   GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_6;
   GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF;
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;

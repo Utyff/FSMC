@@ -11,6 +11,21 @@
  *
 */
 
+struct ADC_param
+{
+    u32	ADC_Prescaler;
+    u8	ADC_SampleTime;
+};
+typedef struct ADC_param ADC_PARAM;
+
+ADC_PARAM Parameters [] = {
+        {ADC_Prescaler_Div4, ADC_SampleTime_3Cycles},
+        {ADC_Prescaler_Div4, ADC_SampleTime_15Cycles},
+        {ADC_Prescaler_Div4, ADC_SampleTime_28Cycles},
+        {ADC_Prescaler_Div4, ADC_SampleTime_56Cycles},
+        {ADC_Prescaler_Div4, ADC_SampleTime_84Cycles},
+};
+
 union SampleBuffer samplesBuffer;
 u8    half=0;
 

@@ -3,6 +3,7 @@
 
 
 uint8_t graph[MAX_X];
+float  scaleX = 1;
 
 void drawFrame()
 {
@@ -70,12 +71,12 @@ void buildGraph1ch()
 {
     uint32_t t0 = DWT_Get_Current_Tick();
     int    i, j;
-    float  scaleX, x; //, scaleY=1;
+    float  x; //, scaleY=1;
 
     u8     *samples = samplesBuffer.one;
     if( half!=0 ) samples += SAMPLES_1_BUFFER_SIZE/2;
 
-    scaleX = 0.5; // (float)320 / (float)(SAMPLES_2_BUFFER_SIZE/2);
+//    scaleX = 0.5; // (float)320 / (float)(SAMPLES_2_BUFFER_SIZE/2);
 
     x=0; j=-1;
     i = triggerStart1ch(samples);
@@ -99,12 +100,12 @@ void buildGraph2ch()
 {
     uint32_t t0 = DWT_Get_Current_Tick();
     int    i, j;
-    float  scaleX, x; //, scaleY=1;
+    float  x; //, scaleY=1;
 
     u8     (*samples)[2] = samplesBuffer.two;
     if( half!=0 ) samples += SAMPLES_2_BUFFER_SIZE/2;
 
-    scaleX = 0.5 ; // (float)320 / (float)(SAMPLES_2_BUFFER_SIZE/2);
+//    scaleX = 0.5 ; // (float)320 / (float)(SAMPLES_2_BUFFER_SIZE/2);
 
     x=0; j=-1;
     i = triggerStart2ch(samples);
@@ -143,4 +144,11 @@ void drawGraph()
   }
   DrawGraphTick = DWT_Elapsed_Tick(t0);
   LCD_ShowxNum(150,227, DrawGraphTick/168, 10,12, 9);
+}
+
+void setXScale(s16 step)
+{
+  scaleX += 0.05*step;
+  if( scaleX>1 )   scaleX = 1;
+  if( scaleX<0.5 ) scaleX = 0.5;
 }

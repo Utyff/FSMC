@@ -16,7 +16,7 @@ extern uint8_t graph[];
 
 void drawFrame();
 void drawGraph();
-
+void setXScale(s16 step);
 
 #ifdef __cplusplus
  }

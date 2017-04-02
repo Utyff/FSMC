@@ -1,5 +1,4 @@
 #include <stm32f4xx_conf.h>
-#include <stm32f4xx.h>
 #include <delay.h>
 #include <adc.h>
 #include <dac.h>
@@ -57,7 +56,8 @@ int main()
     LCD_ShowxNum(260, 227, ENCODER_TIM->CNT, 5,12, 9);
 
     //menu1Step(Encoder_get());
-    setXScale(Encoder_get());
+    //setXScale(Encoder_get());
+    ADC_step(Encoder_get());
     drawMenu1();
   }
 }

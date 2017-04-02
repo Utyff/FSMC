@@ -2,7 +2,7 @@
 #define _EXTI_H
 
 #include "stm32f4xx_conf.h"
-#include "stm32f4xx.h"
+
 
 extern u8  button0Count;
 extern u8  button1Count;

@@ -2,7 +2,7 @@
 #define _ENCODER_H
 
 #include "stm32f4xx_conf.h"
-#include "stm32f4xx.h"
+
 
 #define ENCODER_TIMER 8
 

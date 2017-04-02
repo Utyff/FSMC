@@ -28,11 +28,11 @@
   */
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm32f4xx_it.h"
+#include <stm32f4xx_it.h>
 #include <exti.h>
 #include <dwt.h>
 #include <menu.h>
-#include <stm32f4xx.h>
+
 
 /** @addtogroup Template_Project
   * @{

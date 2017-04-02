@@ -1,7 +1,7 @@
 #ifndef __ADC_H
 #define __ADC_H
 
-#include "stm32f4xx.h"
+#include "stm32f4xx_conf.h"
 
 #define SAMPLES_4_BUFFER_SIZE 1024
 #define SAMPLES_2_BUFFER_SIZE 2*SAMPLES_4_BUFFER_SIZE
@@ -21,6 +21,7 @@ extern "C" {
 #endif
 
 void ADC_init();
+void ADC_step(s16 step);
 
 #ifdef __cplusplus
 }

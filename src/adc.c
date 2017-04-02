@@ -1,5 +1,3 @@
-#include "stm32f4xx_conf.h"
-#include "stm32f4xx.h"
 #include <dwt.h>
 #include <adc.h>
 
@@ -17,6 +15,8 @@ struct ADC_param
     u8	ADC_SampleTime;
 };
 typedef struct ADC_param ADC_PARAM;
+u32  ADC_Prescaler = ADC_Prescaler_Div4;
+u8   ADC_SampleTime = ADC_SampleTime_3Cycles;
 
 ADC_PARAM Parameters [] = {
         {ADC_Prescaler_Div4, ADC_SampleTime_3Cycles},
@@ -27,7 +27,7 @@ ADC_PARAM Parameters [] = {
 };
 
 union SampleBuffer samplesBuffer;
-u8    half=0;
+u8    half=0;  // first or second half writing
 
 uint32_t ADCStartTick;         // time when start ADC buffer fill
 uint32_t ADCHalfElapsedTick;   // the last time half buffer fill
@@ -89,6 +89,7 @@ static void ADC_DMA_init()  // with IRQ when buffer fill
 
 void ADC_init()  // DMA mode
 {
+  ADC_DeInit();
   ADC_GPIO_init();
   ADC_DMA_init();
 
@@ -104,7 +105,7 @@ void ADC_init()  // DMA mode
 
   // базовая настройка
   ADC_CommonInitStructure.ADC_Mode = ADC_Mode_Independent;
-  ADC_CommonInitStructure.ADC_Prescaler = ADC_Prescaler_Div4;
+  ADC_CommonInitStructure.ADC_Prescaler = ADC_Prescaler;
   ADC_CommonInitStructure.ADC_DMAAccessMode = ADC_DMAAccessMode_Disabled;
   ADC_CommonInitStructure.ADC_TwoSamplingDelay = ADC_TwoSamplingDelay_5Cycles;
   ADC_CommonInit(&ADC_CommonInitStructure);
@@ -119,7 +120,7 @@ void ADC_init()  // DMA mode
   ADC_Init(ADC1, &ADC_InitStructure);
 
   // выбор канала
-  ADC_RegularChannelConfig(ADC1, ADC_Channel_12, 1, ADC_SampleTime_3Cycles);
+  ADC_RegularChannelConfig(ADC1, ADC_Channel_12, 1, ADC_SampleTime);
 
   ADC_DiscModeCmd(ADC1, DISABLE);
   ADC_EOCOnEachRegularChannelCmd(ADC1, ENABLE);
@@ -133,8 +134,41 @@ void ADC_init()  // DMA mode
   ADCStartTick = DWT_Get_Current_Tick();
 }
 
+void ADC_set_registers()
+{
+
+}
+
+void ADC_step(s16 step) {
+  if( step==0 )
+    return;
+
+  if( step>0 ) {
+    if (ADC_SampleTime < ADC_SampleTime_480Cycles)
+      ADC_SampleTime++;
+  } else {
+    if (ADC_SampleTime > ADC_SampleTime_3Cycles)
+      ADC_SampleTime--;
+  }
+  ADC_init();
+}
+
+void ADC_step_Presc(s16 step) {
+  if( step==0 )
+    return;
+
+  if( step>0 ) {
+    if (ADC_Prescaler < ADC_Prescaler_Div8)
+      ADC_Prescaler += ADC_Prescaler_Div4;
+  } else {
+    if (ADC_Prescaler > ADC_Prescaler_Div2)
+      ADC_Prescaler -= ADC_Prescaler_Div4;
+  }
+  ADC_init();
+}
+
 // dma2 stream 0 irq handler
-void DMA2_Stream0_IRQHandler ( void )
+void DMA2_Stream0_IRQHandler()
 {
   // Test on DMA Stream HalfTransfer Complete interrupt
   if ( DMA_GetITStatus(DMA2_Stream0, DMA_IT_HTIF0) )

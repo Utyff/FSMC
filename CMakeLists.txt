@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 3.6)
 project(FSMC)
 
-add_definitions(-DSTM32F4xx)
+add_definitions(-DSTM32F4xx -DUSE_STDPERIPH_DRIVER)
+
 set(CMAKE_CXX_STANDARD 11)
 
 include_directories(
@@ -42,7 +43,6 @@ set(SOURCE_FILES
         Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_tim.c
         Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_usart.c
         Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_wwdg.c
-        src/AsciiLib.c
         src/delay.c
         src/main.c
         src/stm32f4xx_it.c
@@ -54,3 +54,29 @@ set(SOURCE_FILES
         )
 
 add_executable(FSMC ${SOURCE_FILES})
+
+# -------------------------------------------------------------------
+
+#set(CMAKE_SYSTEM_NAME Generic)
+
+# where is the target environment
+#set(CMAKE_FIND_ROOT_PATH  P:/__ELECTRONICS/stm32/Sourcery_CodeBench_Lite_for_ARM_EABI )
+
+# specify the cross compiler
+#set(CMAKE_C_COMPILER   arm-none-eabi-gcc )
+#set(CMAKE_CXX_COMPILER arm-none-eabi-g++ )
+#set(CMAKE_LINKER arm-none-eabi-ld )
+
+# MinGW default is .exe
+set(CMAKE_EXECUTABLE_SUFFIX     ".elf")
+
+#set(ARM_FLAGS "-nostdlib -mcpu=cortex-m4 -mthumb -O2")
+
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${ARM_FLAGS} -std=c99 -ffunction-sections -g")
+#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c99 ${ARM_FLAGS} -ffunction-sections -g")
+#set(CMAKE_EXE_LINKER_FLAGS "${ARM_FLAGS} -g -nostartfiles -Wl,-Map=${PROJECT_NAME}.map -Wl,--gc-sections -Wl,--library-path=\"${PROJECT_SOURCE_DIR}\" -Wl,-Tlink.ld  ")
+
+#set(CMAKE_C_LINK_EXECUTABLE "<CMAKE_C_COMPILER> <FLAGS> <CMAKE_C_LINK_FLAGS> <LINK_FLAGS> <OBJECTS>  -o <TARGET>")
+#set(CMAKE_CXX_LINK_EXECUTABLE "<CMAKE_CXX_COMPILER> <FLAGS> <CMAKE_CXX_LINK_FLAGS> <LINK_FLAGS> <OBJECTS>  -o <TARGET>")
+
+# -------------------------------------------------------------------

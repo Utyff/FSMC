@@ -3,6 +3,11 @@
 
 #define SIN_TABLE_SIZE  128
 
+/*
+ * «начени€ Float от 0, до 1
+ * ¬ычисл€ть новую таблицу с нужным количеством значений и аплитудой.
+ */
+
 #if   SIN_TABLE_SIZE==23
 const uint16_t sinTable[32] = {
         2047, 2447, 2831, 3185, 3498, 3750, 3939, 4056, 4095, 4056,
@@ -78,7 +83,7 @@ static void TIM6_Config()
 
     // Time base configuration
     TIM_TimeBaseStructInit(&TIM_TimeBaseStructure);
-    TIM_TimeBaseStructure.TIM_Period = 0x7F; // TIM6CLK = 2 * PCLK1 = HCLK /2 = SystemCoreClock /2 = 84MHz
+    TIM_TimeBaseStructure.TIM_Period = 0x3F;  // TIM6CLK = 2 * PCLK1 = HCLK /2 = SystemCoreClock /2 = 84MHz
     TIM_TimeBaseStructure.TIM_Prescaler = 0;  // 84MHz / 0x17F = 219KHz
     TIM_TimeBaseStructure.TIM_ClockDivision = 0;
     TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;

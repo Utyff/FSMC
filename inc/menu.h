@@ -1,7 +1,7 @@
 #ifndef _MENU_H
 #define _MENU_H
 
-#include "stm32f4xx.h"
+#include "stm32f4xx_conf.h"
 
 #define MENU1_MAX 4
 

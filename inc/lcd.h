@@ -122,7 +122,9 @@ typedef struct
 #define YELLOW        	 0xFFE0
 #define BROWN 			 0XBC40 // Brown
 #define BRRED 			 0XFC07 // reddish brown
-#define GRAY  			 0X8430 // Gray
+#define GRAY  			 0X8430 // Gray  1000 0100 0011 0000
+#define DGRAY  			 0X6208 // Gray  0100 0010 0000 1000
+
 // GUI color
 
 #define DARKBLUE      	 0X01CF	// dark blue

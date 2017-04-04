@@ -177,8 +177,9 @@ void ADC_step_up()
 {
   if( ScreenTime_adj<9 )
     ScreenTime_adj++;
-  else if( ScreenTime<sizeof(ScreenTimes)-1 )
-    ScreenTime_adj=0, ScreenTime++;
+  else
+    if( ScreenTime<sizeof(ScreenTimes)-1 )
+      ScreenTime_adj=0, ScreenTime++;
 }
 
 
@@ -186,15 +187,16 @@ void ADC_step_down()
 {
   if( ScreenTime_adj>0 )
     ScreenTime_adj--;
-  else if( ScreenTime>0 )
-    ScreenTime_adj=9, ScreenTime--;
+  else
+    if( ScreenTime>0 )
+      ScreenTime_adj=9, ScreenTime--;
 }
 
 
 float getTime()
 {
   float time = ScreenTimes[ScreenTime];
-  float adj = (ScreenTimes[ScreenTime+1] - time) * (ScreenTime_adj/10);
+  float adj = (ScreenTimes[ScreenTime+1] - time) * ScreenTime_adj/10;
   time += adj;
   return time;
 }
@@ -219,7 +221,7 @@ void ADC_step(s16 step)
   }
 
   i--;
-  ADC_Prescaler = ADC_Parameters[i].ADC_Prescaler;
+  ADC_Prescaler  = ADC_Parameters[i].ADC_Prescaler;
   ADC_SampleTime = ADC_Parameters[i].ADC_SampleTime;
 
   // set X scale

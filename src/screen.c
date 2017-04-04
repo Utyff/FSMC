@@ -78,7 +78,7 @@ void buildGraph1ch()
 {
     uint32_t t0 = DWT_Get_Current_Tick();
     int    i, j;
-    float  x; //, scaleY=1;
+    float  x;
 
     u8     *samples = samplesBuffer.one;
     if( half!=0 ) samples += SAMPLES_1_BUFFER_SIZE/2;
@@ -107,7 +107,7 @@ void buildGraph2ch()
 {
     uint32_t t0 = DWT_Get_Current_Tick();
     int    i, j;
-    float  x; //, scaleY=1;
+    float  x;
 
     u8     (*samples)[2] = samplesBuffer.two;
     if( half!=0 ) samples += SAMPLES_2_BUFFER_SIZE/2;
@@ -154,9 +154,9 @@ void drawGraph()
   LCD_ShowxNum(190,227, BuildGraphTick/168, 10,12, 9);
 }
 
-void setXScale(s16 step)
+/*void setXScale(s16 step)
 {
   scaleX += 0.05*step;
   if( scaleX>1 )   scaleX = 1;
   if( scaleX<0.5 ) scaleX = 0.5;
-}
+} //*/

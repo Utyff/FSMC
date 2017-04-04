@@ -173,13 +173,7 @@ void ADC_init()  // DMA mode
 }
 
 
-void ADC_set_registers()
-{
-
-}
-
-
-void ADC_step_up(s16 step)
+void ADC_step_up()
 {
   if( ScreenTime_adj<9 )
     ScreenTime_adj++;
@@ -188,7 +182,7 @@ void ADC_step_up(s16 step)
 }
 
 
-void ADC_step_down(s16 step)
+void ADC_step_down()
 {
   if( ScreenTime_adj>0 )
     ScreenTime_adj--;
@@ -209,8 +203,8 @@ float getTime()
 void ADC_step(s16 step)
 {
   if( step==0 ) return;
-  if( step>0  ) ADC_step_up(step);
-  else          ADC_step_down(step);
+  if( step>0  ) ADC_step_up();
+  else          ADC_step_down();
 
   // set params
   float time = getTime();
@@ -235,7 +229,7 @@ void ADC_step(s16 step)
 }
 
 
-void ADC_step_Sample(s16 step)
+/*void ADC_step_Sample(s16 step)
 {
   if( step==0 )
     return;
@@ -253,7 +247,7 @@ void ADC_step_Sample(s16 step)
 }
 
 
-void ADC_step_Presc(s16 step)
+void ADC_step_Prescaler(s16 step)
 {
   if( step==0 )
     return;
@@ -268,7 +262,7 @@ void ADC_step_Presc(s16 step)
       ADC_Prescaler -= ADC_Prescaler_Div4;
   }
   ADC_init();
-}
+} //*/
 
 
 // dma2 stream 0 irq handler

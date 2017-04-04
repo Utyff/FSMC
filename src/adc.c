@@ -1,5 +1,6 @@
 #include <dwt.h>
 #include <adc.h>
+#include <screen.h>
 
 /*
  * ADCCLK = APB2 / ADC_Prescaler =  84 MHz / 4 = 21 MHz
@@ -9,22 +10,57 @@
  *
 */
 
+
 struct ADC_param
 {
     u32	ADC_Prescaler;
-    u8	ADC_SampleTime;
+     u8	ADC_SampleTime;
+  float SampleTime;    // microseconds
+  float ScreenTime;    // microseconds
 };
 typedef struct ADC_param ADC_PARAM;
-u32  ADC_Prescaler = ADC_Prescaler_Div4;
+
+#define ADC_Parameters_Size 31
+const ADC_PARAM ADC_Parameters [ADC_Parameters_Size] = {
+        {ADC_Prescaler_Div2, ADC_SampleTime_3Cycles,    0.2619048f,    83.80952f},
+        {ADC_Prescaler_Div4, ADC_SampleTime_3Cycles,    0.5238095f,   167.61905f},
+        {ADC_Prescaler_Div2, ADC_SampleTime_15Cycles,   0.5476190f,   175.23810f},
+        {ADC_Prescaler_Div6, ADC_SampleTime_3Cycles,    0.7857143f,   251.42857f},
+        {ADC_Prescaler_Div2, ADC_SampleTime_28Cycles,   0.8571429f,   274.28571f},
+        {ADC_Prescaler_Div8, ADC_SampleTime_3Cycles,    1.0476190f,   335.23810f},
+        {ADC_Prescaler_Div4, ADC_SampleTime_15Cycles,   1.0952381f,   350.47619f},
+        {ADC_Prescaler_Div2, ADC_SampleTime_56Cycles,   1.5238095f,   487.61905f},
+        {ADC_Prescaler_Div6, ADC_SampleTime_15Cycles,   1.6428571f,   525.71429f},
+        {ADC_Prescaler_Div4, ADC_SampleTime_28Cycles,   1.7142857f,   548.57143f},
+        {ADC_Prescaler_Div2, ADC_SampleTime_84Cycles,   2.1904762f,   700.95238f},
+        {ADC_Prescaler_Div6, ADC_SampleTime_28Cycles,   2.5714286f,   822.85714f},
+        {ADC_Prescaler_Div2, ADC_SampleTime_112Cycles,  2.8571429f,   914.28571f},
+        {ADC_Prescaler_Div4, ADC_SampleTime_56Cycles,   3.0476190f,   975.23810f},
+        {ADC_Prescaler_Div8, ADC_SampleTime_28Cycles,   3.4285714f,  1097.14286f},
+        {ADC_Prescaler_Div2, ADC_SampleTime_144Cycles,  3.6190476f,  1158.09524f},
+        {ADC_Prescaler_Div4, ADC_SampleTime_84Cycles,   4.3809524f,  1401.90476f},
+        {ADC_Prescaler_Div6, ADC_SampleTime_56Cycles,   4.5714286f,  1462.85714f},
+        {ADC_Prescaler_Div4, ADC_SampleTime_112Cycles,  5.7142857f,  1828.57143f},
+        {ADC_Prescaler_Div8, ADC_SampleTime_56Cycles,   6.0952381f,  1950.47619f},
+        {ADC_Prescaler_Div6, ADC_SampleTime_84Cycles,   6.5714286f,  2102.85714f},
+        {ADC_Prescaler_Div4, ADC_SampleTime_144Cycles,  7.2380952f,  2316.19048f},
+        {ADC_Prescaler_Div6, ADC_SampleTime_112Cycles,  8.5714286f,  2742.85714f},
+        {ADC_Prescaler_Div8, ADC_SampleTime_84Cycles,   8.7619048f,  2803.80952f},
+        {ADC_Prescaler_Div6, ADC_SampleTime_144Cycles, 10.8571429f,  3474.28571f},
+        {ADC_Prescaler_Div8, ADC_SampleTime_112Cycles, 11.4285714f,  3657.14286f},
+        {ADC_Prescaler_Div2, ADC_SampleTime_480Cycles, 11.6190476f,  3718.09524f},
+        {ADC_Prescaler_Div8, ADC_SampleTime_144Cycles, 14.4761905f,  4632.38095f},
+        {ADC_Prescaler_Div4, ADC_SampleTime_480Cycles, 23.2380952f,  7436.19048f},
+        {ADC_Prescaler_Div6, ADC_SampleTime_480Cycles, 34.8571429f, 11154.28571f},
+        {ADC_Prescaler_Div8, ADC_SampleTime_480Cycles, 46.4761905f, 14872.38095f}
+};
+
+u32  ADC_Prescaler  = ADC_Prescaler_Div4;
 u8   ADC_SampleTime = ADC_SampleTime_3Cycles;
 
-ADC_PARAM Parameters [] = {
-        {ADC_Prescaler_Div4, ADC_SampleTime_3Cycles},
-        {ADC_Prescaler_Div4, ADC_SampleTime_15Cycles},
-        {ADC_Prescaler_Div4, ADC_SampleTime_28Cycles},
-        {ADC_Prescaler_Div4, ADC_SampleTime_56Cycles},
-        {ADC_Prescaler_Div4, ADC_SampleTime_84Cycles},
-};
+u16 ScreenTime = 0;      // index in ScreenTimes
+u16 ScreenTime_adj = 0;  // 0-9
+const float ScreenTimes[] = { 100, 200, 500, 1000, 2000, 5000, 10000, 20000 };
 
 union SampleBuffer samplesBuffer;
 u8    half=0;  // first or second half writing
@@ -32,6 +68,7 @@ u8    half=0;  // first or second half writing
 uint32_t ADCStartTick;         // time when start ADC buffer fill
 uint32_t ADCHalfElapsedTick;   // the last time half buffer fill
 uint32_t ADCElapsedTick;       // the last time buffer fill
+
 
 
 static void ADC_GPIO_init()  // configure PC2 as ADC CH12
@@ -87,6 +124,7 @@ static void ADC_DMA_init()  // with IRQ when buffer fill
   DMA_ITConfig ( DMA2_Stream0, DMA_IT_HT | DMA_IT_TC, ENABLE ); // DMA_IT_HT |  // IRQ when transfer complete and half transfer
 }
 
+
 void ADC_init()  // DMA mode
 {
   ADC_DeInit();
@@ -134,38 +172,104 @@ void ADC_init()  // DMA mode
   ADCStartTick = DWT_Get_Current_Tick();
 }
 
+
 void ADC_set_registers()
 {
 
 }
 
-void ADC_step(s16 step) {
+
+void ADC_step_up(s16 step)
+{
+  if( ScreenTime_adj<9 )
+    ScreenTime_adj++;
+  else if( ScreenTime<sizeof(ScreenTimes)-1 )
+    ScreenTime_adj=0, ScreenTime++;
+}
+
+
+void ADC_step_down(s16 step)
+{
+  if( ScreenTime_adj>0 )
+    ScreenTime_adj--;
+  else if( ScreenTime>0 )
+    ScreenTime_adj=9, ScreenTime--;
+}
+
+
+float getTime()
+{
+  float time = ScreenTimes[ScreenTime];
+  float adj = (ScreenTimes[ScreenTime+1] - time) * (ScreenTime_adj/10);
+  time += adj;
+  return time;
+}
+
+
+void ADC_step(s16 step)
+{
+  if( step==0 ) return;
+  if( step>0  ) ADC_step_up(step);
+  else          ADC_step_down(step);
+
+  // set params
+  float time = getTime();
+
+  // looking last parameters set with ScreenTime less than required time
+  int i = 1;
+  while( ADC_Parameters[i].ScreenTime<time )
+  {
+    i++;
+    if( i>=ADC_Parameters_Size )
+      break;
+  }
+
+  i--;
+  ADC_Prescaler = ADC_Parameters[i].ADC_Prescaler;
+  ADC_SampleTime = ADC_Parameters[i].ADC_SampleTime;
+
+  // set X scale
+  scaleX = ADC_Parameters[i].ScreenTime / time;
+
+  ADC_init();
+}
+
+
+void ADC_step_Sample(s16 step)
+{
   if( step==0 )
     return;
 
-  if( step>0 ) {
+  if( step>0 )
+  {
     if (ADC_SampleTime < ADC_SampleTime_480Cycles)
       ADC_SampleTime++;
-  } else {
+  } else
+  {
     if (ADC_SampleTime > ADC_SampleTime_3Cycles)
       ADC_SampleTime--;
   }
   ADC_init();
 }
 
-void ADC_step_Presc(s16 step) {
+
+void ADC_step_Presc(s16 step)
+{
   if( step==0 )
     return;
 
-  if( step>0 ) {
+  if( step>0 )
+  {
     if (ADC_Prescaler < ADC_Prescaler_Div8)
       ADC_Prescaler += ADC_Prescaler_Div4;
-  } else {
+  } else
+  {
     if (ADC_Prescaler > ADC_Prescaler_Div2)
       ADC_Prescaler -= ADC_Prescaler_Div4;
   }
   ADC_init();
 }
+
 
 // dma2 stream 0 irq handler
 void DMA2_Stream0_IRQHandler()

@@ -1,4 +1,4 @@
-#include "stm32f4xx_conf.h"
+#include <stm32f4xx_conf.h>
 #include <dac.h>
 
 #define SIN_TABLE_SIZE  128

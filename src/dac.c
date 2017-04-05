@@ -83,8 +83,8 @@ static void TIM6_Config()
 
     // Time base configuration
     TIM_TimeBaseStructInit(&TIM_TimeBaseStructure);
-    TIM_TimeBaseStructure.TIM_Period = 0x3F;  // TIM6CLK = 2 * PCLK1 = HCLK /2 = SystemCoreClock /2 = 84MHz
-    TIM_TimeBaseStructure.TIM_Prescaler = 0;  // 84MHz / 0x17F = 219KHz
+    TIM_TimeBaseStructure.TIM_Period =  10; // 0x3F;  // TIM6CLK = 2 * PCLK1 = HCLK /2 = SystemCoreClock /2 = 84MHz
+    TIM_TimeBaseStructure.TIM_Prescaler = 0;  // 84MHz / 10 = 8,4MHz | 5,8 in 100 us | 58 000 1s
     TIM_TimeBaseStructure.TIM_ClockDivision = 0;
     TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
     TIM_TimeBaseInit(TIM6, &TIM_TimeBaseStructure);

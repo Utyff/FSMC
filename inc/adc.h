@@ -22,6 +22,7 @@ extern "C" {
 
 void ADC_init();
 void ADC_step(s16 step);
+float ADC_getTime();
 
 #ifdef __cplusplus
 }

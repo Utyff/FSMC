@@ -60,7 +60,7 @@ u8   ADC_SampleTime = ADC_SampleTime_3Cycles;
 
 u16 ScreenTime = 0;      // index in ScreenTimes
 u16 ScreenTime_adj = 0;  // 0-9
-const float ScreenTimes[] = { 100, 200, 500, 1000, 2000, 5000, 10000, 20000 };
+const float ScreenTimes[] = { 100, 200, 500, 1000, 2000, 5000, 10000, 20000 };  // microseconds
 
 union SampleBuffer samplesBuffer;
 u8    half=0;  // first or second half writing
@@ -193,7 +193,7 @@ void ADC_step_down()
 }
 
 
-float getTime()
+float ADC_getTime()
 {
   float time = ScreenTimes[ScreenTime];
   float adj = (ScreenTimes[ScreenTime+1] - time) * ScreenTime_adj/10;
@@ -209,7 +209,7 @@ void ADC_step(s16 step)
   else          ADC_step_down();
 
   // set params
-  float time = getTime();
+  float time = ADC_getTime();
 
   // looking last parameters set with ScreenTime less than required time
   int i = 1;

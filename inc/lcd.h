@@ -123,7 +123,7 @@ typedef struct
 #define BROWN 			 0XBC40 // Brown
 #define BRRED 			 0XFC07 // reddish brown
 #define GRAY  			 0X8430 // Gray  1000 0100 0011 0000
-#define DGRAY  			 0X6208 // Gray  0100 0010 0000 1000
+#define DARKGRAY  			 0X6208 // Gray  0100 0010 0000 1000
 
 // GUI color
 
@@ -133,7 +133,7 @@ typedef struct
 // The above three colors are the color of PANEL
 
 #define LIGHTGREEN     	 0X841F // Light green
-//#define LIGHTGRAY        0XEF5B // light gray (PANNEL)
+#define LIGHTGRAY        0XEF5B // light gray (PANNEL)
 #define LGRAY 			 0XC618 // light gray (PANNEL), the form background color
 
 #define LGRAYBLUE        0XA651 // light gray-blue (middle layer color)

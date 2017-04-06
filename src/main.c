@@ -58,7 +58,7 @@ int main()
     //menu1Step(Encoder_get());
     //setXScale(Encoder_get());
     ADC_step(Encoder_get());
-    LCD_ShowxNum(260, 214, (u32)(ADC_getTime()/10), 7,12, 0x0);
+    LCD_ShowxNum(260, 214, (u32)ADC_getTime()/10, 7,12, 0x0);
     drawMenu1();
   }
 }

@@ -178,7 +178,7 @@ void ADC_step_up()
   if( ScreenTime_adj<9 )
     ScreenTime_adj++;
   else
-    if( ScreenTime<sizeof(ScreenTimes)-1 )
+    if( ScreenTime<sizeof(ScreenTimes)/sizeof(ScreenTimes[0])-2 )
       ScreenTime_adj=0, ScreenTime++;
 }
 

@@ -121,7 +121,7 @@ static void ADC_DMA_init()  // with IRQ when buffer fill
   NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
   NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
   NVIC_Init ( &NVIC_InitStructure );
-  DMA_ITConfig ( DMA2_Stream0, DMA_IT_HT | DMA_IT_TC, ENABLE ); // DMA_IT_HT |  // IRQ when transfer complete and half transfer
+  DMA_ITConfig ( DMA2_Stream0, DMA_IT_HT | DMA_IT_TC, ENABLE ); // IRQ when transfer complete and half transfer
 }
 
 
@@ -172,13 +172,20 @@ void ADC_init()  // DMA mode
   ADCStartTick = DWT_Get_Current_Tick();
 }
 
+void ADC_set_parameters()
+{
+  DMA_Cmd(DMA2_Stream0, DISABLE);
+  DMA_SetCurrDataCounter(DMA2_Stream0, 0);
+
+  DMA_Cmd(DMA2_Stream0, ENABLE);
+}
 
 void ADC_step_up()
 {
   if( ScreenTime_adj<9 )
     ScreenTime_adj++;
   else
-    if( ScreenTime<sizeof(ScreenTimes)/sizeof(ScreenTimes[0])-2 )
+    if( ScreenTime<sizeof(ScreenTimes)/sizeof(ScreenTimes[0])-2 ) // last value forbidden to assign
       ScreenTime_adj=0, ScreenTime++;
 }
 
@@ -196,7 +203,7 @@ void ADC_step_down()
 float ADC_getTime()
 {
   float time = ScreenTimes[ScreenTime];
-  float adj = (ScreenTimes[ScreenTime+1] - time) * ScreenTime_adj/10;
+  float adj = (ScreenTimes[ScreenTime+1] - time) * ScreenTime_adj/10;  // next time always exist because last forbidden to assign
   time += adj;
   return time;
 }

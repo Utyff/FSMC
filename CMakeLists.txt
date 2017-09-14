@@ -1,82 +1,32 @@
-cmake_minimum_required(VERSION 3.6)
-project(FSMC)
+project(FSMC C ASM)
+cmake_minimum_required(VERSION 3.5.0)
 
-add_definitions(-DSTM32F4xx -DUSE_STDPERIPH_DRIVER)
+add_definitions(-DSTM32F4xx -DSTM32F40XX -DUSE_STDPERIPH_DRIVER)
 
-set(CMAKE_CXX_STANDARD 11)
+#set(FREERTOS_DIR Middlewares/Third_Party/FreeRTOS/Source/)
 
-include_directories(
-        inc
-        Libraries/CMSIS/Include
-        Libraries/Device/STM32F4xx/Include
-        Libraries/STM32F4xx_StdPeriph_Driver/inc)
+file(GLOB_RECURSE USER_SOURCES src/*.s src/*.c)
+file(GLOB_RECURSE STL_SOURCES Libraries/STM32F4xx_StdPeriph_Driver/src/*.c)
 
-set(SOURCE_FILES
-        Libraries/STM32F4xx_StdPeriph_Driver/src/misc.c
-        Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_adc.c
-        Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_can.c
-        Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_crc.c
-        Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_cryp.c
-        Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_cryp_aes.c
-        Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_cryp_des.c
-        Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_cryp_tdes.c
-        Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_dac.c
-        Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_dbgmcu.c
-        Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_dcmi.c
-        Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_dma.c
-        Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_exti.c
-        Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_flash.c
-        Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_fsmc.c
-        Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_gpio.c
-        Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_hash.c
-        Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_hash_md5.c
-        Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_hash_sha1.c
-        Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_i2c.c
-        Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_iwdg.c
-        Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_pwr.c
-        Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_rcc.c
-        Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_rng.c
-        Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_rtc.c
-        Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_sdio.c
-        Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_spi.c
-        Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_syscfg.c
-        Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_tim.c
-        Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_usart.c
-        Libraries/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_wwdg.c
-        src/delay.c
-        src/main.c
-        src/stm32f4xx_it.c
-        src/system_stm32f4xx.c
-        src/lib.c
-        src/dac.c
-        src/menu.c
-        src/encoder.c
-        )
+#add_library(CMSIS
+#        src/system_stm32f4xx.c
+#        src/startup_stm32f40xx.s
+#)
+#src/startup_stm32f40xx.s
 
-add_executable(FSMC ${SOURCE_FILES})
+include_directories(inc)
+include_directories(Libraries/STM32F4xx_StdPeriph_Driver/inc)
+include_directories(Libraries/Device/STM32F4xx/Include)
+include_directories(Libraries/CMSIS/Include)
 
-# -------------------------------------------------------------------
+add_executable(${PROJECT_NAME}.elf ${USER_SOURCES} ${STL_SOURCES} ${LINKER_SCRIPT})
 
-#set(CMAKE_SYSTEM_NAME Generic)
+#target_link_libraries(${PROJECT_NAME}.elf CMSIS)
 
-# where is the target environment
-#set(CMAKE_FIND_ROOT_PATH  P:/__ELECTRONICS/stm32/Sourcery_CodeBench_Lite_for_ARM_EABI )
-
-# specify the cross compiler
-#set(CMAKE_C_COMPILER   arm-none-eabi-gcc )
-#set(CMAKE_CXX_COMPILER arm-none-eabi-g++ )
-#set(CMAKE_LINKER arm-none-eabi-ld )
-
-# MinGW default is .exe
-set(CMAKE_EXECUTABLE_SUFFIX     ".elf")
-
-#set(ARM_FLAGS "-nostdlib -mcpu=cortex-m4 -mthumb -O2")
-
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${ARM_FLAGS} -std=c99 -ffunction-sections -g")
-#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c99 ${ARM_FLAGS} -ffunction-sections -g")
-#set(CMAKE_EXE_LINKER_FLAGS "${ARM_FLAGS} -g -nostartfiles -Wl,-Map=${PROJECT_NAME}.map -Wl,--gc-sections -Wl,--library-path=\"${PROJECT_SOURCE_DIR}\" -Wl,-Tlink.ld  ")
-
-#set(CMAKE_C_LINK_EXECUTABLE "<CMAKE_C_COMPILER> <FLAGS> <CMAKE_C_LINK_FLAGS> <LINK_FLAGS> <OBJECTS>  -o <TARGET>")
-#set(CMAKE_CXX_LINK_EXECUTABLE "<CMAKE_CXX_COMPILER> <FLAGS> <CMAKE_CXX_LINK_FLAGS> <LINK_FLAGS> <OBJECTS>  -o <TARGET>")
-
-# -------------------------------------------------------------------
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Map=${PROJECT_SOURCE_DIR}/build/${PROJECT_NAME}.map")
+set(HEX_FILE ${PROJECT_SOURCE_DIR}/build/${PROJECT_NAME}.hex)
+set(BIN_FILE ${PROJECT_SOURCE_DIR}/build/${PROJECT_NAME}.bin)
+add_custom_command(TARGET ${PROJECT_NAME}.elf POST_BUILD
+        COMMAND ${CMAKE_OBJCOPY} -Oihex $<TARGET_FILE:${PROJECT_NAME}.elf> ${HEX_FILE}
+        COMMAND ${CMAKE_OBJCOPY} -Obinary $<TARGET_FILE:${PROJECT_NAME}.elf> ${BIN_FILE}
+        COMMENT "Building ${HEX_FILE} \nBuilding ${BIN_FILE}")

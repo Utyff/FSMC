@@ -2,8 +2,12 @@
 #include <dwt.h>
 
 
+/*
+ * Draw frame and oscillogram
+ */
+
 uint8_t graph[MAX_X];
-float  scaleX = 1;
+float  scaleX = 1;  // no more then 1
 
 void drawFrame() {
   u16 x, y, step = 32;
@@ -27,8 +31,10 @@ void drawFrame() {
   }
 }
 
-
-int triggerStart1ch(u8 *samples)
+/*
+ * Looking for trigger event position in 1 channel samples array
+ */
+int triggerStart1ch(u8 const *samples)
 {
     int i;
     u8  trgLvl = 128;
@@ -49,6 +55,9 @@ int triggerStart1ch(u8 *samples)
     return 0;
 }
 
+/*
+ * Looking for trigger event position in 2 channels samples array
+ */
 int triggerStart2ch(u8 (*samples)[2])
 {
     int i;

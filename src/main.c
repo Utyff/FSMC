@@ -11,6 +11,7 @@
 
 // for f4-disco GPIOD & GPIO_Pin_12  Green LED
 // for ve-board GPIOA & GPIO_Pin_6
+// for DIY MORE GPIOE & GPIO_Pin_0
 #define LED_CLOCKPORT RCC_AHB1Periph_GPIOD
 #define LED_PORT      GPIOD
 #define LED_PIN       GPIO_Pin_12
@@ -22,9 +23,7 @@ void LED_init();
 void AD9833_init();
 
 
-
-int main()
-{
+int main() {
 //  RCC_ClocksTypeDef RCC_Clocks;
 //  RCC_GetClocksFreq(&RCC_Clocks);
 
@@ -40,8 +39,7 @@ int main()
   EXTI_init();
   Encoder_init();
 
-  while(1)
-  {
+  while (1) {
     DWT_Delay(50000); // 50ms / 20 times per second
     GPIO_ToggleBits(LED_PORT, LED_PIN); // Green LED toggle
 
@@ -49,40 +47,39 @@ int main()
     drawGraph();
 
     POINT_COLOR = MAGENTA;
-    BACK_COLOR  = BLACK;
-    LCD_ShowxNum(0,   227, button0Count, 5,12, 9);
-    LCD_ShowxNum(30,  227, button1Count, 5,12, 9);
-    LCD_ShowxNum(60,  227, button2Count, 5,12, 9);
-    LCD_ShowxNum(260, 227, ENCODER_TIM->CNT, 5,12, 9);
+    BACK_COLOR = BLACK;
+    LCD_ShowxNum(0, 227, button0Count, 5, 12, 9);
+    LCD_ShowxNum(30, 227, button1Count, 5, 12, 9);
+    LCD_ShowxNum(60, 227, button2Count, 5, 12, 9);
+    LCD_ShowxNum(260, 227, ENCODER_TIM->CNT, 5, 12, 9);
 
     //menu1Step(Encoder_get());
     //setXScale(Encoder_get());
     ADC_step(Encoder_get());
-    LCD_ShowxNum(260, 214, (u32)ADC_getTime()/10, 7,12, 0x0);
+    LCD_ShowxNum(260, 214, (u32) ADC_getTime() / 10, 7, 12, 0x0);
     drawMenu1();
   }
 }
 
 // Configure TIM3 as square generator
-void TIM3_init()
-{
+void TIM3_init() {
   GPIO_InitTypeDef GPIO_InitStructure;
 
   // GPIOB clock enable
   RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB, ENABLE);
 
   // GPIOA Configuration: TIM3 CH1 (PB4)
-  GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_4;
-  GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF;
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
   GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-  GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
+  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
   GPIO_Init(GPIOB, &GPIO_InitStructure);
   // Connect PB4 pins to AF TIM3
   GPIO_PinAFConfig(GPIOB, GPIO_PinSource4, GPIO_AF_TIM3);
 
-  TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
-  TIM_OCInitTypeDef        TIM_OCInitStructure;
+  TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
+  TIM_OCInitTypeDef TIM_OCInitStructure;
 
   // TIM3 clock enable
   RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);
@@ -109,8 +106,7 @@ void TIM3_init()
 }
 
 
-void TIM4_init()
-{
+void TIM4_init() {
   GPIO_InitTypeDef GPIO_InitStructure;
 
   /* GPIOD clock enable */
@@ -120,11 +116,11 @@ void TIM4_init()
   GPIO_PinAFConfig(GPIOD, GPIO_PinSource13, GPIO_AF_TIM4);
 
   /* GPIOD Configuration: TIM4 CH2 (PD13) */
-  GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_13;
-  GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF;
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_13;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
   GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-  GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_DOWN;
+  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_DOWN;
   GPIO_Init(GPIOD, &GPIO_InitStructure);
 
   /* -----------------------------------------------------------------------
@@ -153,8 +149,8 @@ void TIM4_init()
      based on this variable will be incorrect.
   ----------------------------------------------------------------------- */
 
-  TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
-  TIM_OCInitTypeDef  TIM_OCInitStructure;
+  TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
+  TIM_OCInitTypeDef TIM_OCInitStructure;
   uint16_t CCR2_Val = 1333;
   uint16_t PrescalerValue;
 
@@ -162,7 +158,8 @@ void TIM4_init()
   RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4, ENABLE);
 
   // Compute the prescaler value, TIM4CLK = APB1*2 = 84MHz
-  PrescalerValue = (uint16_t) (((SystemCoreClock /2) / 10000) - 1); // 8399;  84M > 1Hz | 8,4M > 10Hz | 840K > 100Hz .. 8400 > 10KHz
+  PrescalerValue = (uint16_t) (((SystemCoreClock / 2) / 10000) -
+                               1); // 8399;  84M > 1Hz | 8,4M > 10Hz | 840K > 100Hz .. 8400 > 10KHz
 
   // Time base configuration
   TIM_TimeBaseStructure.TIM_Period = 9999; // 10KHz input freq;  10K > 1Hz
@@ -186,10 +183,9 @@ void TIM4_init()
 }
 
 
-void TIM7_init()
-{
+void TIM7_init() {
   // ------------------Инициализация TIM7------------------
-  RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM7,ENABLE);
+  RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM7, ENABLE);
   // По умолчанию частота шины 82 МГц
   TIM7->PSC = 24000 - 1;      // Настройка делителя на 4000 "тиков" в секунду
   TIM7->ARR = 500;            // Отработка прерывания 8 раз в секунду
@@ -199,9 +195,8 @@ void TIM7_init()
   // ------------------------------------------------------
 }
 
-
-void LED_init() // init GPIO PD12 for Green LED
-{
+// init GPIO PD12 for Green LED
+void LED_init() {
   // ------------------Инициализация портов светодиодов------------------
   GPIO_InitTypeDef GPIO_InitStructure;                // Структура содержащая настройки порта
   RCC_AHB1PeriphClockCmd(LED_CLOCKPORT, ENABLE);      // Включаем тактирование порта D
@@ -209,7 +204,7 @@ void LED_init() // init GPIO PD12 for Green LED
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;       // Включаем режим выхода
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
   GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-  GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_DOWN;
+  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_DOWN;
   GPIO_Init(LED_PORT, &GPIO_InitStructure);           // вызов функции инициализации
   // --------------------------------------------------------------------
 }

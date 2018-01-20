@@ -22,6 +22,10 @@ void TIM7_init();
 void LED_init();
 void AD9833_init();
 
+extern s16 sStep;
+extern float time;
+extern int ii;
+
 
 int main() {
 //  RCC_ClocksTypeDef RCC_Clocks;
@@ -48,9 +52,9 @@ int main() {
 
     POINT_COLOR = MAGENTA;
     BACK_COLOR = BLACK;
-    LCD_ShowxNum(0, 227, button0Count, 5, 12, 9);
-    LCD_ShowxNum(30, 227, button1Count, 5, 12, 9);
-    LCD_ShowxNum(60, 227, button2Count, 5, 12, 9);
+    LCD_ShowxNum(0, 227, sStep, 5, 12, 9);
+    LCD_ShowxNum(30, 227, (s32)time, 5, 12, 9);
+    LCD_ShowxNum(60, 227, ii, 5, 12, 9);
     LCD_ShowxNum(260, 227, ENCODER_TIM->CNT, 5, 12, 9);
 
     //menu1Step(Encoder_get());

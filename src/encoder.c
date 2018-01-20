@@ -3,7 +3,7 @@
 
 #define MAX_ENCODER   63  // max encoder value
 #define MID_ENCODER   32
-#define ENCODER_STEP  2   // counts per step
+#define ENCODER_STEP  1   // counts per step
 
 
 
@@ -42,7 +42,7 @@ void Encoder_init()
   TIM_TimeBaseStructure.TIM_CounterMode   = TIM_CounterMode_Up; // count up
   TIM_TimeBaseInit(ENCODER_TIM, &TIM_TimeBaseStructure);
 
-  TIM_EncoderInterfaceConfig(ENCODER_TIM, TIM_EncoderMode_TI1, TIM_ICPolarity_Rising, TIM_ICPolarity_Rising);
+  TIM_EncoderInterfaceConfig(ENCODER_TIM, TIM_EncoderMode_TI1, TIM_ICPolarity_BothEdge, TIM_ICPolarity_BothEdge);
 
   TIM_ICStructInit(&TIM_ICInitStructure);
   TIM_ICInitStructure.TIM_ICFilter = 6;

@@ -20,6 +20,8 @@ extern u8    half;
 extern "C" {
 #endif
 
+void ADC_DMA_init(); // with IRQ when buffer fill
+void ADC_GPIO_init(); // configure PC2 as ADC CH12
 void ADC_init();
 void ADC_step(s16 step);
 float ADC_getTime();

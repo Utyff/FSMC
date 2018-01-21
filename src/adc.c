@@ -58,8 +58,8 @@ u32 ADC_Prescaler = ADC_Prescaler_Div4;
 u8 ADC_SampleTime = ADC_SampleTime_3Cycles;
 
 u16 ScreenTime = 0;      // index in ScreenTimes
-u16 ScreenTime_adj = 0;  // 0-9
-const float ScreenTimes[] = {100, 200, 500, 1000, 2000, 5000, 10000, 20000};  // microseconds
+u16 ScreenTime_adj = 0;  // 0-9 shift in ScreenTime
+const float ScreenTimes[] = {100, 200, 500, 1000, 2000, 5000, 10000, 20000};  // sweep screen, microseconds
 
 union SampleBuffer samplesBuffer;
 u8 half = 0;  // first or second half writing
@@ -70,7 +70,7 @@ uint32_t ADCElapsedTick;       // the last time buffer fill
 
 
 
-static void ADC_GPIO_init() { // configure PC2 as ADC CH12
+void ADC_GPIO_init() { // configure PC2 as ADC CH12
   GPIO_InitTypeDef GPIO_InitStructure;
 
   // Enable peripheral clocks
@@ -85,7 +85,7 @@ static void ADC_GPIO_init() { // configure PC2 as ADC CH12
 }
 
 
-static void ADC_DMA_init() { // with IRQ when buffer fill
+void ADC_DMA_init() { // with IRQ when buffer fill
   DMA_InitTypeDef DMA_InitStructure;
   NVIC_InitTypeDef NVIC_InitStructure;
 
@@ -125,7 +125,7 @@ static void ADC_DMA_init() { // with IRQ when buffer fill
 void ADC_init() {  // DMA mode
   ADC_DeInit();
   ADC_GPIO_init();
-  ADC_DMA_init();
+//  ADC_DMA_init();
 
   ADC_InitTypeDef ADC_InitStructure;
   ADC_CommonInitTypeDef ADC_CommonInitStructure;
@@ -193,8 +193,8 @@ void ADC_step_down() {
 
 float ADC_getTime() {
   float time = ScreenTimes[ScreenTime];
-  float adj = (ScreenTimes[ScreenTime + 1] - time) * ScreenTime_adj /
-              10;  // next time always exist because last forbidden to assign
+  // next time always exist because last forbidden to assign
+  float adj = (ScreenTimes[ScreenTime + 1] - time) * ScreenTime_adj / 10;
   time += adj;
   return time;
 }
@@ -202,14 +202,14 @@ float ADC_getTime() {
 s16 sStep;
 float time;
 int ii;
+
 void ADC_step(s16 step) {
   if (step == 0) return;
   if (step > 0) ADC_step_up();
   else ADC_step_down();
   sStep = step;
 
-  // set params
-  time = ADC_getTime();
+  time = ADC_getTime(); // get screen sweep time
 
   // looking last parameters set with ScreenTime less than required time
   int i = 1;
@@ -263,9 +263,10 @@ void ADC_step_Prescaler(s16 step) {
   ADC_init();
 } //*/
 
-
+u16 ICount = 0;
 // dma2 stream 0 irq handler
 void DMA2_Stream0_IRQHandler() {
+  ICount++;
   // Test on DMA Stream HalfTransfer Complete interrupt
   if (DMA_GetITStatus(DMA2_Stream0, DMA_IT_HTIF0)) {
     // Clear Stream0 HalfTransfer

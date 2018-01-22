@@ -1892,10 +1892,10 @@ void RTC_CalibOutputConfig(uint32_t RTC_CalibOutput)
   *   This parameter can be can be one of the following values:
   *     @arg RTC_SmoothCalibPeriod_32sec : The smooth calibration period is 32s.
   *     @arg RTC_SmoothCalibPeriod_16sec : The smooth calibration period is 16s.
-  *     @arg RTC_SmoothCalibPeriod_8sec  : The smooth calibartion period is 8s.
+  *     @arg RTC_SmoothCalibPeriod_8sec  : The smooth calibration period is 8s.
   * @param  RTC_SmoothCalibPlusPulses : Select to Set or reset the CALP bit.
   *   This parameter can be one of the following values:
-  *     @arg RTC_SmoothCalibPlusPulses_Set  : Add one RTCCLK puls every 2**11 pulses.
+  *     @arg RTC_SmoothCalibPlusPulses_Set  : Add one RTCCLK pulse every 2**11 pulses.
   *     @arg RTC_SmoothCalibPlusPulses_Reset: No RTCCLK pulses are added.
   * @param  RTC_SmouthCalibMinusPulsesValue: Select the value of CALM[8:0] bits.
   *   This parameter can be one any value from 0 to 0x000001FF.

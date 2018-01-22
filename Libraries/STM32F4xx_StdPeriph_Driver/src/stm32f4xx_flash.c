@@ -412,7 +412,7 @@ FLASH_Status FLASH_EraseSector(uint32_t FLASH_Sector, uint8_t VoltageRange)
 /**
   * @brief  Erases all FLASH Sectors.
   *
-  * @note   If an erase and a program operations are requested simustaneously,
+  * @note   If an erase and a program operations are requested simultaneously,
   *         the erase operation is performed before the program one.
   *
   * @param  VoltageRange: The device voltage range which defines the erase parallelism.

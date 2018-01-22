@@ -1121,7 +1121,7 @@ uint8_t CAN_GetLSBTransmitErrorCounter(CAN_TypeDef* CANx)
         (++) CAN_FLAG_RQCP0,
         (++) CAN_FLAG_RQCP1,
         (++) CAN_FLAG_RQCP2  : Request completed MailBoxes 0, 1 and 2  Flags
-                               Set when when the last request (transmit or abort)
+                               Set when the last request (transmit or abort)
                                has been performed.
 
       (+) Receive Flags

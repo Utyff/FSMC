@@ -1636,7 +1636,7 @@ ErrorStatus CRYP_AES_CCM(uint8_t Mode,
     /* Wait until the OFNE flag is reset */
     while(CRYP_GetFlagStatus(CRYP_FLAG_OFNE) == RESET);
 
-    /* Read the Authentaication TAG (MAC) in the IN FIFO */
+    /* Read the Authentification TAG (MAC) in the IN FIFO */
     temptag[0] = CRYP_DataOut();
     temptag[1] = CRYP_DataOut();
     temptag[2] = CRYP_DataOut();

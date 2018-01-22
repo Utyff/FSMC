@@ -154,7 +154,7 @@ void RNG_Cmd(FunctionalState NewState)
   *
   * @note   Before to call this function you have to wait till DRDY (data ready)
   *         flag is set, using RNG_GetFlagStatus(RNG_FLAG_DRDY) function.
-  * @note   Each time the the Random number data is read (using RNG_GetRandomNumber()
+  * @note   Each time the Random number data is read (using RNG_GetRandomNumber()
   *         function), the RNG_FLAG_DRDY flag is automatically cleared.
   * @note   In the case of a seed error, the generation of random numbers is
   *         interrupted for as long as the SECS bit is '1'. If a number is

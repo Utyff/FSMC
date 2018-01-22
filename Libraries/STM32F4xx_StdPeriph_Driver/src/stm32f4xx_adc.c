@@ -648,7 +648,7 @@ void ADC_VBATCmd(FunctionalState NewState)
          (++) Activate the continuous Mode  (*)
          (++) Activate the Discontinuous Mode
          -@@- Please Note that the following features for regular channels
-             are configurated using the ADC_Init() function :
+             are configured using the ADC_Init() function :
            (+@@) scan mode activation
            (+@@) continuous mode activation (**)
            (+@@) External trigger source

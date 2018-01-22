@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f4xx_exti.c
   * @author  MCD Application Team
-  * @version V1.1.0
-  * @date    11-January-2013
+  * @version V1.8.0
+  * @date    04-November-2016
   * @brief   This file provides firmware functions to manage the following
   *          functionalities of the EXTI peripheral:
   *           + Initialization and Configuration
@@ -11,9 +11,9 @@
   *
 @verbatim
 
- ===================================================================
-                       ##### EXTI features #####
- ===================================================================
+ ===============================================================================
+                              ##### EXTI features #####
+ ===============================================================================
 
  [..] External interrupt/event lines are mapped as following:
    (#) All available GPIO pins are connected to the 16 external
@@ -25,10 +25,10 @@
    (#) EXTI line 20 is connected to the USB OTG HS (configured in FS) Wakeup event
    (#) EXTI line 21 is connected to the RTC Tamper and Time Stamp events
    (#) EXTI line 22 is connected to the RTC Wakeup event
+   (#) EXTI line 23 is connected to the LPTIM Wakeup event
 
-
-                ##### How to use this driver #####
- ===================================================================
+                       ##### How to use this driver #####
+ ===============================================================================
 
  [..] In order to use an I/O pin as an external interrupt source, follow steps
       below:
@@ -47,7 +47,7 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; COPYRIGHT 2013 STMicroelectronics</center></h2>
+  * <h2><center>&copy; COPYRIGHT 2016 STMicroelectronics</center></h2>
   *
   * Licensed under MCD-ST Liberty SW License Agreement V2, (the "License");
   * You may not use this file except in compliance with the License.
@@ -263,13 +263,11 @@ void EXTI_ClearFlag(uint32_t EXTI_Line)
   */
 ITStatus EXTI_GetITStatus(uint32_t EXTI_Line)
 {
-  ITStatus bitstatus = RESET;
-  uint32_t enablestatus = 0;
+  FlagStatus bitstatus = RESET;
   /* Check the parameters */
   assert_param(IS_GET_EXTI_LINE(EXTI_Line));
 
-  enablestatus =  EXTI->IMR & EXTI_Line;
-  if (((EXTI->PR & EXTI_Line) != (uint32_t)RESET) && (enablestatus != (uint32_t)RESET))
+  if ((EXTI->PR & EXTI_Line) != (uint32_t)RESET)
   {
     bitstatus = SET;
   }
@@ -278,6 +276,7 @@ ITStatus EXTI_GetITStatus(uint32_t EXTI_Line)
     bitstatus = RESET;
   }
   return bitstatus;
+
 }
 
 /**

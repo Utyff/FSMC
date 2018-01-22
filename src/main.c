@@ -55,10 +55,10 @@ int main() {
 
     POINT_COLOR = MAGENTA;
     BACK_COLOR = BLACK;
-    LCD_ShowxNum(0, 227, sStep, 5, 12, 9);
-    LCD_ShowxNum(30, 227, (s32) time, 5, 12, 9);
-    LCD_ShowxNum(60, 227, ii, 5, 12, 9);
-    LCD_ShowxNum(260, 227, ENCODER_TIM->CNT, 5, 12, 9);
+    LCD_ShowxNum(0, 227, sStep, 5, 12, 0);
+    LCD_ShowxNum(30, 227, (s32) time, 5, 12, 0);
+    LCD_ShowxNum(60, 227, ii, 5, 12, 0);
+    LCD_ShowxNum(260, 227, ENCODER_TIM->CNT, 5, 12, 0);
 
     //menu1Step(Encoder_get());
     //setXScale(Encoder_get());

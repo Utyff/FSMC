@@ -123,7 +123,7 @@ void ADC_DMA_init() { // with IRQ when buffer fill
 
 
 void ADC_init() {  // DMA mode
-  ADC_DeInit();
+//  ADC_DeInit();
   ADC_GPIO_init();
 //  ADC_DMA_init();
 

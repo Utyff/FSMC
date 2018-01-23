@@ -1,16 +1,16 @@
 /**
   ******************************************************************************
-  * @file    Project/STM32F4xx_StdPeriph_Template/stm32f4xx_it.c
+  * @file    Project/STM32F4xx_StdPeriph_Templates/stm32f4xx_it.c
   * @author  MCD Application Team
-  * @version V1.1.0
-  * @date    18-January-2013
+  * @version V1.8.0
+  * @date    04-November-2016
   * @brief   Main Interrupt Service Routines.
   *          This file provides template for all exceptions handler and
   *          peripherals interrupt service routine.
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; COPYRIGHT 2013 STMicroelectronics</center></h2>
+  * <h2><center>&copy; COPYRIGHT 2016 STMicroelectronics</center></h2>
   *
   * Licensed under MCD-ST Liberty SW License Agreement V2, (the "License");
   * You may not use this file except in compliance with the License.
@@ -28,8 +28,8 @@
   */
 
 /* Includes ------------------------------------------------------------------*/
-#include <stm32f4xx_it.h>
-#include <exti.h>
+#include "stm32f4xx_it.h"
+#include "exti.h"
 #include <dwt.h>
 #include <menu.h>
 
@@ -50,7 +50,7 @@
 /******************************************************************************/
 
 /**
-  * @brief   This function handles NMI exception.
+  * @brief  This function handles NMI exception.
   * @param  None
   * @retval None
   */
@@ -283,7 +283,7 @@ void EXTI9_5_IRQHandler()
 /*                 STM32F4xx Peripherals Interrupt Handlers                   */
 /*  Add here the Interrupt Handler for the used peripheral(s) (PPP), for the  */
 /*  available peripheral interrupt handler's name please refer to the startup */
-/*  file (startup_stm32f40xx.s/startup_stm32f427x.s).                         */
+/*  file (startup_stm32f4xx.s).                                               */
 /******************************************************************************/
 
 /**

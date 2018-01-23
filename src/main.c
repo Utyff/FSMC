@@ -192,27 +192,27 @@ void TIM4_init() {
 
 
 void TIM7_init() {
-  // ------------------Инициализация TIM7------------------
+  // ------------------РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ TIM7------------------
   RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM7, ENABLE);
-  // По умолчанию частота шины 82 МГц
-  TIM7->PSC = 24000 - 1;      // Настройка делителя на 4000 "тиков" в секунду
-  TIM7->ARR = 500;            // Отработка прерывания 8 раз в секунду
-  TIM7->DIER |= TIM_DIER_UIE; // Разрешения прерывание от таймера
-  TIM7->CR1 |= TIM_CR1_CEN;   // Запуск таймера
-  NVIC_EnableIRQ(TIM7_IRQn);  // Разрешение TIM7_IRQn прерывания
+  // РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ С‡Р°СЃС‚РѕС‚Р° С€РёРЅС‹ 82 РњР“С†
+  TIM7->PSC = 24000 - 1;      // РќР°СЃС‚СЂРѕР№РєР° РґРµР»РёС‚РµР»СЏ РЅР° 4000 "С‚РёРєРѕРІ" РІ СЃРµРєСѓРЅРґСѓ
+  TIM7->ARR = 500;            // РћС‚СЂР°Р±РѕС‚РєР° РїСЂРµСЂС‹РІР°РЅРёСЏ 8 СЂР°Р· РІ СЃРµРєСѓРЅРґСѓ
+  TIM7->DIER |= TIM_DIER_UIE; // Р Р°Р·СЂРµС€РµРЅРёСЏ РїСЂРµСЂС‹РІР°РЅРёРµ РѕС‚ С‚Р°Р№РјРµСЂР°
+  TIM7->CR1 |= TIM_CR1_CEN;   // Р—Р°РїСѓСЃРє С‚Р°Р№РјРµСЂР°
+  NVIC_EnableIRQ(TIM7_IRQn);  // Р Р°Р·СЂРµС€РµРЅРёРµ TIM7_IRQn РїСЂРµСЂС‹РІР°РЅРёСЏ
   // ------------------------------------------------------
 }
 
 // init GPIO PD12 for Green LED
 void LED_init() {
-  // ------------------Инициализация портов светодиодов------------------
-  GPIO_InitTypeDef GPIO_InitStructure;                // Структура содержащая настройки порта
-  RCC_AHB1PeriphClockCmd(LED_CLOCKPORT, ENABLE);      // Включаем тактирование порта D
-  GPIO_InitStructure.GPIO_Pin = LED_PIN;              // Выбираем нужные выводы | GPIO_Pin_13 | GPIO_Pin_14| GPIO_Pin_15
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;       // Включаем режим выхода
+  // ------------------РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РїРѕСЂС‚РѕРІ СЃРІРµС‚РѕРґРёРѕРґРѕРІ------------------
+  GPIO_InitTypeDef GPIO_InitStructure;                // РЎС‚СЂСѓРєС‚СѓСЂР° СЃРѕРґРµСЂР¶Р°С‰Р°СЏ РЅР°СЃС‚СЂРѕР№РєРё РїРѕСЂС‚Р°
+  RCC_AHB1PeriphClockCmd(LED_CLOCKPORT, ENABLE);      // Р’РєР»СЋС‡Р°РµРј С‚Р°РєС‚РёСЂРѕРІР°РЅРёРµ РїРѕСЂС‚Р° D
+  GPIO_InitStructure.GPIO_Pin = LED_PIN;              // Р’С‹Р±РёСЂР°РµРј РЅСѓР¶РЅС‹Рµ РІС‹РІРѕРґС‹ | GPIO_Pin_13 | GPIO_Pin_14| GPIO_Pin_15
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;       // Р’РєР»СЋС‡Р°РµРј СЂРµР¶РёРј РІС‹С…РѕРґР°
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
   GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
   GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_DOWN;
-  GPIO_Init(LED_PORT, &GPIO_InitStructure);           // вызов функции инициализации
+  GPIO_Init(LED_PORT, &GPIO_InitStructure);           // РІС‹Р·РѕРІ С„СѓРЅРєС†РёРё РёРЅРёС†РёР°Р»РёР·Р°С†РёРё
   // --------------------------------------------------------------------
 }

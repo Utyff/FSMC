@@ -148,7 +148,7 @@ void SysTick_Handler(void)
 }
 
 /*int OraStat=0;
-// Œ·‡·ÓÚ˜ËÍ ÔÂ˚‚‡ÌËˇ TIM4_DAC
+// –û–±—Ä–∞–±–æ—Ç—á–∏–∫ –ø—Ä–µ—Ä—ã–≤–∞–Ω–∏—è TIM4_DAC
 void TIM4_IRQHandler(void)
 {
   if( OraStat )
@@ -156,25 +156,25 @@ void TIM4_IRQHandler(void)
   else
        GPIO_ResetBits(GPIOD, GPIO_Pin_13);
   OraStat = !OraStat;
-  TIM4->SR &= ~TIM_SR_UIF; //—·‡Ò˚‚‡ÂÏ ÙÎ‡„ ÔÂ˚‚‡ÌËˇ
+  TIM4->SR &= ~TIM_SR_UIF; //–°–±—Ä–∞—Å—ã–≤–∞–µ–º —Ñ–ª–∞–≥ –ø—Ä–µ—Ä—ã–≤–∞–Ω–∏—è
 } //*/
 
 
-/*/ Œ·‡·ÓÚ˜ËÍ ÔÂ˚‚‡ÌËˇ TIM2
+/*/ –û–±—Ä–∞–±–æ—Ç—á–∏–∫ –ø—Ä–µ—Ä—ã–≤–∞–Ω–∏—è TIM2
 void TIM2_IRQHandler()
 {
   encoder = TIM2->CNT;
-  TIM2->SR &= ~TIM_SR_UIF; //—·‡Ò˚‚‡ÂÏ ÙÎ‡„ ÔÂ˚‚‡ÌËˇ
+  TIM2->SR &= ~TIM_SR_UIF; //–°–±—Ä–∞—Å—ã–≤–∞–µ–º —Ñ–ª–∞–≥ –ø—Ä–µ—Ä—ã–≤–∞–Ω–∏—è
 } //*/
 
-// Œ·‡·ÓÚ˜ËÍ ÔÂ˚‚‡ÌËˇ TIM7
+// –û–±—Ä–∞–±–æ—Ç—á–∏–∫ –ø—Ä–µ—Ä—ã–≤–∞–Ω–∏—è TIM7
 void TIM7_IRQHandler()
 {
 //  GPIO_ToggleBits(GPIOD, GPIO_Pin_12); // Green toggle
-  TIM7->SR &= ~TIM_SR_UIF; //—·‡Ò˚‚‡ÂÏ ÙÎ‡„ ÔÂ˚‚‡ÌËˇ
+  TIM7->SR &= ~TIM_SR_UIF; //–°–±—Ä–∞—Å—ã–≤–∞–µ–º —Ñ–ª–∞–≥ –ø—Ä–µ—Ä—ã–≤–∞–Ω–∏—è
 }
 
-#define BOUNCING_TIME  200*(168000000/1000)  // 100 milliseconds in DWT ticks
+#define BOUNCING_TIME  (200*(168000000/1000))  // 100 milliseconds in DWT ticks
 
 // This function handles External line 0 interrupt request.
 void EXTI0_IRQHandler()
@@ -220,7 +220,7 @@ void EXTI1_IRQHandler()
 // This function handles External line 2 interrupt request.
 void EXTI2_IRQHandler()
 {
-  static u32 t0 = 0;
+//  static u32 t0 = 0;
 
   if (EXTI_GetITStatus(EXTI_Line2) != RESET)
   {
@@ -239,7 +239,7 @@ void EXTI2_IRQHandler()
 // This function handles External line 2 interrupt request.
 void EXTI9_5_IRQHandler()
 {
-  static u32 t0 = 0;
+//  static u32 t0 = 0;
 
   if (EXTI_GetITStatus(EXTI_Line5) != RESET)
   {

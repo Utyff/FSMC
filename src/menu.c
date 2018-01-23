@@ -27,7 +27,7 @@ void menu1Step(s16 step)
 
 void drawMenu1()
 {
-  POINT_COLOR = BLUE;  // Drawing pen color
+  POINT_COLOR = BLUE;  // Drawing pen color
 
   for( u16 i=0; i<4; i++ )
   {

@@ -1,5 +1,5 @@
 project(FSMC C ASM)
-cmake_minimum_required(VERSION 3.5.0)
+cmake_minimum_required(VERSION 3.9.0)
 
 add_definitions(-DSTM32F4xx -DSTM32F40XX -DUSE_STDPERIPH_DRIVER)
 

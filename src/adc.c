@@ -133,11 +133,11 @@ void ADC_init() {  // DMA mode
 //  FLASH->ACR &= (~FLASH_ACR_PRFTEN);
 //  FLASH_PrefetchBufferCmd(DISABLE);
 
-  // разрешаем тактирование
+  // СЂР°Р·СЂРµС€Р°РµРј С‚Р°РєС‚РёСЂРѕРІР°РЅРёРµ
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1, ENABLE);
   //RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1 | RCC_APB2Periph_ADC2 | RCC_APB2Periph_ADC3, ENABLE);
 
-  // базовая настройка
+  // Р±Р°Р·РѕРІР°СЏ РЅР°СЃС‚СЂРѕР№РєР°
   ADC_CommonInitStructure.ADC_Mode = ADC_Mode_Independent;
   ADC_CommonInitStructure.ADC_Prescaler = ADC_Prescaler;
   ADC_CommonInitStructure.ADC_DMAAccessMode = ADC_DMAAccessMode_Disabled;
@@ -153,7 +153,7 @@ void ADC_init() {  // DMA mode
   ADC_InitStructure.ADC_Resolution = ADC_Resolution_8b;
   ADC_Init(ADC1, &ADC_InitStructure);
 
-  // выбор канала
+  // РІС‹Р±РѕСЂ РєР°РЅР°Р»Р°
   ADC_RegularChannelConfig(ADC1, ADC_Channel_12, 1, ADC_SampleTime);
 
   ADC_DiscModeCmd(ADC1, DISABLE);
@@ -161,7 +161,7 @@ void ADC_init() {  // DMA mode
   ADC_DMARequestAfterLastTransferCmd(ADC1, ENABLE);
   ADC_DMACmd(ADC1, ENABLE);
 
-  // включаем АЦП
+  // РІРєР»СЋС‡Р°РµРј РђР¦Рџ
   ADC_Cmd(ADC1, ENABLE);
   // Start ADC1 Software Conversion
   ADC_SoftwareStartConv(ADC1);

@@ -1,50 +1,45 @@
 #include "lib.h"
 
 
-int length(const char s[])
-{
-  int i = 0;
+int length(const char s[]) {
+    int i = 0;
 
-  while( s[i] != 0 )
-     i++;
+    while (s[i] != 0)
+        i++;
 
-  return i;
+    return i;
 }
 
 
-void reverse(char s[])
-{
-  char  c;
-  int   ll = length(s);
-  int   j = ll-1;
+void reverse(char s[]) {
+    char c;
+    int ll = length(s);
+    int j = ll - 1;
 
-  for( int i=0; i<j; i++,j-- )
-  {
-    c    = s[i];
-    s[i] = s[j];
-    s[j] = c;
-  }
+    for (int i = 0; i < j; i++, j--) {
+        c = s[i];
+        s[i] = s[j];
+        s[j] = c;
+    }
 }
 
 
 // itoa:  конвертируем n в символы в s
-void itoa(int n, char s[])
-{
-  int i=0, sign;
+void itoa(int n, char s[]) {
+    int i = 0, sign;
 
-  if ((sign = n) < 0)  // записываем знак
-      n = -n;          // делаем n положительным числом
+    if ((sign = n) < 0)  // записываем знак
+        n = -n;          // делаем n положительным числом
 
-  do
-  {       // генерируем цифры в обратном порядке
-      s[i++] = (char)(n % 10 + '0');   // берем следующую цифру
-  } while ((n /= 10) > 0);             // удаляем последнюю цифру
+    do {       // генерируем цифры в обратном порядке
+        s[i++] = (char) (n % 10 + '0');   // берем следующую цифру
+    } while ((n /= 10) > 0);             // удаляем последнюю цифру
 
-  if (sign < 0)
-      s[i++] = '-';
+    if (sign < 0)
+        s[i++] = '-';
 
-  s[i] = '\0';
-  reverse(s);
+    s[i] = '\0';
+    reverse(s);
 }
 
 

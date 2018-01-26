@@ -8,37 +8,36 @@
  * Вычислять новую таблицу с нужным количеством значений и аплитудой.
  */
 
-#if   SIN_TABLE_SIZE==23
+#if   SIN_TABLE_SIZE == 23
 const uint16_t sinTable[32] = {
         2047, 2447, 2831, 3185, 3498, 3750, 3939, 4056, 4095, 4056,
         3939, 3750, 3495, 3185, 2831, 2447, 2047, 1647, 1263, 909,
         599, 344, 155, 38, 0, 38, 155, 344, 599, 909, 1263, 1647};
-#elif SIN_TABLE_SIZE==128
+#elif SIN_TABLE_SIZE == 128
 const uint16_t sinTable[128] = {
-        2000,  2093,  2186,  2278,  2370,  2461,  2551,  2640,
-        2727,  2812,  2895,  2976,  3055,  3131,  3205,  3275,
-        3343,  3407,  3468,  3526,  3579,  3629,  3675,  3717,
-        3755,  3788,  3818,  3843,  3863,  3879,  3890,  3897,
-        3900,  3897,  3890,  3879,  3863,  3843,  3818,  3788,
-        3755,  3717,  3675,  3629,  3579,  3526,  3468,  3407,
-        3343,  3275,  3205,  3131,  3055,  2976,  2895,  2812,
-        2727,  2640,  2551,  2461,  2370,  2278,  2186,  2093,
-        2000,  1906,  1813,  1721,  1629,  1538,  1448,  1359,
-        1272,  1187,  1104,  1023,   944,   868,   794,   724,
-         656,   592,   531,   473,   420,   370,   324,   282,
-         244,   211,   181,   156,   136,   120,   109,   102,
-         100,   102,   109,   120,   136,   156,   181,   211,
-         244,   282,   324,   370,   420,   473,   531,   592,
-         656,   724,   794,   868,   944,  1023,  1104,  1187,
-        1272,  1359,  1448,  1538,  1629,  1721,  1813,  1906};
+        2000, 2093, 2186, 2278, 2370, 2461, 2551, 2640,
+        2727, 2812, 2895, 2976, 3055, 3131, 3205, 3275,
+        3343, 3407, 3468, 3526, 3579, 3629, 3675, 3717,
+        3755, 3788, 3818, 3843, 3863, 3879, 3890, 3897,
+        3900, 3897, 3890, 3879, 3863, 3843, 3818, 3788,
+        3755, 3717, 3675, 3629, 3579, 3526, 3468, 3407,
+        3343, 3275, 3205, 3131, 3055, 2976, 2895, 2812,
+        2727, 2640, 2551, 2461, 2370, 2278, 2186, 2093,
+        2000, 1906, 1813, 1721, 1629, 1538, 1448, 1359,
+        1272, 1187, 1104, 1023, 944, 868, 794, 724,
+        656, 592, 531, 473, 420, 370, 324, 282,
+        244, 211, 181, 156, 136, 120, 109, 102,
+        100, 102, 109, 120, 136, 156, 181, 211,
+        244, 282, 324, 370, 420, 473, 531, 592,
+        656, 724, 794, 868, 944, 1023, 1104, 1187,
+        1272, 1359, 1448, 1538, 1629, 1721, 1813, 1906};
 #endif
 const uint8_t aEscalator8bit[6] = {0x0, 0x33, 0x66, 0x99, 0xCC, 0xFF};
 
 static void TIM6_Config();
 
 
-void DAC_init()
-{
+void DAC_init() {
     DAC_DeInit();
 
     // Preconfiguration before using DAC----------------------------------
@@ -75,15 +74,14 @@ void DAC_init()
   * @note   TIM6 configuration is based on APB1 frequency
   * @note   TIM6 Update event occurs each TIM6CLK/256
   */
-static void TIM6_Config()
-{
-    TIM_TimeBaseInitTypeDef    TIM_TimeBaseStructure;
+static void TIM6_Config() {
+    TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
     // TIM6 Periph clock enable
     RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM6, ENABLE);
 
     // Time base configuration
     TIM_TimeBaseStructInit(&TIM_TimeBaseStructure);
-    TIM_TimeBaseStructure.TIM_Period =  10; // 0x3F;  // TIM6CLK = 2 * PCLK1 = HCLK /2 = SystemCoreClock /2 = 84MHz
+    TIM_TimeBaseStructure.TIM_Period = 10; // 0x3F;  // TIM6CLK = 2 * PCLK1 = HCLK /2 = SystemCoreClock /2 = 84MHz
     TIM_TimeBaseStructure.TIM_Prescaler = 0;  // 84MHz / 10 = 8,4MHz | 5,8 in 100 us | 58 000 1s
     TIM_TimeBaseStructure.TIM_ClockDivision = 0;
     TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
@@ -99,10 +97,9 @@ static void TIM6_Config()
 /**
   * @brief  DAC  Channel2 SineWave Configuration
   */
-void DAC_Ch2_SineWaveConfig()
-{
-    DMA_InitTypeDef  DMA_InitStructure;
-    DAC_InitTypeDef  DAC_InitStructure;
+void DAC_Ch2_SineWaveConfig() {
+    DMA_InitTypeDef DMA_InitStructure;
+    DAC_InitTypeDef DAC_InitStructure;
 
     // DAC channel2 Configuration
     DAC_InitStructure.DAC_Trigger = DAC_Trigger_T6_TRGO;
@@ -113,8 +110,8 @@ void DAC_Ch2_SineWaveConfig()
     // DMA1_Stream6 channel7 configuration **************************************
     DMA_DeInit(DMA1_Stream6);
     DMA_InitStructure.DMA_Channel = DMA_Channel_7;
-    DMA_InitStructure.DMA_PeripheralBaseAddr = (uint32_t)&DAC->DHR12R2; //DAC_DHR12R2_ADDRESS; //
-    DMA_InitStructure.DMA_Memory0BaseAddr = (uint32_t)&sinTable;
+    DMA_InitStructure.DMA_PeripheralBaseAddr = (uint32_t) &DAC->DHR12R2; //DAC_DHR12R2_ADDRESS; //
+    DMA_InitStructure.DMA_Memory0BaseAddr = (uint32_t) &sinTable;
     DMA_InitStructure.DMA_DIR = DMA_DIR_MemoryToPeripheral;
     DMA_InitStructure.DMA_BufferSize = SIN_TABLE_SIZE;
     DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
@@ -142,10 +139,9 @@ void DAC_Ch2_SineWaveConfig()
 /**
   * @brief  DAC Channel1 Escalator Configuration
   */
-void DAC_Ch1_EscalatorConfig()
-{
-    DMA_InitTypeDef  DMA_InitStructure;
-    DAC_InitTypeDef  DAC_InitStructure;
+void DAC_Ch1_EscalatorConfig() {
+    DMA_InitTypeDef DMA_InitStructure;
+    DAC_InitTypeDef DAC_InitStructure;
 
     // DAC channel1 Configuration
     DAC_InitStructure.DAC_Trigger = DAC_Trigger_T6_TRGO;
@@ -156,8 +152,8 @@ void DAC_Ch1_EscalatorConfig()
     // DMA1_Stream5 channel7 configuration **************************************
     DMA_DeInit(DMA1_Stream5);
     DMA_InitStructure.DMA_Channel = DMA_Channel_7;
-    DMA_InitStructure.DMA_PeripheralBaseAddr = (uint32_t)&DAC->DHR8R1; // DAC_DHR8R1_ADDRESS;
-    DMA_InitStructure.DMA_Memory0BaseAddr = (uint32_t)&aEscalator8bit;
+    DMA_InitStructure.DMA_PeripheralBaseAddr = (uint32_t) &DAC->DHR8R1; // DAC_DHR8R1_ADDRESS;
+    DMA_InitStructure.DMA_Memory0BaseAddr = (uint32_t) &aEscalator8bit;
     DMA_InitStructure.DMA_BufferSize = 6;
     DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_Byte;
     DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_Byte;
@@ -185,9 +181,8 @@ void DAC_Ch1_EscalatorConfig()
 /**
   * @brief  DAC Channel2 Triangle Configuration
   */
-void DAC_Ch2_TriangleConfig()
-{
-    DAC_InitTypeDef  DAC_InitStructure;
+void DAC_Ch2_TriangleConfig() {
+    DAC_InitTypeDef DAC_InitStructure;
 
     // DAC channel2 Configuration
     DAC_InitStructure.DAC_Trigger = DAC_Trigger_T6_TRGO;
@@ -207,9 +202,8 @@ void DAC_Ch2_TriangleConfig()
 /**
   * @brief  DAC  Channel1 Noise Configuration
   */
-void DAC_Ch1_NoiseConfig()
-{
-    DAC_InitTypeDef  DAC_InitStructure;
+void DAC_Ch1_NoiseConfig() {
+    DAC_InitTypeDef DAC_InitStructure;
 
     // DAC channel1 Configuration
     DAC_InitStructure.DAC_Trigger = DAC_Trigger_T6_TRGO;

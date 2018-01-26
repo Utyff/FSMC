@@ -9,11 +9,11 @@
 #define MAX_X 320
 #define MAX_Y 240
 
-extern float  scaleX;
+extern float scaleX;
 extern uint8_t graph[];
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 void drawFrame();
@@ -21,7 +21,7 @@ void drawGraph();
 void setXScale(s16 step);
 
 #ifdef __cplusplus
- }
+}
 #endif
 
 #endif /* __SCREEN_H */

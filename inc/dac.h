@@ -4,7 +4,6 @@
 #include "stm32f4xx_conf.h"
 
 
-
 #ifdef __cplusplus
 extern "C" {
 #endif

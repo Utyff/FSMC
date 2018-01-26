@@ -6,7 +6,7 @@
 
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 void delay_us(uint32_t us);
@@ -17,7 +17,7 @@ void Delay(__IO uint32_t nTime);
 //static __IO uint32_t TimingDelay;
 
 #ifdef __cplusplus
- }
+}
 #endif
 
 #endif

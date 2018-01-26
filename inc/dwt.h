@@ -4,8 +4,12 @@
 #include "stm32f4xx_conf.h"
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
+
+// DWT tics in one microsecond
+// for 168MHz: 168 000 000 / 1 000 000 = 168
+#define DWT_IN_MICROSEC (SystemCoreClock/1000000)
 
 void DWT_Init();
 void DWT_Delay_ms(uint32_t ms);   // milliseconds

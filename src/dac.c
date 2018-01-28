@@ -1,14 +1,14 @@
 #include <stm32f4xx_conf.h>
 #include <dac.h>
 
-#define SIN_TABLE_SIZE  128
+#define SIN_TABLE_SIZE  32
 
 /*
  * Значения Float от 0, до 1
  * Вычислять новую таблицу с нужным количеством значений и аплитудой.
  */
 
-#if   SIN_TABLE_SIZE == 23
+#if   SIN_TABLE_SIZE == 32
 const uint16_t sinTable[32] = {
         2047, 2447, 2831, 3185, 3498, 3750, 3939, 4056, 4095, 4056,
         3939, 3750, 3495, 3185, 2831, 2447, 2047, 1647, 1263, 909,
@@ -46,16 +46,16 @@ void DAC_init() {
     // DMA1 clock enable
     RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA1, ENABLE);
     // GPIOA clock enable (to be used with DAC)
-    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
+    RCC_AHB1PeriphClockCmd(DAC_CLOCKPORT, ENABLE);
     // DAC Periph clock enable
     RCC_APB1PeriphClockCmd(RCC_APB1Periph_DAC, ENABLE);
 
     // DAC channel 1 & 2 (DAC_OUT1 = PA.4)(DAC_OUT2 = PA.5) configuration
-    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4 | GPIO_Pin_5;
+    GPIO_InitStructure.GPIO_Pin = DAC1_PIN | DAC2_PIN;
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AN;
     GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
-    GPIO_Init(GPIOA, &GPIO_InitStructure);
+    GPIO_Init(DAC_PORT, &GPIO_InitStructure);
 
     // TIM6 Configuration ------------------------------------------------
     TIM6_Config();
@@ -81,7 +81,7 @@ static void TIM6_Config() {
 
     // Time base configuration
     TIM_TimeBaseStructInit(&TIM_TimeBaseStructure);
-    TIM_TimeBaseStructure.TIM_Period = 10; // 0x3F;  // TIM6CLK = 2 * PCLK1 = HCLK /2 = SystemCoreClock /2 = 84MHz
+    TIM_TimeBaseStructure.TIM_Period = 19; // 0x3F;  // TIM6CLK = 2 * PCLK1 = HCLK /2 = SystemCoreClock /2 = 84MHz
     TIM_TimeBaseStructure.TIM_Prescaler = 0;  // 84MHz / 10 = 8,4MHz | 5,8 in 100 us | 58 000 1s
     TIM_TimeBaseStructure.TIM_ClockDivision = 0;
     TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
@@ -93,6 +93,28 @@ static void TIM6_Config() {
     // TIM6 enable counter
     TIM_Cmd(TIM6, ENABLE);
 }
+
+u16 presc = 20;
+
+void DAC_step(s16 step) {
+    TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
+
+    if(step==0) return;
+    if(step<0) {
+        presc -=5;
+    } else {
+        presc +=5;
+    }
+
+    // Time base configuration
+    TIM_TimeBaseStructInit(&TIM_TimeBaseStructure);
+    TIM_TimeBaseStructure.TIM_Period = presc; // 0x3F;  // TIM6CLK = 2 * PCLK1 = HCLK /2 = SystemCoreClock /2 = 84MHz
+    TIM_TimeBaseStructure.TIM_Prescaler = 0;  // 84MHz / 10 = 8,4MHz | 5,8 in 100 us | 58 000 1s
+    TIM_TimeBaseStructure.TIM_ClockDivision = 0;
+    TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
+    TIM_TimeBaseInit(TIM6, &TIM_TimeBaseStructure);
+}
+
 
 /**
   * @brief  DAC  Channel2 SineWave Configuration

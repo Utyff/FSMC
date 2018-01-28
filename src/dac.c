@@ -1,7 +1,7 @@
 #include <stm32f4xx_conf.h>
 #include <dac.h>
 
-#define SIN_TABLE_SIZE  32
+#define SIN_TABLE_SIZE  128
 
 /*
  * Значения Float от 0, до 1
@@ -65,9 +65,9 @@ void DAC_init() {
     // Sine Wave generator -----------------------------------------------
     DAC_Ch2_SineWaveConfig();
     // Noise signal generator ----------------------------------------------
-    DAC_Ch1_NoiseConfig();
+//    DAC_Ch1_NoiseConfig();
     // Triangle signal generator -------------------------------------------
-//    DAC_Ch2_TriangleConfig();
+    DAC_Ch1_TriangleConfig();
 }
 
 /**
@@ -203,22 +203,22 @@ void DAC_Ch1_EscalatorConfig() {
 /**
   * @brief  DAC Channel2 Triangle Configuration
   */
-void DAC_Ch2_TriangleConfig() {
+void DAC_Ch1_TriangleConfig() {
     DAC_InitTypeDef DAC_InitStructure;
 
     // DAC channel2 Configuration
     DAC_InitStructure.DAC_Trigger = DAC_Trigger_T6_TRGO;
     DAC_InitStructure.DAC_WaveGeneration = DAC_WaveGeneration_Triangle;
-    DAC_InitStructure.DAC_LFSRUnmask_TriangleAmplitude = DAC_TriangleAmplitude_4095;
+    DAC_InitStructure.DAC_LFSRUnmask_TriangleAmplitude = DAC_TriangleAmplitude_255;
     DAC_InitStructure.DAC_OutputBuffer = DAC_OutputBuffer_Disable;
-    DAC_Init(DAC_Channel_2, &DAC_InitStructure);
+    DAC_Init(DAC_Channel_1, &DAC_InitStructure);
 
     // Enable DAC Channel2
-    DAC_Cmd(DAC_Channel_2, ENABLE);
+    DAC_Cmd(DAC_Channel_1, ENABLE);
 
-    // Set DAC channel2 DHR12RD register
-    //DAC_SetChannel2Data(DAC_Align_12b_R, 0x0);
-    DAC->DHR12R2 = 0;
+    // Set DAC channel1 DHR12RD register
+    //DAC_SetChannel1Data(DAC_Align_8b_R, 0x0);
+    DAC->DHR12R1 = 4096/2+50;
 }
 
 /**

@@ -1,13 +1,8 @@
 #include <stm32f4xx_conf.h>
 #include <dac.h>
 
+
 #define SIN_TABLE_SIZE  128
-
-/*
- * Значения Float от 0, до 1
- * Вычислять новую таблицу с нужным количеством значений и аплитудой.
- */
-
 #if   SIN_TABLE_SIZE == 32
 const uint16_t sinTable[32] = {
         2047, 2447, 2831, 3185, 3498, 3750, 3939, 4056, 4095, 4056,
@@ -32,7 +27,32 @@ const uint16_t sinTable[128] = {
         656, 724, 794, 868, 944, 1023, 1104, 1187,
         1272, 1359, 1448, 1538, 1629, 1721, 1813, 1906};
 #endif
+
+#define TRI_TABLE_SIZE 32
+const uint16_t triTable[32] = {
+        0, 256, 512, 768,
+        1024, 1280, 1536, 1792,
+        2048, 2304, 2560, 2816,
+        3072, 3328, 3584, 3840,
+        4096, 3840, 3584, 3328,
+        3072, 2816, 2560, 2304,
+        2048, 1792, 1536, 1280,
+        1024, 768, 512, 256};
+
+#define SQE_TABLE_SIZE 32
+const uint16_t sqeTable[32] = {
+        0, 0, 0, 0,
+        0, 0, 0, 0,
+        0, 0, 0, 0,
+        0, 0, 0, 0,
+        4096, 4096, 4096, 4096,
+        4096, 4096, 4096, 4096,
+        4096, 4096, 4096, 4096,
+        4096, 4096, 4096, 4096};
+
 const uint8_t aEscalator8bit[6] = {0x0, 0x33, 0x66, 0x99, 0xCC, 0xFF};
+
+DAC_SIGNAL_FORM DAC_SignalForm = Sin;
 
 static void TIM6_Config();
 
@@ -57,17 +77,32 @@ void DAC_init() {
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
     GPIO_Init(DAC_PORT, &GPIO_InitStructure);
 
-    // TIM6 Configuration ------------------------------------------------
+    // TIM6 Configuration as TRGOSource_Update for DAC event
     TIM6_Config();
 
-    // Escalator generator -----------------------------------------------
-//    DAC_Ch1_EscalatorConfig();
-    // Sine Wave generator -----------------------------------------------
-    DAC_Ch2_SineWaveConfig();
-    // Noise signal generator ----------------------------------------------
-//    DAC_Ch1_NoiseConfig();
+    DAC_SetGeneratorSignal(DAC_SignalForm);
+
     // Triangle signal generator -------------------------------------------
     DAC_Ch1_TriangleConfig();
+}
+
+void DAC_SetGeneratorSignal(DAC_SIGNAL_FORM form) {
+    DAC_SignalForm = form;
+    if (form == Sin) {
+        DAC_Ch2_Config(sinTable, SIN_TABLE_SIZE);
+    } else if (form == Tri) {
+        DAC_Ch2_Config(triTable, TRI_TABLE_SIZE);
+    } else {
+        DAC_Ch2_Config(sqeTable, SQE_TABLE_SIZE);
+    }
+}
+
+void DAC_NextGeneratorSignal() {
+    DAC_SignalForm++;
+    if (DAC_SignalForm > Sqe) {
+        DAC_SignalForm = Sin;
+    }
+    DAC_SetGeneratorSignal(DAC_SignalForm);
 }
 
 /**
@@ -97,15 +132,14 @@ static void TIM6_Config() {
 u16 presc = 20;
 
 void DAC_step(s16 step) {
-    TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
-
-    if(step==0) return;
-    if(step<0) {
-        presc -=5;
+    if (step == 0) return;
+    if (step < 0) {
+        presc -= 5;
     } else {
-        presc +=5;
+        presc += 5;
     }
 
+    TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
     // Time base configuration
     TIM_TimeBaseStructInit(&TIM_TimeBaseStructure);
     TIM_TimeBaseStructure.TIM_Period = presc; // 0x3F;  // TIM6CLK = 2 * PCLK1 = HCLK /2 = SystemCoreClock /2 = 84MHz
@@ -117,9 +151,9 @@ void DAC_step(s16 step) {
 
 
 /**
-  * @brief  DAC  Channel2 SineWave Configuration
+  * @brief  DAC  Channel2 Configuration
   */
-void DAC_Ch2_SineWaveConfig() {
+void DAC_Ch2_Config(const uint16_t *table, uint32_t tableSize) {
     DMA_InitTypeDef DMA_InitStructure;
     DAC_InitTypeDef DAC_InitStructure;
 
@@ -133,9 +167,9 @@ void DAC_Ch2_SineWaveConfig() {
     DMA_DeInit(DMA1_Stream6);
     DMA_InitStructure.DMA_Channel = DMA_Channel_7;
     DMA_InitStructure.DMA_PeripheralBaseAddr = (uint32_t) &DAC->DHR12R2; //DAC_DHR12R2_ADDRESS; //
-    DMA_InitStructure.DMA_Memory0BaseAddr = (uint32_t) &sinTable;
+    DMA_InitStructure.DMA_Memory0BaseAddr = (uint32_t) table;
     DMA_InitStructure.DMA_DIR = DMA_DIR_MemoryToPeripheral;
-    DMA_InitStructure.DMA_BufferSize = SIN_TABLE_SIZE;
+    DMA_InitStructure.DMA_BufferSize = tableSize;
     DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
     DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;
     DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_HalfWord;
@@ -218,7 +252,7 @@ void DAC_Ch1_TriangleConfig() {
 
     // Set DAC channel1 DHR12RD register
     //DAC_SetChannel1Data(DAC_Align_8b_R, 0x0);
-    DAC->DHR12R1 = 4096/2+50;
+    DAC->DHR12R1 = 4096 / 2 + 50; // shift signal to centre
 }
 
 /**

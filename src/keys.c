@@ -36,13 +36,19 @@ void KEYS_scan() {
         btn1_last ^= 1;
         if (btn1_last != 0) {
             button0Count++;
-//          menu1Next();
         }
     }
 
-    if ((button0Count & 1) == 0) {
-        ADC_step(Encoder_get());
+    s16 step = Encoder_get();
+    if (step == 0) return;
+
+    // choose type of encoder action
+    u8 action = button0Count % (u8) 3;
+    if (action == 0) {
+        ADC_step(step);
+    } else if (action == 1) {
+        DAC_step(step);
     } else {
-        DAC_step(Encoder_get());
+        DAC_NextGeneratorSignal();
     }
 }

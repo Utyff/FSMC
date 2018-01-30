@@ -2,7 +2,7 @@
 #include <dac.h>
 
 
-#define SIN_TABLE_SIZE  128
+#define SIN_TABLE_SIZE  32
 #if   SIN_TABLE_SIZE == 32
 const uint16_t sinTable[32] = {
         2047, 2447, 2831, 3185, 3498, 3750, 3939, 4056, 4095, 4056,

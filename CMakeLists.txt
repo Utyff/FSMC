@@ -11,7 +11,7 @@ include_directories(Libraries/STM32F4xx_StdPeriph_Driver/inc)
 include_directories(Libraries/Device/STM32F4xx/Include)
 include_directories(Libraries/CMSIS/Include)
 
-add_executable(${PROJECT_NAME}.elf ${USER_SOURCES} ${STL_SOURCES} ${LINKER_SCRIPT} src/keys.c inc/keys.h inc/pins.h)
+add_executable(${PROJECT_NAME}.elf ${USER_SOURCES} ${STL_SOURCES} ${LINKER_SCRIPT})
 
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Map=${PROJECT_SOURCE_DIR}/build/${PROJECT_NAME}.map")
 set(HEX_FILE ${PROJECT_SOURCE_DIR}/build/${PROJECT_NAME}.hex)

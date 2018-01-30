@@ -169,8 +169,8 @@ void TIM4_init() {
     RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4, ENABLE);
 
     // Compute the prescaler value, TIM4CLK = APB1*2 = 84MHz
-    PrescalerValue = (uint16_t) (((SystemCoreClock / 2) / 10000) -
-                                 1); // 8399;  84M > 1Hz | 8,4M > 10Hz | 840K > 100Hz .. 8400 > 10KHz
+    // 8399;  84M > 1Hz | 8,4M > 10Hz | 840K > 100Hz .. 8400 > 10KHz
+    PrescalerValue = (uint16_t) (((SystemCoreClock / 2) / 10000) - 1);
 
     // Time base configuration
     TIM_TimeBaseStructure.TIM_Period = 9999; // 10KHz input freq;  10K > 1Hz

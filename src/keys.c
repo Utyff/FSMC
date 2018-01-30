@@ -31,7 +31,7 @@ void KEYS_scan() {
         return;
     }
 
-    if ((GPIOA->IDR & GPIO_Pin_0) != btn1_last) {
+    if ((BTN1_PORT->IDR & BTN1_PIN) != btn1_last) {
         debounceCnt = DEBOUNCING_CNT;
         btn1_last ^= 1;
         if (btn1_last != 0) {

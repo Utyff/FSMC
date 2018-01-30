@@ -9,6 +9,6 @@
 
 #define BTN1_CLOCKPORT RCC_AHB1Periph_GPIOA
 #define BTN1_PORT      GPIOA
-#define BTN1_PIN       GPIO_Pin_1
+#define BTN1_PIN       GPIO_Pin_0
 
 #endif //FSMC_PINS_H

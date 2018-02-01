@@ -189,7 +189,7 @@ void EXTI0_IRQHandler()
 //      if( GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_0) != 0 )
       if( (GPIOA->IDR & GPIO_Pin_0) != 0 )
       {
-        button0Count++;   // only on rising trigger (button down)
+        button1Count++;   // only on rising trigger (button down)
 //        menu1Next();
       }
     }
@@ -210,7 +210,7 @@ void EXTI1_IRQHandler()
       t0 = DWT_Get_Current_Tick();
 //      if( GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_1) != 0 )
       if( (GPIOB->IDR & GPIO_Pin_1) == 0 )
-        button1Count++;   // only on rising trigger (button down)
+        button2Count++;   // only on rising trigger (button down)
     }
     // Clear the EXTI line 1 pending bit
     EXTI_ClearITPendingBit(EXTI_Line1);
@@ -229,7 +229,7 @@ void EXTI2_IRQHandler()
 //      t0 = DWT_Get_Current_Tick();
 //      if( GPIO_ReadInputDataBit(GPIOE, GPIO_Pin_2) != 0 )
       if( (GPIOE->IDR & GPIO_Pin_2) != 0 )
-        button2Count++;   // only on rising trigger (button down)
+        button3Count++;   // only on rising trigger (button down)
     }
     // Clear the EXTI line 0 pending bit
     EXTI_ClearITPendingBit(EXTI_Line2);
@@ -247,7 +247,7 @@ void EXTI9_5_IRQHandler()
     {
 //      t0 = DWT_Get_Current_Tick();
       if( (GPIOE->IDR & GPIO_Pin_5) != 0 )
-        button1Count++;   // only on rising trigger (button down)
+        button2Count++;   // only on rising trigger (button down)
     }
     EXTI_ClearITPendingBit(EXTI_Line5);
   }
@@ -258,7 +258,7 @@ void EXTI9_5_IRQHandler()
     {
 //      t0 = DWT_Get_Current_Tick();
       if( (GPIOE->IDR & GPIO_Pin_6) != 0 )
-        button2Count++;   // only on rising trigger (button down)
+        button3Count++;   // only on rising trigger (button down)
     }
     EXTI_ClearITPendingBit(EXTI_Line6);
   }

@@ -2,9 +2,9 @@
 #include <exti.h>
 
 
-u8 button0Count = 0;
 u8 button1Count = 0;
 u8 button2Count = 0;
+u8 button3Count = 0;
 
 
 void EXTI_init() {

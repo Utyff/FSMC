@@ -67,7 +67,7 @@ int main() {
         //setXScale(Encoder_get());
         LCD_ShowxNum(260, 214, (u32) ADC_getTime() / 10, 7, 12, 0x0);
         LCD_ShowxNum(0,  214, (u32) ICount, 5, 12, 0x0);
-        LCD_ShowxNum(30, 214, (u32) button0Count, 5, 12, 0x0);
+        LCD_ShowxNum(30, 214, (u32) button1Count, 5, 12, 0x0);
 //        drawMenu1();
     }
 }

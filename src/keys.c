@@ -23,27 +23,32 @@ void KEYS_init() {
 }
 
 static u16 debounceCnt = 0;
-static u16 btn1_last = 0;
+u16 btns_state = 0;
 
+/**
+ * Check buttons and run actions
+ */
 void KEYS_scan() {
     if (debounceCnt > 0) {
         debounceCnt--;
         return;
     }
 
-    if ((BTN1_PORT->IDR & BTN1_PIN) != btn1_last) {
+    // if button1 change state
+    if ((BTN1_PORT->IDR & BTN1_PIN) != btns_state & BUTTON1) {
         debounceCnt = DEBOUNCING_CNT;
-        btn1_last ^= 1;
-        if (btn1_last != 0) {
-            button0Count++;
+        btns_state ^= BUTTON1;
+        if (btns_state & BUTTON1 != 0) {
+            button1Count++;
         }
     }
 
+    // if encoder has step - do it
     s16 step = Encoder_get();
     if (step == 0) return;
 
     // choose type of encoder action
-    u8 action = button0Count % (u8) 3;
+    u8 action = button1Count % (u8) 3;
     if (action == 0) {
         ADC_step(step);
     } else if (action == 1) {

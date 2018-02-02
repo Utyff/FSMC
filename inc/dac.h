@@ -25,6 +25,7 @@ void DAC_SetGeneratorSignal(DAC_SIGNAL_FORM form);
 void DAC_NextGeneratorSignal();
 
 extern DAC_SIGNAL_FORM DAC_SignalForm;
+extern u16 presc;
 
 #ifdef __cplusplus
 }

@@ -1,6 +1,7 @@
 #include <stm32f4xx_conf.h>
 #include <dac.h>
 
+void DAC_Ch2_SineWaveConfig(const uint16_t *table, uint32_t tableSize);
 
 #define SIN_TABLE_SIZE  32
 #if   SIN_TABLE_SIZE == 32
@@ -129,7 +130,7 @@ static void TIM6_Config() {
     TIM_Cmd(TIM6, ENABLE);
 }
 
-u16 presc = 20;
+u16 presc = 21;
 
 void DAC_step(s16 step) {
     if (step == 0) return;
@@ -154,6 +155,10 @@ void DAC_step(s16 step) {
   * @brief  DAC  Channel2 Configuration
   */
 void DAC_Ch2_Config(const uint16_t *table, uint32_t tableSize) {
+    DAC_Ch2_SineWaveConfig(table,tableSize);
+}
+
+void DAC_Ch2_SineWaveConfig(const uint16_t *table, uint32_t tableSize) {
     DMA_InitTypeDef DMA_InitStructure;
     DAC_InitTypeDef DAC_InitStructure;
 
